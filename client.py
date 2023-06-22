@@ -71,7 +71,7 @@ class AmbrAPI:
             The achievements.
         """
         data = await self._request("achievement")
-        return [Achievement(**achievement) for achievement in data]
+        return [Achievement(**achievement) for achievement in data["data"]["items"]]
 
     async def fetch_artifacts(self) -> List[Artifact]:
         """
@@ -83,7 +83,7 @@ class AmbrAPI:
             The artifacts.
         """
         data = await self._request("reliquary")
-        return [Artifact(**artifact) for artifact in data]
+        return [Artifact(**artifact) for artifact in data["data"]["items"]]
 
     async def fetch_books(self) -> List[Book]:
         """
@@ -95,7 +95,7 @@ class AmbrAPI:
             The books.
         """
         data = await self._request("book")
-        return [Book(**book) for book in data]
+        return [Book(**book) for book in data["data"]["items"]]
 
     async def fetch_characters(self) -> List[Character]:
         """
@@ -107,7 +107,7 @@ class AmbrAPI:
             The characters.
         """
         data = await self._request("character")
-        return [Character(**character) for character in data]
+        return [Character(**character) for character in data["data"]["items"]]
 
     async def fetch_foods(self) -> List[Food]:
         """
@@ -119,7 +119,7 @@ class AmbrAPI:
             The foods.
         """
         data = await self._request("food")
-        return [Food(**food) for food in data]
+        return [Food(**food) for food in data["data"]["items"]]
 
     async def fetch_furnitures(self) -> List[Furniture]:
         """
@@ -131,7 +131,7 @@ class AmbrAPI:
             The furnitures.
         """
         data = await self._request("furniture")
-        return [Furniture(**furniture) for furniture in data]
+        return [Furniture(**furniture) for furniture in data["data"]["items"]]
 
     async def fetch_materials(self) -> List[Material]:
         """
@@ -143,7 +143,7 @@ class AmbrAPI:
             The materials.
         """
         data = await self._request("material")
-        return [Material(**material) for material in data]
+        return [Material(**material) for material in data["data"]["items"]]
 
     async def fetch_monsters(self) -> List[Monster]:
         """
@@ -155,7 +155,7 @@ class AmbrAPI:
             The monsters.
         """
         data = await self._request("monster")
-        return [Monster(**monster) for monster in data]
+        return [Monster(**monster) for monster in data["data"]["items"]]
 
     async def fetch_namecards(self) -> List[NameCard]:
         """
@@ -167,7 +167,7 @@ class AmbrAPI:
             The name cards.
         """
         data = await self._request("namecard")
-        return [NameCard(**namecard) for namecard in data]
+        return [NameCard(**namecard) for namecard in data["data"]["items"]]
 
     async def fetch_quests(self) -> List[Quest]:
         """
@@ -179,7 +179,7 @@ class AmbrAPI:
             The quests.
         """
         data = await self._request("quest")
-        return [Quest(**quest) for quest in data]
+        return [Quest(**quest) for quest in data["data"]["items"]]
 
     async def fetch_tcgcards(self) -> List[TCGCard]:
         """
@@ -191,7 +191,7 @@ class AmbrAPI:
             The TCG cards.
         """
         data = await self._request("gcg")
-        return [TCGCard(**tcgcard) for tcgcard in data]
+        return [TCGCard(**tcgcard) for tcgcard in data["data"]["items"]]
 
     async def fetch_weapons(self) -> List[Weapon]:
         """
@@ -203,4 +203,4 @@ class AmbrAPI:
             The weapons.
         """
         data = await self._request("weapon")
-        return [Weapon(**weapon) for weapon in data]
+        return [Weapon(**weapon) for weapon in data["data"]["items"]]
