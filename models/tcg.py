@@ -1,6 +1,11 @@
-from typing import Dict
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field, validator
+
+
+class DiceCost(BaseModel):
+    type: str
+    count: int
 
 
 class TCGCard(BaseModel):
@@ -17,7 +22,7 @@ class TCGCard(BaseModel):
         The card's type.
     tags: Dict[:class:`str`, :class:`str`]
         The card's tags.
-    props: Dict[:class:`str`, :class:`int`]
+    dice_cost: Dict[:class:`str`, :class:`int`]
         The card's properties.
     icon: :class:`str`
         The card's icon.
@@ -31,10 +36,18 @@ class TCGCard(BaseModel):
     name: str
     type: str
     tags: Dict[str, str]
-    props: Dict[str, int]
+    dice_cost: List[DiceCost] = Field(None, alias="props")
     icon: str
     route: str
     sort_order: int = Field(alias="sortOrder")
+
+    @validator("dice_cost", pre=True)
+    def _convert_dice_cost(cls, v: Optional[Dict[str, int]]) -> List[DiceCost]:
+        return (
+            [DiceCost(type=type_, count=count) for type_, count in v.items()]
+            if v
+            else []
+        )
 
     @validator("icon", pre=True)
     def _add_icon_url(cls, v: str) -> str:
