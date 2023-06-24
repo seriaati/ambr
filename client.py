@@ -3,9 +3,10 @@ from typing import Any, Dict, Final, List
 
 import aiohttp
 
+from models.artifact import ArtifactSet
+
 from .models import (
     Achievement,
-    Artifact,
     Book,
     Character,
     Food,
@@ -73,7 +74,7 @@ class AmbrAPI:
         data = await self._request("achievement")
         return [Achievement(**achievement) for achievement in data["data"]["items"]]
 
-    async def fetch_artifacts(self) -> List[Artifact]:
+    async def fetch_artiact_sets(self) -> List[ArtifactSet]:
         """
         Fetches all artifacts.
 
@@ -83,7 +84,7 @@ class AmbrAPI:
             The artifacts.
         """
         data = await self._request("reliquary")
-        return [Artifact(**artifact) for artifact in data["data"]["items"]]
+        return [ArtifactSet(**artifact_set) for artifact_set in data["data"]["items"]]
 
     async def fetch_books(self) -> List[Book]:
         """
@@ -157,7 +158,7 @@ class AmbrAPI:
         data = await self._request("monster")
         return [Monster(**monster) for monster in data["data"]["items"]]
 
-    async def fetch_namecards(self) -> List[NameCard]:
+    async def fetch_name_cards(self) -> List[NameCard]:
         """
         Fetches all name cards.
 
@@ -167,7 +168,7 @@ class AmbrAPI:
             The name cards.
         """
         data = await self._request("namecard")
-        return [NameCard(**namecard) for namecard in data["data"]["items"]]
+        return [NameCard(**name_card) for name_card in data["data"]["items"]]
 
     async def fetch_quests(self) -> List[Quest]:
         """
@@ -181,7 +182,7 @@ class AmbrAPI:
         data = await self._request("quest")
         return [Quest(**quest) for quest in data["data"]["items"]]
 
-    async def fetch_tcgcards(self) -> List[TCGCard]:
+    async def fetch_tcg_cards(self) -> List[TCGCard]:
         """
         Fetches all TCG cards.
 
@@ -191,7 +192,7 @@ class AmbrAPI:
             The TCG cards.
         """
         data = await self._request("gcg")
-        return [TCGCard(**tcgcard) for tcgcard in data["data"]["items"]]
+        return [TCGCard(**tcg_card) for tcg_card in data["data"]["items"]]
 
     async def fetch_weapons(self) -> List[Weapon]:
         """
