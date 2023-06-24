@@ -106,7 +106,7 @@ class AmbrAPI:
         List[:class:`Character`]
             The characters.
         """
-        data = await self._request("character")
+        data = await self._request("avatar")
         return [Character(**character) for character in data["data"]["items"]]
 
     async def fetch_foods(self) -> List[Food]:
