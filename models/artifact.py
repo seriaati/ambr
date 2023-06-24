@@ -80,7 +80,7 @@ class ArtifactSetDetail(BaseModel):
 
     @validator("affix_list", pre=True)
     def _add_affix_list(cls, v: Dict[str, str]) -> List[ArtifactAffix]:
-        return [ArtifactAffix(id=int(k), effect=v[k]) for k in v]
+        return [ArtifactAffix(id=k, effect=v[k]) for k in v]
 
     @validator("icon", pre=True)
     def _add_icon_url(cls, v: str) -> str:
@@ -127,4 +127,4 @@ class ArtifactSet(BaseModel):
 
     @validator("affix_list", pre=True)
     def _add_affix_list(cls, v: Dict[str, str]) -> List[ArtifactAffix]:
-        return [ArtifactAffix(id=int(k), effect=v[k]) for k in v]
+        return [ArtifactAffix(id=k, effect=v[k]) for k in v]
