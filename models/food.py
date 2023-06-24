@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseModel, Field, validator
 
 
@@ -35,12 +37,12 @@ class Food(BaseModel):
     icon: str
     rarity: int = Field(alias="rank")
     route: str
-    effect_icon: str = Field(alias="effectIcon")
+    effect_icon: Optional[str] = Field(None, alias="effectIcon")
 
     @validator("icon", pre=True)
     def _add_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
     @validator("effect_icon", pre=True)
-    def _add_effect_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+    def _add_effect_icon_url(cls, v: Optional[str]) -> Optional[str]:
+        return f"https://api.ambr.top/assets/UI/{v}.png" if v else None
