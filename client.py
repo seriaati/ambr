@@ -71,7 +71,9 @@ class AmbrAPI:
             The achievements.
         """
         data = await self._request("achievement")
-        return [Achievement(**achievement) for achievement in data["data"]["items"]]
+        return [
+            Achievement(**achievement) for achievement in data["data"]["items"].values()
+        ]
 
     async def fetch_artiact_sets(self) -> List[ArtifactSet]:
         """
@@ -83,7 +85,10 @@ class AmbrAPI:
             The artifact sets.
         """
         data = await self._request("reliquary")
-        return [ArtifactSet(**artifact_set) for artifact_set in data["data"]["items"]]
+        return [
+            ArtifactSet(**artifact_set)
+            for artifact_set in data["data"]["items"].values()
+        ]
 
     async def fetch_books(self) -> List[Book]:
         """
@@ -95,7 +100,7 @@ class AmbrAPI:
             The books.
         """
         data = await self._request("book")
-        return [Book(**book) for book in data["data"]["items"]]
+        return [Book(**book) for book in data["data"]["items"].values()]
 
     async def fetch_characters(self) -> List[Character]:
         """
@@ -107,7 +112,7 @@ class AmbrAPI:
             The characters.
         """
         data = await self._request("avatar")
-        return [Character(**character) for character in data["data"]["items"]]
+        return [Character(**character) for character in data["data"]["items"].values()]
 
     async def fetch_foods(self) -> List[Food]:
         """
@@ -119,7 +124,7 @@ class AmbrAPI:
             The foods.
         """
         data = await self._request("food")
-        return [Food(**food) for food in data["data"]["items"]]
+        return [Food(**food) for food in data["data"]["items"].values()]
 
     async def fetch_furnitures(self) -> List[Furniture]:
         """
@@ -131,7 +136,7 @@ class AmbrAPI:
             The furnitures.
         """
         data = await self._request("furniture")
-        return [Furniture(**furniture) for furniture in data["data"]["items"]]
+        return [Furniture(**furniture) for furniture in data["data"]["items"].values()]
 
     async def fetch_materials(self) -> List[Material]:
         """
@@ -143,7 +148,7 @@ class AmbrAPI:
             The materials.
         """
         data = await self._request("material")
-        return [Material(**material) for material in data["data"]["items"]]
+        return [Material(**material) for material in data["data"]["items"].values()]
 
     async def fetch_monsters(self) -> List[Monster]:
         """
@@ -155,7 +160,7 @@ class AmbrAPI:
             The monsters.
         """
         data = await self._request("monster")
-        return [Monster(**monster) for monster in data["data"]["items"]]
+        return [Monster(**monster) for monster in data["data"]["items"].values()]
 
     async def fetch_name_cards(self) -> List[NameCard]:
         """
@@ -167,7 +172,7 @@ class AmbrAPI:
             The name cards.
         """
         data = await self._request("namecard")
-        return [NameCard(**name_card) for name_card in data["data"]["items"]]
+        return [NameCard(**name_card) for name_card in data["data"]["items"].values()]
 
     async def fetch_quests(self) -> List[Quest]:
         """
@@ -179,7 +184,7 @@ class AmbrAPI:
             The quests.
         """
         data = await self._request("quest")
-        return [Quest(**quest) for quest in data["data"]["items"]]
+        return [Quest(**quest) for quest in data["data"]["items"].values()]
 
     async def fetch_tcg_cards(self) -> List[TCGCard]:
         """
@@ -191,7 +196,7 @@ class AmbrAPI:
             The TCG cards.
         """
         data = await self._request("gcg")
-        return [TCGCard(**tcg_card) for tcg_card in data["data"]["items"]]
+        return [TCGCard(**tcg_card) for tcg_card in data["data"]["items"].values()]
 
     async def fetch_weapons(self) -> List[Weapon]:
         """
@@ -203,4 +208,4 @@ class AmbrAPI:
             The weapons.
         """
         data = await self._request("weapon")
-        return [Weapon(**weapon) for weapon in data["data"]["items"]]
+        return [Weapon(**weapon) for weapon in data["data"]["items"].values()]
