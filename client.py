@@ -75,12 +75,12 @@ class AmbrAPI:
 
     async def fetch_artiact_sets(self) -> List[ArtifactSet]:
         """
-        Fetches all artifacts.
+        Fetches all artifact sets.
 
         Returns
         -------
-        List[:class:`Artifact`]
-            The artifacts.
+        List[:class:`ArtifactSet`]
+            The artifact sets.
         """
         data = await self._request("reliquary")
         return [ArtifactSet(**artifact_set) for artifact_set in data["data"]["items"]]
