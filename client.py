@@ -3,10 +3,9 @@ from typing import Any, Dict, Final, List
 
 import aiohttp
 
-from models.artifact import ArtifactSet
-
 from .models import (
     Achievement,
+    ArtifactSet,
     Book,
     Character,
     Food,
