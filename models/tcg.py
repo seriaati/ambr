@@ -3,6 +3,11 @@ from typing import Dict, List, Optional
 from pydantic import BaseModel, Field, validator
 
 
+class CardTag(BaseModel):
+    id: str
+    name: str
+
+
 class DiceCost(BaseModel):
     type: str
     count: int
@@ -35,11 +40,15 @@ class TCGCard(BaseModel):
     id: int
     name: str
     type: str
-    tags: Dict[str, str]
+    tags: List[CardTag]
     dice_cost: List[DiceCost] = Field(None, alias="props")
     icon: str
     route: str
     sort_order: int = Field(alias="sortOrder")
+
+    @validator("tags", pre=True)
+    def _convert_tags(cls, v: Optional[Dict[str, str]]) -> List[CardTag]:
+        return [CardTag(id=id_, name=name) for id_, name in v.items()] if v else []
 
     @validator("dice_cost", pre=True)
     def _convert_dice_cost(cls, v: Optional[Dict[str, int]]) -> List[DiceCost]:
