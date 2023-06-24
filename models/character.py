@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field, validator
 
@@ -127,15 +127,19 @@ class Character(BaseModel):
         The character's route.
     """
 
-    id: int
+    id: str
     rarity: int = Field(alias="rank")
     name: str
     element: str
     weapon_type: str = Field(alias="weaponType")
     icon: str
     birthday: List[str]
-    release: int
+    release: Optional[int] = Field(None)
     route: str
+
+    @validator("id", pre=True)
+    def _stringify_id(cls, v: Union[int, str]) -> str:
+        return str(v)
 
     @validator("icon", pre=True)
     def _add_icon_url(cls, v: str) -> str:
