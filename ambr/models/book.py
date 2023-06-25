@@ -15,14 +15,14 @@ class BookDetail(BaseModel):
     name: str
     rarity: int = Field(alias="rank")
     icon: str
-    volumes: List[BookVolume]
+    volumes: List[BookVolume] = Field(alias="volume")
 
     @validator("icon", pre=True)
-    def _add_icon_url(cls, v: str) -> str:
+    def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
     @validator("volumes", pre=True)
-    def _add_volumes(cls, v: List[Dict[str, Any]]) -> List[BookVolume]:
+    def _convert_volumes(cls, v: List[Dict[str, Any]]) -> List[BookVolume]:
         return [BookVolume(**volume) for volume in v]
 
 
@@ -51,5 +51,5 @@ class Book(BaseModel):
     route: str
 
     @validator("icon", pre=True)
-    def _add_icon_url(cls, v: str) -> str:
+    def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"

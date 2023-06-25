@@ -1,4 +1,21 @@
+from typing import Optional
+
 from pydantic import BaseModel, Field, validator
+
+
+class NameCardDetail(BaseModel):
+    id: int
+    name: str
+    rarity: int = Field(alias="rank")
+    icon: str
+    route: str
+    description: str
+    description_special: str = Field(alias="descriptionSpecial")
+    source: Optional[str]
+
+    @validator("icon", pre=True)
+    def _convert_icon_url(cls, v: str) -> str:
+        return f"https://api.ambr.top/assets/UI/{v}.png"
 
 
 class NameCard(BaseModel):
@@ -29,5 +46,5 @@ class NameCard(BaseModel):
     route: str
 
     @validator("icon", pre=True)
-    def _add_icon_url(cls, v: str) -> str:
+    def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"

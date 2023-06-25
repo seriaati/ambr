@@ -28,14 +28,14 @@ class Quest(BaseModel):
     """
 
     id: int
-    type: str
+    type: Optional[str]
     chapter_num: Optional[str] = Field(alias="chapterNum")
     chapter_title: str = Field(alias="chapterTitle")
     chapter_icon: Optional[str] = Field(alias="chapterIcon")
-    chapter_image_title: str = Field(alias="chapterImageTitle")
+    chapter_image_title: Optional[str] = Field(alias="chapterImageTitle")
     route: str
     chapter_count: int = Field(alias="chapterCount")
 
     @validator("chapter_icon", pre=True)
-    def _add_icon_url(cls, v: str) -> str:
+    def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"

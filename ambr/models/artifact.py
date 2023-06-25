@@ -44,7 +44,7 @@ class Artifact(BaseModel):
     icon: str
 
     @validator("icon", pre=True)
-    def _add_icon_url(cls, v: str) -> str:
+    def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
 
@@ -79,15 +79,15 @@ class ArtifactSetDetail(BaseModel):
     artifacts: List[Artifact] = Field(alias="suit")
 
     @validator("affix_list", pre=True)
-    def _add_affix_list(cls, v: Dict[str, str]) -> List[ArtifactAffix]:
+    def _convert_affix_list(cls, v: Dict[str, str]) -> List[ArtifactAffix]:
         return [ArtifactAffix(id=k, effect=v[k]) for k in v]
 
     @validator("icon", pre=True)
-    def _add_icon_url(cls, v: str) -> str:
+    def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
     @validator("artifacts", pre=True)
-    def _add_artifacts(cls, v: Dict[str, Dict[str, Any]]) -> List[Artifact]:
+    def _convert_artifacts(cls, v: Dict[str, Dict[str, Any]]) -> List[Artifact]:
         return [Artifact(pos=artifact_pos, **v[artifact_pos]) for artifact_pos in v]
 
 
@@ -122,9 +122,9 @@ class ArtifactSet(BaseModel):
     sort_order: int = Field(alias="sortOrder")
 
     @validator("icon", pre=True)
-    def _add_icon_url(cls, v: str) -> str:
+    def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
     @validator("affix_list", pre=True)
-    def _add_affix_list(cls, v: Dict[str, str]) -> List[ArtifactAffix]:
+    def _convert_affix_list(cls, v: Dict[str, str]) -> List[ArtifactAffix]:
         return [ArtifactAffix(id=k, effect=v[k]) for k in v]

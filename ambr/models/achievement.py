@@ -11,18 +11,18 @@ class AchievementReward(BaseModel):
     ----------
     rarity: :class:`int`
         The achievement reward's rarity.
-    count: :class:`int`
-        The achievement reward's count.
+    amount: :class:`int`
+        The achievement reward's amount.
     icon: :class:`str`
         The achievement reward's icon.
     """
 
     rarity: int = Field(alias="rank")
-    count: int
+    amount: int = Field(alias="count")
     icon: str
 
     @validator("icon", pre=True)
-    def _add_icon_url(cls, v: str) -> str:
+    def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
 
@@ -33,13 +33,13 @@ class AchievementDetail(BaseModel):
     Attributes
     ----------
     id: :class:`int`
-        The achievement detail's ID.
+        The achievement's ID.
     title: :class:`str`
-        The achievement detail's title.
+        The achievement's title.
     description: :class:`str`
-        The achievement detail's description.
+        The achievement's description.
     rewards: List[:class:`AchievementReward`]
-        The achievement detail's rewards.
+        The achievement's rewards.
     """
 
     id: int
@@ -48,7 +48,7 @@ class AchievementDetail(BaseModel):
     rewards: List[AchievementReward]
 
     @validator("rewards", pre=True)
-    def _add_rewards(cls, v: Dict[str, Dict[str, Any]]) -> List[AchievementReward]:
+    def _convert_rewards(cls, v: Dict[str, Dict[str, Any]]) -> List[AchievementReward]:
         return [AchievementReward(**v[item_id]) for item_id in v]
 
 
@@ -71,7 +71,7 @@ class Achievement(BaseModel):
     details: List[AchievementDetail]
 
     @validator("details", pre=True)
-    def _add_details(cls, v: List[Dict[str, Any]]) -> List[AchievementDetail]:
+    def _convert_details(cls, v: List[Dict[str, Any]]) -> List[AchievementDetail]:
         return [AchievementDetail(**detail) for detail in v]
 
 
@@ -100,9 +100,9 @@ class AchievementCategory(BaseModel):
     achievements: List[Achievement] = Field(alias="achievementList")
 
     @validator("icon", pre=True)
-    def _add_icon_url(cls, v: str) -> str:
+    def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
     @validator("achievements", pre=True)
-    def _add_achievements(cls, v: Dict[str, Dict[str, Any]]) -> List[Achievement]:
+    def _convert_achievements(cls, v: Dict[str, Dict[str, Any]]) -> List[Achievement]:
         return [Achievement(**v[achievement_id]) for achievement_id in v]
