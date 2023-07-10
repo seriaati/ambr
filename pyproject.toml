@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "yatta"
+version = "1.0.0"
+authors = [
+  { name="Seria Ati", email="seria.ati@gmail.com" },
+]
+description = "Python async API wrapper for hsr.yatta.top"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GPL-3.0 License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "aiohttp==3.*",
+  "pydantic==1.*",
+]

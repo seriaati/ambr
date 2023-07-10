@@ -22,6 +22,7 @@ class Birthday(BaseModel):
 
 
 class ExtraLevelType(IntEnum):
+    NORMAL = 1
     ULTIMATE = 9
     SKILL = 2
 
