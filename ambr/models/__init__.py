@@ -2,6 +2,7 @@ from .achievement import *
 from .artifact import *
 from .book import *
 from .character import *
+from .domain import *
 from .food import *
 from .furniture import *
 from .material import *

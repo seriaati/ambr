@@ -11,6 +11,7 @@ from .models import (
     BookDetail,
     Character,
     CharacterDetail,
+    Domains,
     Food,
     FoodDetail,
     Furniture,
@@ -402,3 +403,15 @@ class AmbrAPI:
         """
         data = await self._request(f"weapon/{id}")
         return WeaponDetail(**data["data"])
+
+    async def fetch_domains(self) -> Domains:
+        """
+        Fetches all domains.
+
+        Returns
+        -------
+        :class:`Domains`
+            The domains.
+        """
+        data = await self._request("dailyDungeon")
+        return Domains(**data["data"])
