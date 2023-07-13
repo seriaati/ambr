@@ -1,3 +1,4 @@
+import logging
 from enum import Enum
 from typing import Any, Dict, Final, List
 
@@ -9,6 +10,7 @@ from .models import (
     ArtifactSetDetail,
     Book,
     BookDetail,
+    ChangeLog,
     Character,
     CharacterDetail,
     Domains,
@@ -52,7 +54,7 @@ class AmbrAPI:
     def __init__(self, lang: Language = Language.EN) -> None:
         self.lang = lang
 
-    async def _request(self, endpoint: str) -> Dict[str, Any]:
+    async def _request(self, endpoint: str, *, static: bool = False) -> Dict[str, Any]:
         """
         A helper function to make requests to the API.
 
@@ -60,16 +62,21 @@ class AmbrAPI:
         ----------
         endpoint: :class:`str`
             The endpoint to request from.
+        static: :class:`bool`
+            Whether to use the static endpoint or not. Defaults to ``False``.
 
         Returns
         -------
         Dict[str, Any]
             The response from the API.
         """
+        if static:
+            url = f"{self.BASE_URL}/static/{endpoint}"
+        else:
+            url = f"{self.BASE_URL}/{self.lang.value}/{endpoint}"
+        logging.debug(f"Requesting {url}...")
         async with aiohttp.ClientSession() as session:
-            async with session.get(
-                f"{self.BASE_URL}/{self.lang.value}/{endpoint}"
-            ) as resp:
+            async with session.get(url) as resp:
                 return await resp.json()
 
     async def fetch_achievement_categories(self) -> List[AchievementCategory]:
@@ -415,3 +422,18 @@ class AmbrAPI:
         """
         data = await self._request("dailyDungeon")
         return Domains(**data["data"])
+
+    async def fetch_change_logs(self) -> List[ChangeLog]:
+        """
+        Fetch change logs from the API.
+
+        Returns
+        -------
+        List[ChangeLog]
+            A list of ChangeLog objects.
+        """
+        data = await self._request("changelog", static=True)
+        change_logs: List[ChangeLog] = []
+        for id, log in data["data"].items():
+            change_logs.append(ChangeLog(id=int(id), **log))
+        return change_logs

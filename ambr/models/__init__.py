@@ -1,6 +1,7 @@
 from .achievement import *
 from .artifact import *
 from .book import *
+from .change_log import *
 from .character import *
 from .domain import *
 from .food import *
