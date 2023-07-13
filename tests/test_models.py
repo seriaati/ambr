@@ -99,3 +99,9 @@ async def test_artifacts():
 async def test_domains():
     client = ambr.AmbrAPI()
     await client.fetch_domains()
+
+
+@pytest.mark.asyncio
+async def test_change_log():
+    client = ambr.AmbrAPI()
+    await client.fetch_change_logs()
