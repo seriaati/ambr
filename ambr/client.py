@@ -27,6 +27,7 @@ from .models import (
     Quest,
     TCGCard,
     TCGCardDetail,
+    UpgradeData,
     Weapon,
     WeaponDetail,
 )
@@ -437,3 +438,15 @@ class AmbrAPI:
         for id, log in data["data"].items():
             change_logs.append(ChangeLog(id=int(id), **log))
         return change_logs
+
+    async def fetch_upgrade_data(self) -> UpgradeData:
+        """
+        Fetch upgrade data from the API.
+
+        Returns
+        -------
+        UpgradeData
+            The upgrade data.
+        """
+        data = await self._request("upgrade")
+        return UpgradeData(**data["data"])

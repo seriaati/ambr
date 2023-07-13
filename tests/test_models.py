@@ -105,3 +105,9 @@ async def test_domains():
 async def test_change_log():
     client = ambr.AmbrAPI()
     await client.fetch_change_logs()
+
+
+@pytest.mark.asyncio
+async def test_upgrade_data():
+    client = ambr.AmbrAPI()
+    await client.fetch_upgrade_data()

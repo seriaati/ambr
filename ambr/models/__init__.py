@@ -11,4 +11,5 @@ from .monster import *
 from .name_card import *
 from .quest import *
 from .tcg import *
+from .upgrade import *
 from .weapon import *
