@@ -187,6 +187,7 @@ class CharacterDetail(BaseModel):
     ascension_materials: List[AscensionMaterial] = Field(alias="ascension")
     talents: List[Talent] = Field(alias="talent")
     constellations: List[Constellation] = Field(alias="constellation")
+    beta: bool = Field(False)
 
     @validator("id", pre=True)
     def _stringify_id(cls, v: int) -> str:
@@ -258,6 +259,7 @@ class Character(BaseModel):
     birthday: Birthday
     release: Optional[int] = Field(None)
     route: str
+    beta: bool = Field(False)
 
     @validator("id", pre=True)
     def _stringify_id(cls, v: Union[int, str]) -> str:
