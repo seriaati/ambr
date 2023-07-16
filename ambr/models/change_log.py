@@ -19,7 +19,7 @@ class ItemCategory(StrEnum):
 
 
 class Item(BaseModel):
-    category: str
+    category: ItemCategory
     ids: List[str]
 
 
