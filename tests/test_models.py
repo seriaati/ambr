@@ -90,7 +90,7 @@ async def test_achievements():
 @pytest.mark.asyncio
 async def test_artifacts():
     client = ambr.AmbrAPI()
-    artifacts = await client.fetch_artiact_sets()
+    artifacts = await client.fetch_artifact_sets()
     for artifact in artifacts:
         await client.fetch_artifact_set_detail(artifact.id)
 
