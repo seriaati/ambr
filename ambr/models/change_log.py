@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field, validator
 
 
 class ItemCategory(StrEnum):
-    AVATAR = "avatar"
+    CHARACTER = "avatar"
     WEAPON = "weapon"
     MATERIAL = "material"
     ARTIFACT = "reliquary"
