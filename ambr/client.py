@@ -95,7 +95,7 @@ class AmbrAPI:
             for achievement_category in data["data"].values()
         ]
 
-    async def fetch_artiact_sets(self) -> List[ArtifactSet]:
+    async def fetch_artifact_sets(self) -> List[ArtifactSet]:
         """
         Fetches all artifact sets.
 
