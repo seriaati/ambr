@@ -4,6 +4,7 @@ from typing import Any, Dict, Final, List
 
 import aiohttp
 
+from .exceptions import DataNotFound
 from .models import (
     AchievementCategory,
     ArtifactSet,
@@ -78,7 +79,10 @@ class AmbrAPI:
         logging.debug(f"Requesting {url}...")
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
-                return await resp.json()
+                data = await resp.json()
+                if "code" in data and data["code"] == 404:
+                    raise DataNotFound(data["data"])
+                return data
 
     async def fetch_achievement_categories(self) -> List[AchievementCategory]:
         """

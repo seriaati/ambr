@@ -111,3 +111,10 @@ async def test_change_log():
 async def test_upgrade_data():
     client = ambr.AmbrAPI()
     await client.fetch_upgrade_data()
+
+
+@pytest.mark.asyncio
+async def test_invalid_id():
+    client = ambr.AmbrAPI()
+    with pytest.raises(ambr.DataNotFound):
+        await client.fetch_character_detail("invalid")
