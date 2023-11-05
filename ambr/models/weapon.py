@@ -72,7 +72,7 @@ class WeaponDetail(BaseModel):
     name: str
     description: str
     icon: str
-    story_id: int = Field(alias="storyId")
+    story_id: Optional[int] = Field(alias="storyId")
     affix: Optional[WeaponAffix]
     route: str
     upgrade: WeaponUpgrade
