@@ -1,22 +1,22 @@
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
-
-[project]
-name = "ambr"
-version = "1.0.0"
-authors = [
-  { name="Seria Ati", email="seria.ati@gmail.com" },
-]
-description = "Python async API wrapper for ambr.top"
+[tool.poetry]
+name = "ambr-py"
+version = "0.1.0"
+description = "API wrapper for ambr.top written in Python"
+authors = ["seriaati <seria.ati@gmail.com>"]
+license = "GPL-3.0"
 readme = "README.md"
-requires-python = ">=3.10"
-classifiers = [
-    "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: GPL-3.0 License",
-    "Operating System :: OS Independent",
-]
-dependencies = [
-  "aiohttp==3.*",
-  "pydantic==1.*",
-]
+packages = [{include = "ambr"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aiohttp = "^3.8.6"
+pydantic = "^2.4.2"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+pytest-asyncio = "^0.21.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
