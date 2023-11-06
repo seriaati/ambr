@@ -59,6 +59,13 @@ class AmbrAPI:
 
     def __init__(self, lang: Language = Language.EN) -> None:
         self.lang = lang
+        self.session = aiohttp.ClientSession(headers={"User-Agent": "ambr.py"})
+
+    async def __aenter__(self) -> "AmbrAPI":
+        return self
+
+    async def __aexit__(self, exc_type, exc, tb) -> None:
+        await self.close()
 
     async def _request(self, endpoint: str, *, static: bool = False) -> Dict[str, Any]:
         """
@@ -81,12 +88,17 @@ class AmbrAPI:
         else:
             url = f"{self.BASE_URL}/{self.lang.value}/{endpoint}"
         logging.debug(f"Requesting {url}...")
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url) as resp:
-                data = await resp.json()
-                if "code" in data and data["code"] == 404:
-                    raise DataNotFound(data["data"])
-                return data
+        async with self.session.get(url) as resp:
+            data = await resp.json()
+            if "code" in data and data["code"] == 404:
+                raise DataNotFound(data["data"])
+            return data
+
+    async def close(self) -> None:
+        """
+        Closes the client session.
+        """
+        await self.session.close()
 
     async def fetch_achievement_categories(self) -> List[AchievementCategory]:
         """
