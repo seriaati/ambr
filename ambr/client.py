@@ -48,6 +48,8 @@ class Language(Enum):
     RU = "ru"
     TH = "th"
     VI = "vi"
+    IT = "it"
+    TR = "tr"
 
 
 class AmbrAPI:
