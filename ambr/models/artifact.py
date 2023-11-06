@@ -2,6 +2,13 @@ from typing import Any, Dict, List
 
 from pydantic import BaseModel, Field, field_validator
 
+__all__ = (
+    "ArtifactAffix",
+    "Artifact",
+    "ArtifactSetDetail",
+    "ArtifactSet",
+)
+
 
 class ArtifactAffix(BaseModel):
     """

@@ -5,33 +5,7 @@ from typing import Any, Dict, Final, List
 import aiohttp
 
 from .exceptions import DataNotFound
-from .models import (
-    AchievementCategory,
-    ArtifactSet,
-    ArtifactSetDetail,
-    Book,
-    BookDetail,
-    ChangeLog,
-    Character,
-    CharacterDetail,
-    Domains,
-    Food,
-    FoodDetail,
-    Furniture,
-    FurnitureDetail,
-    Material,
-    MaterialDetail,
-    Monster,
-    MonsterDetail,
-    NameCard,
-    NameCardDetail,
-    Quest,
-    TCGCard,
-    TCGCardDetail,
-    UpgradeData,
-    Weapon,
-    WeaponDetail,
-)
+from .models import *
 
 __all__ = ("AmbrAPI", "Language")
 
@@ -321,7 +295,7 @@ class AmbrAPI:
         data = await self._request(f"monster/{id}")
         return MonsterDetail(**data["data"])
 
-    async def fetch_namecards(self) -> List[NameCard]:
+    async def fetch_namecards(self) -> List[Namecard]:
         """
         Fetches all name cards.
 
@@ -331,9 +305,9 @@ class AmbrAPI:
             The name cards.
         """
         data = await self._request("namecard")
-        return [NameCard(**name_card) for name_card in data["data"]["items"].values()]
+        return [Namecard(**name_card) for name_card in data["data"]["items"].values()]
 
-    async def fetch_namecard_detail(self, id: int) -> NameCardDetail:
+    async def fetch_namecard_detail(self, id: int) -> NamecardDetail:
         """
         Fetches a name card detail by ID.
 
@@ -348,7 +322,7 @@ class AmbrAPI:
             The name card detail.
         """
         data = await self._request(f"namecard/{id}")
-        return NameCardDetail(**data["data"])
+        return NamecardDetail(**data["data"])
 
     async def fetch_quests(self) -> List[Quest]:
         """

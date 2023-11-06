@@ -1,6 +1,13 @@
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field, field_validator
+
+__all__ = (
+    "MaterialRecipe",
+    "MaterialSource",
+    "MaterialDetail",
+    "Material",
+)
 
 WEEKDAYS = {
     "monday": 1,

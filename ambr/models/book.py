@@ -2,6 +2,12 @@ from typing import Any, Dict, List
 
 from pydantic import BaseModel, Field, field_validator
 
+__all__ = (
+    "BookVolume",
+    "BookDetail",
+    "Book",
+)
+
 
 class BookVolume(BaseModel):
     id: int

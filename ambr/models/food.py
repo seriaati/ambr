@@ -2,6 +2,14 @@ from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field, field_validator
 
+__all__ = (
+    "FoodSource",
+    "FoodEffect",
+    "FoodRecipe",
+    "FoodDetail",
+    "Food",
+)
+
 
 class FoodSource(BaseModel):
     name: str

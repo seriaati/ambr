@@ -2,6 +2,13 @@ from typing import Any, Dict, List
 
 from pydantic import BaseModel, Field, field_validator
 
+__all__ = (
+    "AchievementReward",
+    "AchievementDetail",
+    "Achievement",
+    "AchievementCategory",
+)
+
 
 class AchievementReward(BaseModel):
     """

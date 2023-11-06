@@ -2,6 +2,12 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
+__all__ = (
+    "UpgradeItem",
+    "Upgrade",
+    "UpgradeData",
+)
+
 
 class UpgradeItem(BaseModel):
     id: int

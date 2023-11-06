@@ -2,8 +2,13 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, field_validator
 
+__all__ = (
+    "NamecardDetail",
+    "Namecard",
+)
 
-class NameCardDetail(BaseModel):
+
+class NamecardDetail(BaseModel):
     id: int
     name: str
     rarity: int = Field(alias="rank")
@@ -18,9 +23,9 @@ class NameCardDetail(BaseModel):
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
 
-class NameCard(BaseModel):
+class Namecard(BaseModel):
     """
-    Represents a name card.
+    Represents a namecard.
 
     Attributes
     ----------

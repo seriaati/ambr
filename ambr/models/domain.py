@@ -3,6 +3,12 @@ from typing import Any, Dict, List
 
 from pydantic import BaseModel, Field, field_validator
 
+__all__ = (
+    "City",
+    "Domain",
+    "Domains",
+)
+
 
 class City(IntEnum):
     MONDSTAT = 1

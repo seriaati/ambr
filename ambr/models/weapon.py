@@ -4,6 +4,18 @@ from pydantic import BaseModel, Field, field_validator
 
 from ..utils import remove_html_tags
 
+__all__ = (
+    "WeaponAscensionMaterial",
+    "WeaponPromoteCostItem",
+    "WeaponPromote",
+    "WeaponProp",
+    "WeaponUpgrade",
+    "WeaponAffixUpgrade",
+    "WeaponAffix",
+    "WeaponDetail",
+    "Weapon",
+)
+
 
 class WeaponAscensionMaterial(BaseModel):
     id: int
