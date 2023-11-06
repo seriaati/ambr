@@ -321,7 +321,7 @@ class AmbrAPI:
         data = await self._request(f"monster/{id}")
         return MonsterDetail(**data["data"])
 
-    async def fetch_name_cards(self) -> List[NameCard]:
+    async def fetch_namecards(self) -> List[NameCard]:
         """
         Fetches all name cards.
 
@@ -333,7 +333,7 @@ class AmbrAPI:
         data = await self._request("namecard")
         return [NameCard(**name_card) for name_card in data["data"]["items"].values()]
 
-    async def fetch_name_card_detail(self, id: int) -> NameCardDetail:
+    async def fetch_namecard_detail(self, id: int) -> NameCardDetail:
         """
         Fetches a name card detail by ID.
 
