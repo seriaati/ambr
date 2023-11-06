@@ -43,9 +43,9 @@ class CardTalent(BaseModel):
     tags: List[CardTag]
     icon: str
 
-    @field_validator("description", mode="before")  # type:ignore
-    def _format_description(cls, v: str, values: Dict[str, Any]) -> str:
-        params = values.get("params")
+    @field_validator("description", mode="before")
+    def _format_description(cls, v: str, values) -> str:
+        params = values.data.get("params")
         if params:
             v = replace_placeholders(v, params)
         return remove_html_tags(v)

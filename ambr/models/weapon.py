@@ -90,6 +90,10 @@ class WeaponDetail(BaseModel):
     upgrade: WeaponUpgrade
     ascension_materials: List[WeaponAscensionMaterial] = Field(alias="ascension")
 
+    @field_validator("story_id", mode="before")
+    def _flatten_story_id(cls, v: Optional[List[int]]) -> Optional[int]:
+        return v[0] if v else None
+
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"

@@ -106,7 +106,7 @@ class Talent(BaseModel):
     description: str
     icon: str
     upgrades: Optional[List[TalentUpgrade]] = Field(None, alias="promote")
-    cooldown: Optional[int] = Field(None)
+    cooldown: Optional[float] = Field(None)
     cost: Optional[int] = Field(None)
 
     @field_validator("description", mode="before")
