@@ -1,6 +1,6 @@
 name: CI
 
-on: pull_request
+on: push
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
         run: |
           poetry config virtualenvs.create true --local
           poetry config virtualenvs.in-project true --local
-      - uses: actions/cache@v3
+      - uses: actions/cache@v3  
         name: Create a cache for the venv
         with:
           path: ./.venv
