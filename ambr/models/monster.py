@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class MonsterReward(BaseModel):
@@ -9,7 +9,7 @@ class MonsterReward(BaseModel):
     icon: str
     count: Optional[float] = Field(None)
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
@@ -19,7 +19,7 @@ class MonsterEntry(BaseModel):
     type: str
     rewards: List[MonsterReward] = Field(alias="reward")
 
-    @validator("rewards", pre=True)
+    @field_validator("rewards", mode="before")
     def _convert_rewards(
         cls, v: Optional[Dict[str, Dict[str, Any]]]
     ) -> List[MonsterReward]:
@@ -39,11 +39,11 @@ class MonsterDetail(BaseModel):
     description: str
     entries: List[MonsterEntry]
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
-    @validator("entries", pre=True)
+    @field_validator("entries", mode="before")
     def _convert_entries(cls, v: Dict[str, Dict[str, Any]]) -> List[MonsterEntry]:
         return [MonsterEntry(**v[item_id]) for item_id in v]
 
@@ -72,6 +72,6 @@ class Monster(BaseModel):
     icon: str
     route: str
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"

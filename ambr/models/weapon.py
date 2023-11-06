@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 from ..utils import remove_html_tags
 
@@ -22,7 +22,7 @@ class WeaponPromote(BaseModel):
     coin_cost: Optional[int] = Field(None, alias="coinCost")
     required_player_level: Optional[int] = Field(None, alias="requiredPlayerLevel")
 
-    @validator("cost_items", pre=True)
+    @field_validator("cost_items", mode="before")
     def _convert_cost_items(cls, v: Dict[str, int]) -> List[WeaponPromoteCostItem]:
         return [WeaponPromoteCostItem(id=int(k), amount=v[k]) for k in v]
 
@@ -38,11 +38,11 @@ class WeaponUpgrade(BaseModel):
     props: List[WeaponProp] = Field(alias="prop")
     promotes: List[WeaponPromote] = Field(alias="promote")
 
-    @validator("props", pre=True)
+    @field_validator("props", mode="before")
     def _convert_props(cls, v: List[Dict[str, Any]]) -> List[WeaponProp]:
         return [WeaponProp(**prop) for prop in v]
 
-    @validator("promotes", pre=True)
+    @field_validator("promotes", mode="before")
     def _convert_promotes(cls, v: List[Dict[str, Any]]) -> List[WeaponPromote]:
         return [WeaponPromote(**promote) for promote in v]
 
@@ -51,7 +51,7 @@ class WeaponAffixUpgrade(BaseModel):
     level: int
     description: str
 
-    @validator("description", pre=True)
+    @field_validator("description", mode="before")
     def _format_description(cls, v: str) -> str:
         return remove_html_tags(v)
 
@@ -60,7 +60,7 @@ class WeaponAffix(BaseModel):
     name: str
     upgrades: List[WeaponAffixUpgrade] = Field(alias="upgrade")
 
-    @validator("upgrades", pre=True)
+    @field_validator("upgrades", mode="before")
     def _convert_upgrades(cls, v: Dict[str, str]) -> List[WeaponAffixUpgrade]:
         return [WeaponAffixUpgrade(level=int(k), description=v[k]) for k in v]
 
@@ -78,11 +78,11 @@ class WeaponDetail(BaseModel):
     upgrade: WeaponUpgrade
     ascension_materials: List[WeaponAscensionMaterial] = Field(alias="ascension")
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
-    @validator("affix", pre=True)
+    @field_validator("affix", mode="before")
     def _convert_affix(
         cls, v: Optional[Dict[str, Dict[str, Any]]]
     ) -> Optional[WeaponAffix]:
@@ -91,11 +91,11 @@ class WeaponDetail(BaseModel):
         affix = list(v.values())[0]
         return WeaponAffix(**affix)
 
-    @validator("upgrade", pre=True)
+    @field_validator("upgrade", mode="before")
     def _convert_upgrade(cls, v: Dict[str, Any]) -> WeaponUpgrade:
         return WeaponUpgrade(**v)
 
-    @validator("ascension_materials", pre=True)
+    @field_validator("ascension_materials", mode="before")
     def _convert_ascension_materials(
         cls, v: Dict[str, int]
     ) -> List[WeaponAscensionMaterial]:
@@ -129,6 +129,6 @@ class Weapon(BaseModel):
     icon: str
     route: str
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"

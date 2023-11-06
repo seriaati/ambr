@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class FurnitureRecipeInput(BaseModel):
@@ -14,7 +14,7 @@ class FurnitureRecipe(BaseModel):
     time: int
     inputs: List[FurnitureRecipeInput] = Field(alias="input")
 
-    @validator("inputs", pre=True)
+    @field_validator("inputs", mode="before")
     def _convert_inputs(
         cls, v: Dict[str, Dict[str, Any]]
     ) -> List[FurnitureRecipeInput]:
@@ -34,11 +34,11 @@ class FurnitureDetail(BaseModel):
     description: str
     recipe: Optional[FurnitureRecipe]
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
-    @validator("recipe", pre=True)
+    @field_validator("recipe", mode="before")
     def _convert_recipe(cls, v: Optional[Dict[str, Any]]) -> Optional[FurnitureRecipe]:
         if v is None:
             return None
@@ -81,7 +81,7 @@ class Furniture(BaseModel):
     categories: List[str]
     types: List[str]
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
@@ -94,6 +94,6 @@ class FurnitureSet(BaseModel):
     categories: List[str]
     types: List[str]
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"

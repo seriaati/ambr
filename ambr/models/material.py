@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Literal, Optional, Union
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 WEEKDAYS = {
     "monday": 1,
@@ -17,7 +17,7 @@ class MaterialRecipe(BaseModel):
     icon: str
     amount: int = Field(alias="count")
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
@@ -27,7 +27,7 @@ class MaterialSource(BaseModel):
     type: str
     days: Optional[List[int]] = Field(None)
 
-    @validator("days", pre=True)
+    @field_validator("days", mode="before")
     def _convert_days(cls, v: List[str]) -> List[int]:
         return [WEEKDAYS[day] for day in v]
 
@@ -43,7 +43,7 @@ class MaterialDetail(BaseModel):
     rarity: int = Field(alias="rank")
     route: str
 
-    @validator("recipe", pre=True)
+    @field_validator("recipe", mode="before")
     def _convert_recipe(
         cls, v: Union[bool, Dict[str, Dict[str, Dict[str, Any]]]]
     ) -> List[MaterialRecipe]:
@@ -52,11 +52,11 @@ class MaterialDetail(BaseModel):
             return [MaterialRecipe(**item) for item in recipe.values()]
         return []
 
-    @validator("sources", pre=True)
+    @field_validator("sources", mode="before")
     def _convert_sources(cls, v: Optional[List[dict]]) -> List[MaterialSource]:
         return [MaterialSource(**item) for item in v] if v else []
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
@@ -94,6 +94,6 @@ class Material(BaseModel):
     rarity: int = Field(alias="rank")
     route: str
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"

@@ -1,6 +1,6 @@
 from typing import Any, Dict, List
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class ArtifactAffix(BaseModel):
@@ -43,7 +43,7 @@ class Artifact(BaseModel):
     max_rarity: int = Field(alias="maxLevel")
     icon: str
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
@@ -78,15 +78,15 @@ class ArtifactSetDetail(BaseModel):
     route: str
     artifacts: List[Artifact] = Field(alias="suit")
 
-    @validator("affix_list", pre=True)
+    @field_validator("affix_list", mode="before")
     def _convert_affix_list(cls, v: Dict[str, str]) -> List[ArtifactAffix]:
         return [ArtifactAffix(id=k, effect=v[k]) for k in v]
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
-    @validator("artifacts", pre=True)
+    @field_validator("artifacts", mode="before")
     def _convert_artifacts(cls, v: Dict[str, Dict[str, Any]]) -> List[Artifact]:
         return [Artifact(pos=artifact_pos, **v[artifact_pos]) for artifact_pos in v]
 
@@ -121,10 +121,10 @@ class ArtifactSet(BaseModel):
     route: str
     sort_order: int = Field(alias="sortOrder")
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
-    @validator("affix_list", pre=True)
+    @field_validator("affix_list", mode="before")
     def _convert_affix_list(cls, v: Dict[str, str]) -> List[ArtifactAffix]:
         return [ArtifactAffix(id=k, effect=v[k]) for k in v]

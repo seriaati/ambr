@@ -1,6 +1,6 @@
 from typing import Any, Dict, List
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class BookVolume(BaseModel):
@@ -17,11 +17,11 @@ class BookDetail(BaseModel):
     icon: str
     volumes: List[BookVolume] = Field(alias="volume")
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
-    @validator("volumes", pre=True)
+    @field_validator("volumes", mode="before")
     def _convert_volumes(cls, v: List[Dict[str, Any]]) -> List[BookVolume]:
         return [BookVolume(**volume) for volume in v]
 
@@ -50,6 +50,6 @@ class Book(BaseModel):
     icon: str
     route: str
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"

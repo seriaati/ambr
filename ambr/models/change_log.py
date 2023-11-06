@@ -1,7 +1,7 @@
 from enum import StrEnum
 from typing import Dict, List
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class ItemCategory(StrEnum):
@@ -29,6 +29,6 @@ class ChangeLog(BaseModel):
     items: List[Item]
     beta: bool = Field(False)
 
-    @validator("items", pre=True)
+    @field_validator("items", mode="before")
     def _convert_items(cls, v: Dict[str, List[str]]) -> List[Item]:
         return [Item(category=k, ids=v) for k, v in v.items()]  # type: ignore

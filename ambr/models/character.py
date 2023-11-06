@@ -1,7 +1,7 @@
 from enum import IntEnum, StrEnum
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 from ..utils import remove_html_tags
 
@@ -38,17 +38,17 @@ class Constellation(BaseModel):
     extra_level: Optional[TalentExtraLevel] = Field(alias="extraData")
     icon: str
 
-    @validator("description", pre=True)
+    @field_validator("description", mode="before")
     def _format_description(cls, v: str) -> str:
         return remove_html_tags(v)
 
-    @validator("extra_level", pre=True)
+    @field_validator("extra_level", mode="before")
     def _convert_extra_level(
         cls, v: Optional[Dict[str, Dict[str, Any]]]
     ) -> Optional[TalentExtraLevel]:
         return TalentExtraLevel(**v["addTalentExtraLevel"]) if v else None
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
@@ -71,7 +71,7 @@ class TalentUpgrade(BaseModel):
     description: List[str]
     params: List[Union[int, float]]
 
-    @validator("cost_items", pre=True)
+    @field_validator("cost_items", mode="before")
     def _convert_cost_items(
         cls, v: Optional[Dict[str, int]]
     ) -> Optional[List[TalentUpgradeItem]]:
@@ -87,15 +87,15 @@ class Talent(BaseModel):
     cooldown: Optional[int] = Field(None)
     cost: Optional[int] = Field(None)
 
-    @validator("description", pre=True)
+    @field_validator("description", mode="before")
     def _format_description(cls, v: str) -> str:
         return remove_html_tags(v)
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
-    @validator("upgrades", pre=True)
+    @field_validator("upgrades", mode="before")
     def _convert_upgrades(cls, v: Dict[str, Dict[str, Any]]) -> List[TalentUpgrade]:
         return [TalentUpgrade(**upgrade) for upgrade in v.values()]
 
@@ -125,13 +125,13 @@ class CharacterPromote(BaseModel):
     required_player_level: Optional[int] = Field(None, alias="requiredPlayerLevel")
     mora_cost: Optional[int] = Field(None, alias="coinCost")
 
-    @validator("cost_items", pre=True)
+    @field_validator("cost_items", mode="before")
     def _convert_cost_items(cls, v: Dict[str, int]) -> List[CharacterPromoteMaterial]:
         return [
             CharacterPromoteMaterial(id=int(item_id), count=v[item_id]) for item_id in v
         ]
 
-    @validator("add_stats", pre=True)
+    @field_validator("add_stats", mode="before")
     def _convert_add_stats(cls, v: Dict[str, float]) -> List[CharacterPromoteStat]:
         return [CharacterPromoteStat(id=stat_id, value=v[stat_id]) for stat_id in v]
 
@@ -146,11 +146,11 @@ class CharacterUpgrade(BaseModel):
     base_stats: List[CharacterBaseStat] = Field(alias="prop")
     promotes: List[CharacterPromote] = Field(alias="promote")
 
-    @validator("base_stats", pre=True)
+    @field_validator("base_stats", mode="before")
     def _convert_base_stats(cls, v: List[Dict[str, Any]]) -> List[CharacterBaseStat]:
         return [CharacterBaseStat(**stat) for stat in v]
 
-    @validator("promotes", pre=True)
+    @field_validator("promotes", mode="before")
     def _convert_promotes(cls, v: List[Dict[str, Any]]) -> List[CharacterPromote]:
         return [CharacterPromote(**ascension) for ascension in v]
 
@@ -167,7 +167,7 @@ class CharacterInfo(BaseModel):
     native: str
     cv: List[CharacterCV]
 
-    @validator("cv", pre=True)
+    @field_validator("cv", mode="before")
     def _convert_cv(cls, v: Dict[str, str]) -> List[CharacterCV]:
         return [CharacterCV(lang=lang, va=v[lang]) for lang in v]
 
@@ -189,35 +189,35 @@ class CharacterDetail(BaseModel):
     constellations: List[Constellation] = Field(alias="constellation")
     beta: bool = Field(False)
 
-    @validator("id", pre=True)
+    @field_validator("id", mode="before")
     def _stringify_id(cls, v: int) -> str:
         return str(v)
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
-    @validator("birthday", pre=True)
+    @field_validator("birthday", mode="before")
     def _convert_birthday(cls, v: List[int]) -> Birthday:
         return Birthday(month=v[0], day=v[1])
 
-    @validator("info", pre=True)
+    @field_validator("info", mode="before")
     def _convert_info(cls, v: Dict[str, Any]) -> CharacterInfo:
         return CharacterInfo(**v)
 
-    @validator("upgrade", pre=True)
+    @field_validator("upgrade", mode="before")
     def _convert_upgrade(cls, v: Dict[str, Any]) -> CharacterUpgrade:
         return CharacterUpgrade(**v)
 
-    @validator("ascension_materials", pre=True)
+    @field_validator("ascension_materials", mode="before")
     def _convert_ascension_materials(cls, v: Dict[str, int]) -> List[AscensionMaterial]:
         return [AscensionMaterial(id=int(item_id), rarity=v[item_id]) for item_id in v]
 
-    @validator("talents", pre=True)
+    @field_validator("talents", mode="before")
     def _convert_talents(cls, v: Dict[str, Dict[str, Any]]) -> List[Talent]:
         return [Talent(**talent) for talent in v.values()]
 
-    @validator("constellations", pre=True)
+    @field_validator("constellations", mode="before")
     def _convert_constellations(
         cls, v: Dict[str, Dict[str, Any]]
     ) -> List[Constellation]:
@@ -261,14 +261,14 @@ class Character(BaseModel):
     route: str
     beta: bool = Field(False)
 
-    @validator("id", pre=True)
+    @field_validator("id", mode="before")
     def _stringify_id(cls, v: Union[int, str]) -> str:
         return str(v)
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
-    @validator("birthday", pre=True)
+    @field_validator("birthday", mode="before")
     def _convert_birthday(cls, v: List[int]) -> Birthday:
         return Birthday(month=v[0], day=v[1])

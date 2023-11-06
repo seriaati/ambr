@@ -1,7 +1,7 @@
 from enum import IntEnum
 from typing import Any, Dict, List
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class City(IntEnum):
@@ -32,6 +32,6 @@ class Domains(BaseModel):
     def _convert_domains(domains: Dict[str, Dict[str, Any]]) -> List[Domain]:
         return [Domain(**domain) for domain in domains.values()]
 
-    @validator("*", pre=True)
+    @field_validator("*", mode="before")
     def convert_domains(cls, v: Dict[str, Dict[str, Any]]) -> List[Domain]:
         return cls._convert_domains(v)

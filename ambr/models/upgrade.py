@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class UpgradeItem(BaseModel):
@@ -14,11 +14,11 @@ class Upgrade(BaseModel):
     icon: str
     items: List[UpgradeItem]
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
-    @validator("items", pre=True)
+    @field_validator("items", mode="before")
     def _convert_items(cls, v: Dict[str, int]) -> List[UpgradeItem]:
         return [UpgradeItem(id=int(k), rarity=v[k]) for k in v]
 
@@ -27,6 +27,6 @@ class UpgradeData(BaseModel):
     character: List[Upgrade] = Field(alias="avatar")
     weapon: List[Upgrade] = Field(alias="weapon")
 
-    @validator("*", pre=True)
+    @field_validator("*", mode="before")
     def _convert_upgrade(cls, v: Dict[str, Dict[str, Any]]) -> List[Upgrade]:
         return [Upgrade(id=k, **v[k]) for k in v]

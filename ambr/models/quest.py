@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class Quest(BaseModel):
@@ -36,6 +36,6 @@ class Quest(BaseModel):
     route: str
     chapter_count: int = Field(alias="chapterCount")
 
-    @validator("chapter_icon", pre=True)
+    @field_validator("chapter_icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"

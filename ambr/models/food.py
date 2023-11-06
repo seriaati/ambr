@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class FoodSource(BaseModel):
@@ -17,11 +17,11 @@ class FoodRecipe(BaseModel):
     effect_icon: str = Field(alias="effectIcon")
     effects: List[FoodEffect] = Field(alias="effect")
 
-    @validator("effect_icon", pre=True)
+    @field_validator("effect_icon", mode="before")
     def _convert_effect_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
-    @validator("effects", pre=True)
+    @field_validator("effects", mode="before")
     def _convert_effects(cls, v: Dict[str, str]) -> List[FoodEffect]:
         return [FoodEffect(id=item_id, description=v[item_id]) for item_id in v]
 
@@ -37,17 +37,17 @@ class FoodDetail(BaseModel):
     rarity: int = Field(alias="rank")
     route: str
 
-    @validator("recipe", pre=True)
+    @field_validator("recipe", mode="before")
     def _convert_recipe(cls, v: Union[bool, Dict[str, Any]]) -> Union[FoodRecipe, bool]:
         if isinstance(v, dict):
             return FoodRecipe(**v)
         return False
 
-    @validator("sources", pre=True)
+    @field_validator("sources", mode="before")
     def _convert_sources(cls, v: List[Dict[str, str]]) -> List[FoodSource]:
         return [FoodSource(**item) for item in v]
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
@@ -88,10 +88,10 @@ class Food(BaseModel):
     route: str
     effect_icon: Optional[str] = Field(None, alias="effectIcon")
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
-    @validator("effect_icon", pre=True)
+    @field_validator("effect_icon", mode="before")
     def _convert_effect_icon_url(cls, v: Optional[str]) -> Optional[str]:
         return f"https://api.ambr.top/assets/UI/{v}.png" if v else None

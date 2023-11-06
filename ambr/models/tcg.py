@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 from ..utils import remove_html_tags, replace_placeholders
 
@@ -33,14 +33,14 @@ class CardTalent(BaseModel):
     tags: List[CardTag]
     icon: str
 
-    @validator("description", pre=True)
+    @field_validator("description", mode="before")  # type:ignore
     def _format_description(cls, v: str, values: Dict[str, Any]) -> str:
         params = values.get("params")
         if params:
             v = replace_placeholders(v, params)
         return remove_html_tags(v)
 
-    @validator("cost", pre=True)
+    @field_validator("cost", mode="before")
     def _convert_cost(cls, v: Optional[Dict[str, int]]) -> List[DiceCost]:
         return (
             [DiceCost(type=type_, count=count) for type_, count in v.items()]
@@ -48,11 +48,11 @@ class CardTalent(BaseModel):
             else []
         )
 
-    @validator("tags", pre=True)
+    @field_validator("tags", mode="before")
     def _convert_tags(cls, v: Optional[Dict[str, str]]) -> List[CardTag]:
         return [CardTag(id=id_, name=name) for id_, name in v.items()] if v else []
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
@@ -71,27 +71,27 @@ class TCGCardDetail(BaseModel):
     dictionaries: List[CardDictionary] = Field(alias="dictionary")
     talents: List[CardTalent] = Field(alias="talent")
 
-    @validator("tags", pre=True)
+    @field_validator("tags", mode="before")
     def _convert_tags(cls, v: Optional[Dict[str, str]]) -> List[CardTag]:
         return [CardTag(id=id_, name=name) for id_, name in v.items()] if v else []
 
-    @validator("props", pre=True)
+    @field_validator("props", mode="before")
     def _convert_props(cls, v: Optional[Dict[str, int]]) -> List[CardProperty]:
         return (
             [CardProperty(id=id_, value=value) for id_, value in v.items()] if v else []
         )
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
-    @validator("dictionaries", pre=True)
+    @field_validator("dictionaries", mode="before")
     def _convert_dictionaries(
         cls, v: Optional[Dict[str, Dict[str, Any]]]
     ) -> List[CardDictionary]:
         return [CardDictionary(**v[item_id]) for item_id in v] if v else []
 
-    @validator("talents", pre=True)
+    @field_validator("talents", mode="before")
     def _convert_talents(cls, v: Dict[str, Dict[str, Any]]) -> List[CardTalent]:
         return [CardTalent(**v[item_id]) for item_id in v]
 
@@ -129,11 +129,11 @@ class TCGCard(BaseModel):
     route: str
     sort_order: int = Field(alias="sortOrder")
 
-    @validator("tags", pre=True)
+    @field_validator("tags", mode="before")
     def _convert_tags(cls, v: Optional[Dict[str, str]]) -> List[CardTag]:
         return [CardTag(id=id_, name=name) for id_, name in v.items()] if v else []
 
-    @validator("dice_cost", pre=True)
+    @field_validator("dice_cost", mode="before")
     def _convert_dice_cost(cls, v: Optional[Dict[str, int]]) -> List[DiceCost]:
         return (
             [DiceCost(type=type_, count=count) for type_, count in v.items()]
@@ -141,6 +141,6 @@ class TCGCard(BaseModel):
             else []
         )
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"

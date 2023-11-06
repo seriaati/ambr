@@ -1,6 +1,6 @@
 from typing import Any, Dict, List
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 
 
 class AchievementReward(BaseModel):
@@ -21,7 +21,7 @@ class AchievementReward(BaseModel):
     amount: int = Field(alias="count")
     icon: str
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
@@ -47,7 +47,7 @@ class AchievementDetail(BaseModel):
     description: str
     rewards: List[AchievementReward]
 
-    @validator("rewards", pre=True)
+    @field_validator("rewards", mode="before")
     def _convert_rewards(cls, v: Dict[str, Dict[str, Any]]) -> List[AchievementReward]:
         return [AchievementReward(**v[item_id]) for item_id in v]
 
@@ -70,7 +70,7 @@ class Achievement(BaseModel):
     order: int
     details: List[AchievementDetail]
 
-    @validator("details", pre=True)
+    @field_validator("details", mode="before")
     def _convert_details(cls, v: List[Dict[str, Any]]) -> List[AchievementDetail]:
         return [AchievementDetail(**detail) for detail in v]
 
@@ -99,10 +99,10 @@ class AchievementCategory(BaseModel):
     icon: str
     achievements: List[Achievement] = Field(alias="achievementList")
 
-    @validator("icon", pre=True)
+    @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
-    @validator("achievements", pre=True)
+    @field_validator("achievements", mode="before")
     def _convert_achievements(cls, v: Dict[str, Dict[str, Any]]) -> List[Achievement]:
         return [Achievement(**v[achievement_id]) for achievement_id in v]
