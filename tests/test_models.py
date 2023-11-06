@@ -6,8 +6,6 @@ import pytest_asyncio
 
 import ambr
 
-loop = asyncio.get_event_loop()
-
 
 async def fetch_ids(
     fetch_func: Callable[[], Awaitable[List[Any]]]
