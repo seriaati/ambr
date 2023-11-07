@@ -444,3 +444,15 @@ class AmbrAPI:
         """
         data = await self._request("upgrade")
         return UpgradeData(**data["data"])
+
+    async def fetch_manual_weapon(self) -> Dict[str, str]:
+        """
+        Fetch manual weapon data from the API.
+
+        Returns
+        -------
+        Dict[str, str]
+            The manual weapon data.
+        """
+        data = await self._request("manualWeapon")
+        return data["data"]
