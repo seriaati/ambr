@@ -17,4 +17,4 @@ async def test_fetch_manual_weapon(api_client: ambr.AmbrAPI):
 @pytest.mark.asyncio
 async def test_fetch_readable(api_client: ambr.AmbrAPI):
     data = await api_client.fetch_readable("Weapon11509")
-    assert isinstance(data, dict)
+    assert isinstance(data, str)
