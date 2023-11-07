@@ -456,3 +456,20 @@ class AmbrAPI:
         """
         data = await self._request("manualWeapon")
         return data["data"]
+
+    async def fetch_readable(self, id: str) -> str:
+        """
+        Fetch a readable from the API.
+
+        Parameters
+        ----------
+        id: :class:`str`
+            The ID of the readable to fetch.
+
+        Returns
+        -------
+        :class:`str`
+            The readable.
+        """
+        data = await self._request(f"readable/{id}")
+        return data["data"]
