@@ -473,3 +473,27 @@ class AmbrAPI:
         """
         data = await self._request(f"readable/{id}")
         return data["data"]
+
+    async def fetch_avatar_curve(self) -> Dict[str, Dict[str, Dict[str, float]]]:
+        """
+        Fetch avatar curve from the API.
+
+        Returns
+        -------
+        Dict[str, Dict[str, Dict[str, float]]]
+            The avatar curve.
+        """
+        data = await self._request("avatarCurve", static=True)
+        return data["data"]
+
+    async def fetch_weapon_curve(self) -> Dict[str, Dict[str, Dict[str, float]]]:
+        """
+        Fetch weapon curve from the API.
+
+        Returns
+        -------
+        Dict[str, Dict[str, Dict[str, float]]]
+            The weapon curve.
+        """
+        data = await self._request("weaponCurve", static=True)
+        return data["data"]
