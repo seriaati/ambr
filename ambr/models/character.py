@@ -145,7 +145,7 @@ class CharacterPromote(BaseModel):
     )
     add_stats: Optional[List[CharacterPromoteStat]] = Field(None, alias="addProps")
     required_player_level: Optional[int] = Field(None, alias="requiredPlayerLevel")
-    mora_cost: Optional[int] = Field(None, alias="coinCost")
+    coin_cost: Optional[int] = Field(None, alias="coinCost")
 
     @field_validator("cost_items", mode="before")
     def _convert_cost_items(cls, v: Dict[str, int]) -> List[CharacterPromoteMaterial]:

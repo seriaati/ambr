@@ -8,7 +8,7 @@ __all__ = (
     "WeaponAscensionMaterial",
     "WeaponPromoteCostItem",
     "WeaponPromote",
-    "WeaponProp",
+    "WeaponBaseStat",
     "WeaponUpgrade",
     "WeaponAffixUpgrade",
     "WeaponAffix",
@@ -27,19 +27,29 @@ class WeaponPromoteCostItem(BaseModel):
     amount: int
 
 
+class WeaponPromoteStat(BaseModel):
+    id: str
+    value: float
+
+
 class WeaponPromote(BaseModel):
     unlock_max_level: int = Field(alias="unlockMaxLevel")
     promote_level: int = Field(alias="promoteLevel")
-    cost_items: List[WeaponPromoteCostItem] = Field(list, alias="costItems")
+    cost_items: Optional[List[WeaponPromoteCostItem]] = Field(None, alias="costItems")
     coin_cost: Optional[int] = Field(None, alias="coinCost")
     required_player_level: Optional[int] = Field(None, alias="requiredPlayerLevel")
+    add_stats: Optional[List[WeaponPromoteStat]] = Field(None, alias="addProps")
 
     @field_validator("cost_items", mode="before")
     def _convert_cost_items(cls, v: Dict[str, int]) -> List[WeaponPromoteCostItem]:
         return [WeaponPromoteCostItem(id=int(k), amount=v[k]) for k in v]
 
+    @field_validator("add_stats", mode="before")
+    def _convert_add_stats(cls, v: Dict[str, float]) -> List[WeaponPromoteStat]:
+        return [WeaponPromoteStat(id=stat_id, value=v[stat_id]) for stat_id in v]
 
-class WeaponProp(BaseModel):
+
+class WeaponBaseStat(BaseModel):
     prop_type: Optional[str] = Field(None, alias="propType")
     init_value: float = Field(alias="initValue")
     growth_type: str = Field(alias="type")
@@ -47,12 +57,12 @@ class WeaponProp(BaseModel):
 
 class WeaponUpgrade(BaseModel):
     awaken_cost: List[int] = Field(alias="awakenCost")
-    props: List[WeaponProp] = Field(alias="prop")
+    base_stats: List[WeaponBaseStat] = Field(alias="prop")
     promotes: List[WeaponPromote] = Field(alias="promote")
 
-    @field_validator("props", mode="before")
-    def _convert_props(cls, v: List[Dict[str, Any]]) -> List[WeaponProp]:
-        return [WeaponProp(**prop) for prop in v]
+    @field_validator("base_stats", mode="before")
+    def _convert_base_stats(cls, v: List[Dict[str, Any]]) -> List[WeaponBaseStat]:
+        return [WeaponBaseStat(**prop) for prop in v]
 
     @field_validator("promotes", mode="before")
     def _convert_promotes(cls, v: List[Dict[str, Any]]) -> List[WeaponPromote]:
