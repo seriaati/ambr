@@ -3,6 +3,7 @@ from enum import Enum
 from typing import Any, Dict, Final, List
 
 import aiohttp
+from diskcache import Cache
 
 from .exceptions import DataNotFound
 from .models import *
@@ -28,6 +29,9 @@ class Language(Enum):
     TR = "tr"
 
 
+cache = Cache()
+
+
 class AmbrAPI:
     BASE_URL: Final[str] = "https://api.ambr.top/v2"
 
@@ -41,6 +45,7 @@ class AmbrAPI:
     async def __aexit__(self, exc_type, exc, tb) -> None:
         await self.close()
 
+    @cache.memoize(expire=86400)
     async def _request(self, endpoint: str, *, static: bool = False) -> Dict[str, Any]:
         """
         A helper function to make requests to the API.
@@ -418,6 +423,7 @@ class AmbrAPI:
         data = await self._request("dailyDungeon")
         return Domains(**data["data"])
 
+    @cache.memoize(expire=3600)
     async def fetch_change_logs(self) -> List[ChangeLog]:
         """
         Fetch change logs from the API.
