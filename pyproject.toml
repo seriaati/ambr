@@ -11,6 +11,7 @@ packages = [{include = "ambr"}]
 python = "^3.11"
 aiohttp = "^3.8.6"
 pydantic = "^2.4.2"
+diskcache = "^5.6.3"
 
 
 [tool.poetry.group.dev.dependencies]
