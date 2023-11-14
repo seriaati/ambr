@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from enum import Enum
 from typing import Any, Dict, Final, List
@@ -29,15 +30,13 @@ class Language(Enum):
     TR = "tr"
 
 
-cache = Cache()
-
-
 class AmbrAPI:
     BASE_URL: Final[str] = "https://api.ambr.top/v2"
 
     def __init__(self, lang: Language = Language.EN) -> None:
         self.lang = lang
         self.session = aiohttp.ClientSession(headers={"User-Agent": "ambr.py"})
+        self.cache = Cache()
 
     async def __aenter__(self) -> "AmbrAPI":
         return self
@@ -45,8 +44,9 @@ class AmbrAPI:
     async def __aexit__(self, exc_type, exc, tb) -> None:
         await self.close()
 
-    @cache.memoize(expire=86400)
-    async def _request(self, endpoint: str, *, static: bool = False) -> Dict[str, Any]:
+    async def _request(
+        self, endpoint: str, *, static: bool = False, use_cache: bool
+    ) -> Dict[str, Any]:
         """
         A helper function to make requests to the API.
 
@@ -62,15 +62,23 @@ class AmbrAPI:
         Dict[str, Any]
             The response from the API.
         """
+        cache = await asyncio.to_thread(self.cache.get, f"{endpoint}_{self.lang.value}")
+        if cache is not None and use_cache:
+            return cache  # type: ignore
+
         if static:
             url = f"{self.BASE_URL}/static/{endpoint}"
         else:
             url = f"{self.BASE_URL}/{self.lang.value}/{endpoint}"
+
         logging.debug(f"Requesting {url}...")
         async with self.session.get(url) as resp:
             data = await resp.json()
             if "code" in data and data["code"] == 404:
                 raise DataNotFound(data["data"])
+            await asyncio.to_thread(
+                self.cache.set, f"{endpoint}_{self.lang.value}", data, expire=86400
+            )
             return data
 
     async def close(self) -> None:
@@ -78,8 +86,11 @@ class AmbrAPI:
         Closes the client session.
         """
         await self.session.close()
+        self.cache.close()
 
-    async def fetch_achievement_categories(self) -> List[AchievementCategory]:
+    async def fetch_achievement_categories(
+        self, use_cache: bool = True
+    ) -> List[AchievementCategory]:
         """
         Fetches all achievement categories.
 
@@ -88,13 +99,13 @@ class AmbrAPI:
         List[:class:`AchievementCategory`]
             The achievement categories.
         """
-        data = await self._request("achievement")
+        data = await self._request("achievement", use_cache=use_cache)
         return [
             AchievementCategory(**achievement_category)
             for achievement_category in data["data"].values()
         ]
 
-    async def fetch_artifact_sets(self) -> List[ArtifactSet]:
+    async def fetch_artifact_sets(self, use_cache: bool = True) -> List[ArtifactSet]:
         """
         Fetches all artifact sets.
 
@@ -103,13 +114,15 @@ class AmbrAPI:
         List[:class:`ArtifactSet`]
             The artifact sets.
         """
-        data = await self._request("reliquary")
+        data = await self._request("reliquary", use_cache=use_cache)
         return [
             ArtifactSet(**artifact_set)
             for artifact_set in data["data"]["items"].values()
         ]
 
-    async def fetch_artifact_set_detail(self, id: int) -> ArtifactSetDetail:
+    async def fetch_artifact_set_detail(
+        self, id: int, use_cache: bool = True
+    ) -> ArtifactSetDetail:
         """
         Fetches an artifact set detail by ID.
 
@@ -123,10 +136,10 @@ class AmbrAPI:
         :class:`ArtifactSetDetail`
             The artifact set detail.
         """
-        data = await self._request(f"reliquary/{id}")
+        data = await self._request(f"reliquary/{id}", use_cache=use_cache)
         return ArtifactSetDetail(**data["data"])
 
-    async def fetch_books(self) -> List[Book]:
+    async def fetch_books(self, use_cache: bool = True) -> List[Book]:
         """
         Fetches all books.
 
@@ -135,10 +148,10 @@ class AmbrAPI:
         List[:class:`Book`]
             The books.
         """
-        data = await self._request("book")
+        data = await self._request("book", use_cache=use_cache)
         return [Book(**book) for book in data["data"]["items"].values()]
 
-    async def fetch_book_detail(self, id: int) -> BookDetail:
+    async def fetch_book_detail(self, id: int, use_cache: bool = True) -> BookDetail:
         """
         Fetches a book detail by ID.
 
@@ -152,10 +165,10 @@ class AmbrAPI:
         :class:`BookDetail`
             The book detail.
         """
-        data = await self._request(f"book/{id}")
+        data = await self._request(f"book/{id}", use_cache=use_cache)
         return BookDetail(**data["data"])
 
-    async def fetch_characters(self) -> List[Character]:
+    async def fetch_characters(self, use_cache: bool = True) -> List[Character]:
         """
         Fetches all characters.
 
@@ -164,10 +177,12 @@ class AmbrAPI:
         List[:class:`Character`]
             The characters.
         """
-        data = await self._request("avatar")
+        data = await self._request("avatar", use_cache=use_cache)
         return [Character(**character) for character in data["data"]["items"].values()]
 
-    async def fetch_character_detail(self, id: str) -> CharacterDetail:
+    async def fetch_character_detail(
+        self, id: str, use_cache: bool = True
+    ) -> CharacterDetail:
         """
         Fetches a character detail by ID.
 
@@ -181,10 +196,10 @@ class AmbrAPI:
         :class:`CharacterDetail`
             The character detail.
         """
-        data = await self._request(f"avatar/{id}")
+        data = await self._request(f"avatar/{id}", use_cache=use_cache)
         return CharacterDetail(**data["data"])
 
-    async def fetch_foods(self) -> List[Food]:
+    async def fetch_foods(self, use_cache: bool = True) -> List[Food]:
         """
         Fetches all foods.
 
@@ -193,10 +208,10 @@ class AmbrAPI:
         List[:class:`Food`]
             The foods.
         """
-        data = await self._request("food")
+        data = await self._request("food", use_cache=use_cache)
         return [Food(**food) for food in data["data"]["items"].values()]
 
-    async def fetch_food_detail(self, id: int) -> FoodDetail:
+    async def fetch_food_detail(self, id: int, use_cache: bool = True) -> FoodDetail:
         """
         Fetches a food detail by ID.
 
@@ -210,10 +225,10 @@ class AmbrAPI:
         :class:`FoodDetail`
             The food detail.
         """
-        data = await self._request(f"food/{id}")
+        data = await self._request(f"food/{id}", use_cache=use_cache)
         return FoodDetail(**data["data"])
 
-    async def fetch_furnitures(self) -> List[Furniture]:
+    async def fetch_furnitures(self, use_cache: bool = True) -> List[Furniture]:
         """
         Fetches all furnitures.
 
@@ -222,10 +237,12 @@ class AmbrAPI:
         List[:class:`Furniture`]
             The furnitures.
         """
-        data = await self._request("furniture")
+        data = await self._request("furniture", use_cache=use_cache)
         return [Furniture(**furniture) for furniture in data["data"]["items"].values()]
 
-    async def fetch_furniture_detail(self, id: int) -> FurnitureDetail:
+    async def fetch_furniture_detail(
+        self, id: int, use_cache: bool = True
+    ) -> FurnitureDetail:
         """
         Fetches a furniture detail by ID.
 
@@ -239,10 +256,10 @@ class AmbrAPI:
         :class:`FurnitureDetail`
             The furniture detail.
         """
-        data = await self._request(f"furniture/{id}")
+        data = await self._request(f"furniture/{id}", use_cache=use_cache)
         return FurnitureDetail(**data["data"])
 
-    async def fetch_materials(self) -> List[Material]:
+    async def fetch_materials(self, use_cache: bool = True) -> List[Material]:
         """
         Fetches all materials.
 
@@ -251,10 +268,12 @@ class AmbrAPI:
         List[:class:`Material`]
             The materials.
         """
-        data = await self._request("material")
+        data = await self._request("material", use_cache=use_cache)
         return [Material(**material) for material in data["data"]["items"].values()]
 
-    async def fetch_material_detail(self, id: int) -> MaterialDetail:
+    async def fetch_material_detail(
+        self, id: int, use_cache: bool = True
+    ) -> MaterialDetail:
         """
         Fetches a material detail by ID.
 
@@ -268,10 +287,10 @@ class AmbrAPI:
         :class:`MaterialDetail`
             The material detail.
         """
-        data = await self._request(f"material/{id}")
+        data = await self._request(f"material/{id}", use_cache=use_cache)
         return MaterialDetail(**data["data"])
 
-    async def fetch_monsters(self) -> List[Monster]:
+    async def fetch_monsters(self, use_cache: bool = True) -> List[Monster]:
         """
         Fetches all monsters.
 
@@ -280,10 +299,12 @@ class AmbrAPI:
         List[:class:`Monster`]
             The monsters.
         """
-        data = await self._request("monster")
+        data = await self._request("monster", use_cache=use_cache)
         return [Monster(**monster) for monster in data["data"]["items"].values()]
 
-    async def fetch_monster_detail(self, id: int) -> MonsterDetail:
+    async def fetch_monster_detail(
+        self, id: int, use_cache: bool = True
+    ) -> MonsterDetail:
         """
         Fetches a monster detail by ID.
 
@@ -297,10 +318,10 @@ class AmbrAPI:
         :class:`MonsterDetail`
             The monster detail.
         """
-        data = await self._request(f"monster/{id}")
+        data = await self._request(f"monster/{id}", use_cache=use_cache)
         return MonsterDetail(**data["data"])
 
-    async def fetch_namecards(self) -> List[Namecard]:
+    async def fetch_namecards(self, use_cache: bool = True) -> List[Namecard]:
         """
         Fetches all name cards.
 
@@ -309,10 +330,12 @@ class AmbrAPI:
         List[:class:`NameCard`]
             The name cards.
         """
-        data = await self._request("namecard")
+        data = await self._request("namecard", use_cache=use_cache)
         return [Namecard(**name_card) for name_card in data["data"]["items"].values()]
 
-    async def fetch_namecard_detail(self, id: int) -> NamecardDetail:
+    async def fetch_namecard_detail(
+        self, id: int, use_cache: bool = True
+    ) -> NamecardDetail:
         """
         Fetches a name card detail by ID.
 
@@ -326,10 +349,10 @@ class AmbrAPI:
         :class:`NameCardDetail`
             The name card detail.
         """
-        data = await self._request(f"namecard/{id}")
+        data = await self._request(f"namecard/{id}", use_cache=use_cache)
         return NamecardDetail(**data["data"])
 
-    async def fetch_quests(self) -> List[Quest]:
+    async def fetch_quests(self, use_cache: bool = True) -> List[Quest]:
         """
         Fetches all quests.
 
@@ -338,10 +361,10 @@ class AmbrAPI:
         List[:class:`Quest`]
             The quests.
         """
-        data = await self._request("quest")
+        data = await self._request("quest", use_cache=use_cache)
         return [Quest(**quest) for quest in data["data"]["items"].values()]
 
-    async def fetch_tcg_cards(self) -> List[TCGCard]:
+    async def fetch_tcg_cards(self, use_cache: bool = True) -> List[TCGCard]:
         """
         Fetches all TCG cards.
 
@@ -350,10 +373,12 @@ class AmbrAPI:
         List[:class:`TCGCard`]
             The TCG cards.
         """
-        data = await self._request("gcg")
+        data = await self._request("gcg", use_cache=use_cache)
         return [TCGCard(**tcg_card) for tcg_card in data["data"]["items"].values()]
 
-    async def fetch_tcg_card_detail(self, id: int) -> TCGCardDetail:
+    async def fetch_tcg_card_detail(
+        self, id: int, use_cache: bool = True
+    ) -> TCGCardDetail:
         """
         Fetches a TCG card detail by ID.
 
@@ -367,10 +392,10 @@ class AmbrAPI:
         :class:`TCGCardDetail`
             The TCG card detail.
         """
-        data = await self._request(f"gcg/{id}")
+        data = await self._request(f"gcg/{id}", use_cache=use_cache)
         return TCGCardDetail(**data["data"])
 
-    async def fetch_weapons(self) -> List[Weapon]:
+    async def fetch_weapons(self, use_cache: bool = True) -> List[Weapon]:
         """
         Fetches all weapons.
 
@@ -379,10 +404,10 @@ class AmbrAPI:
         List[:class:`Weapon`]
             The weapons.
         """
-        data = await self._request("weapon")
+        data = await self._request("weapon", use_cache=use_cache)
         return [Weapon(**weapon) for weapon in data["data"]["items"].values()]
 
-    async def fetch_weapon_types(self) -> Dict[str, str]:
+    async def fetch_weapon_types(self, use_cache: bool = True) -> Dict[str, str]:
         """
         Fetches all weapon types.
 
@@ -391,10 +416,12 @@ class AmbrAPI:
         Dict[:class:`str`, :class:`str`]
             All of the weapon types.
         """
-        data = await self._request("weapon")
+        data = await self._request("weapon", use_cache=use_cache)
         return data["data"]["types"]
 
-    async def fetch_weapon_detail(self, id: int) -> WeaponDetail:
+    async def fetch_weapon_detail(
+        self, id: int, use_cache: bool = True
+    ) -> WeaponDetail:
         """
         Fetches a weapon detail by ID.
 
@@ -408,10 +435,10 @@ class AmbrAPI:
         :class:`WeaponDetail`
             The weapon detail.
         """
-        data = await self._request(f"weapon/{id}")
+        data = await self._request(f"weapon/{id}", use_cache=use_cache)
         return WeaponDetail(**data["data"])
 
-    async def fetch_domains(self) -> Domains:
+    async def fetch_domains(self, use_cache: bool = True) -> Domains:
         """
         Fetches all domains.
 
@@ -420,11 +447,10 @@ class AmbrAPI:
         :class:`Domains`
             The domains.
         """
-        data = await self._request("dailyDungeon")
+        data = await self._request("dailyDungeon", use_cache=use_cache)
         return Domains(**data["data"])
 
-    @cache.memoize(expire=3600)
-    async def fetch_change_logs(self) -> List[ChangeLog]:
+    async def fetch_change_logs(self, use_cache: bool = True) -> List[ChangeLog]:
         """
         Fetch change logs from the API.
 
@@ -433,13 +459,13 @@ class AmbrAPI:
         List[ChangeLog]
             A list of ChangeLog objects.
         """
-        data = await self._request("changelog", static=True)
+        data = await self._request("changelog", static=True, use_cache=use_cache)
         change_logs: List[ChangeLog] = []
         for id, log in data["data"].items():
             change_logs.append(ChangeLog(id=int(id), **log))
         return change_logs
 
-    async def fetch_upgrade_data(self) -> UpgradeData:
+    async def fetch_upgrade_data(self, use_cache: bool = True) -> UpgradeData:
         """
         Fetch upgrade data from the API.
 
@@ -448,10 +474,10 @@ class AmbrAPI:
         UpgradeData
             The upgrade data.
         """
-        data = await self._request("upgrade")
+        data = await self._request("upgrade", use_cache=use_cache)
         return UpgradeData(**data["data"])
 
-    async def fetch_manual_weapon(self) -> Dict[str, str]:
+    async def fetch_manual_weapon(self, use_cache: bool = True) -> Dict[str, str]:
         """
         Fetch manual weapon data from the API.
 
@@ -460,10 +486,10 @@ class AmbrAPI:
         Dict[str, str]
             The manual weapon data.
         """
-        data = await self._request("manualWeapon")
+        data = await self._request("manualWeapon", use_cache=use_cache)
         return data["data"]
 
-    async def fetch_readable(self, id: str) -> str:
+    async def fetch_readable(self, id: str, use_cache: bool = True) -> str:
         """
         Fetch a readable from the API.
 
@@ -477,10 +503,12 @@ class AmbrAPI:
         :class:`str`
             The readable.
         """
-        data = await self._request(f"readable/{id}")
+        data = await self._request(f"readable/{id}", use_cache=use_cache)
         return data["data"]
 
-    async def fetch_avatar_curve(self) -> Dict[str, Dict[str, Dict[str, float]]]:
+    async def fetch_avatar_curve(
+        self, use_cache: bool = True
+    ) -> Dict[str, Dict[str, Dict[str, float]]]:
         """
         Fetch avatar curve from the API.
 
@@ -489,10 +517,12 @@ class AmbrAPI:
         Dict[str, Dict[str, Dict[str, float]]]
             The avatar curve.
         """
-        data = await self._request("avatarCurve", static=True)
+        data = await self._request("avatarCurve", static=True, use_cache=use_cache)
         return data["data"]
 
-    async def fetch_weapon_curve(self) -> Dict[str, Dict[str, Dict[str, float]]]:
+    async def fetch_weapon_curve(
+        self, use_cache: bool = True
+    ) -> Dict[str, Dict[str, Dict[str, float]]]:
         """
         Fetch weapon curve from the API.
 
@@ -501,5 +531,5 @@ class AmbrAPI:
         Dict[str, Dict[str, Dict[str, float]]]
             The weapon curve.
         """
-        data = await self._request("weaponCurve", static=True)
+        data = await self._request("weaponCurve", static=True, use_cache=use_cache)
         return data["data"]
