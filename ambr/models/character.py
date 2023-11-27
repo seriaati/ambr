@@ -168,14 +168,6 @@ class CharacterUpgrade(BaseModel):
     base_stats: List[CharacterBaseStat] = Field(alias="prop")
     promotes: List[CharacterPromote] = Field(alias="promote")
 
-    @field_validator("base_stats", mode="before")
-    def _convert_base_stats(cls, v: List[Dict[str, Any]]) -> List[CharacterBaseStat]:
-        return [CharacterBaseStat(**stat) for stat in v]
-
-    @field_validator("promotes", mode="before")
-    def _convert_promotes(cls, v: List[Dict[str, Any]]) -> List[CharacterPromote]:
-        return [CharacterPromote(**ascension) for ascension in v]
-
 
 class CharacterCV(BaseModel):
     lang: str
@@ -222,14 +214,6 @@ class CharacterDetail(BaseModel):
     @field_validator("birthday", mode="before")
     def _convert_birthday(cls, v: List[int]) -> Birthday:
         return Birthday(month=v[0], day=v[1])
-
-    @field_validator("info", mode="before")
-    def _convert_info(cls, v: Dict[str, Any]) -> CharacterInfo:
-        return CharacterInfo(**v)
-
-    @field_validator("upgrade", mode="before")
-    def _convert_upgrade(cls, v: Dict[str, Any]) -> CharacterUpgrade:
-        return CharacterUpgrade(**v)
 
     @field_validator("ascension_materials", mode="before")
     def _convert_ascension_materials(cls, v: Dict[str, int]) -> List[AscensionMaterial]:

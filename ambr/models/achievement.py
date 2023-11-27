@@ -77,10 +77,6 @@ class Achievement(BaseModel):
     order: int
     details: List[AchievementDetail]
 
-    @field_validator("details", mode="before")
-    def _convert_details(cls, v: List[Dict[str, Any]]) -> List[AchievementDetail]:
-        return [AchievementDetail(**detail) for detail in v]
-
 
 class AchievementCategory(BaseModel):
     """

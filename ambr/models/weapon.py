@@ -60,14 +60,6 @@ class WeaponUpgrade(BaseModel):
     base_stats: List[WeaponBaseStat] = Field(alias="prop")
     promotes: List[WeaponPromote] = Field(alias="promote")
 
-    @field_validator("base_stats", mode="before")
-    def _convert_base_stats(cls, v: List[Dict[str, Any]]) -> List[WeaponBaseStat]:
-        return [WeaponBaseStat(**prop) for prop in v]
-
-    @field_validator("promotes", mode="before")
-    def _convert_promotes(cls, v: List[Dict[str, Any]]) -> List[WeaponPromote]:
-        return [WeaponPromote(**promote) for promote in v]
-
 
 class WeaponAffixUpgrade(BaseModel):
     level: int
@@ -116,10 +108,6 @@ class WeaponDetail(BaseModel):
             return None
         affix = list(v.values())[0]
         return WeaponAffix(**affix)
-
-    @field_validator("upgrade", mode="before")
-    def _convert_upgrade(cls, v: Dict[str, Any]) -> WeaponUpgrade:
-        return WeaponUpgrade(**v)
 
     @field_validator("ascension_materials", mode="before")
     def _convert_ascension_materials(

@@ -27,10 +27,6 @@ class BookDetail(BaseModel):
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
-    @field_validator("volumes", mode="before")
-    def _convert_volumes(cls, v: List[Dict[str, Any]]) -> List[BookVolume]:
-        return [BookVolume(**volume) for volume in v]
-
 
 class Book(BaseModel):
     """

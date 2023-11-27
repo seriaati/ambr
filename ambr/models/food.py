@@ -51,10 +51,6 @@ class FoodDetail(BaseModel):
             return FoodRecipe(**v)
         return False
 
-    @field_validator("sources", mode="before")
-    def _convert_sources(cls, v: List[Dict[str, str]]) -> List[FoodSource]:
-        return [FoodSource(**item) for item in v]
-
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
