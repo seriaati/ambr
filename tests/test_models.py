@@ -59,6 +59,16 @@ async def test_character(api_client: ambr.AmbrAPI, _fetch_ids):
 
 
 @pytest.mark.asyncio
+async def test_character_fetter(api_client: ambr.AmbrAPI, _fetch_ids):
+    character_ids = _fetch_ids[1]
+    for character_id in character_ids:
+        try:
+            await api_client.fetch_character_fetter(character_id)
+        except ambr.DataNotFound:
+            pass
+
+
+@pytest.mark.asyncio
 async def test_food(api_client: ambr.AmbrAPI, _fetch_ids):
     food_ids = _fetch_ids[2]
     for food_id in food_ids:
