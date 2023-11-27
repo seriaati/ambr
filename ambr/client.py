@@ -36,7 +36,7 @@ class AmbrAPI:
     def __init__(self, lang: Language = Language.EN) -> None:
         self.lang = lang
         self.session = aiohttp.ClientSession(headers={"User-Agent": "ambr.py"})
-        self.cache = Cache()
+        self.cache = Cache("ambr_cache")
 
     async def __aenter__(self) -> "AmbrAPI":
         return self
@@ -62,23 +62,21 @@ class AmbrAPI:
         Dict[str, Any]
             The response from the API.
         """
-        cache = await asyncio.to_thread(self.cache.get, f"{endpoint}_{self.lang.value}")
-        if cache is not None and use_cache:
-            return cache  # type: ignore
-
         if static:
             url = f"{self.BASE_URL}/static/{endpoint}"
         else:
             url = f"{self.BASE_URL}/{self.lang.value}/{endpoint}"
+
+        cache = await asyncio.to_thread(self.cache.get, url)
+        if cache is not None and use_cache:
+            return cache  # type: ignore
 
         logging.debug(f"Requesting {url}...")
         async with self.session.get(url) as resp:
             data = await resp.json()
             if "code" in data and data["code"] == 404:
                 raise DataNotFound(data["data"])
-            await asyncio.to_thread(
-                self.cache.set, f"{endpoint}_{self.lang.value}", data, expire=86400
-            )
+            await asyncio.to_thread(self.cache.set, url, data, expire=86400)
             return data
 
     async def close(self) -> None:
