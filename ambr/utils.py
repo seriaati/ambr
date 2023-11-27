@@ -15,7 +15,7 @@ def replace_placeholders(string: str, params: Dict[str, Any]) -> str:
 
 
 def replace_pronouns(text: str) -> str:
-    female_pronoun_pattern = r"#\{F#(.*?)\}"
+    female_pronoun_pattern = r"\{F#(.*?)\}"
     male_pronoun_pattern = r"\{M#(.*?)\}"
 
     female_pronoun_match = re.search(female_pronoun_pattern, text)
@@ -28,5 +28,6 @@ def replace_pronouns(text: str) -> str:
 
         text = re.sub(female_pronoun_pattern, replacement, text)
         text = re.sub(male_pronoun_pattern, "", text)
+        text = text.replace("#", "")
 
     return text
