@@ -2,7 +2,7 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
-from ..utils import remove_html_tags
+from ..utils import remove_html_tags, replace_pronouns
 
 __all__ = (
     "Quest",
@@ -34,7 +34,7 @@ class Quote(BaseModel):
 
     @field_validator("text", mode="before")
     def _format_text(cls, v: str) -> str:
-        return remove_html_tags(v)
+        return remove_html_tags(replace_pronouns(v))
 
     @field_validator("tips", mode="before")
     def _convert_empty_tips(cls, v: str) -> Optional[str]:
@@ -56,11 +56,11 @@ class Story(BaseModel):
 
     @field_validator("text", mode="before")
     def _format_text(cls, v: str) -> str:
-        return remove_html_tags(v)
+        return remove_html_tags(replace_pronouns(v))
 
     @field_validator("text2", mode="before")
     def _format_text2(cls, v: Optional[str]) -> Optional[str]:
-        return remove_html_tags(v) if v else None
+        return remove_html_tags(replace_pronouns(v)) if v else None
 
     @field_validator("tips", mode="before")
     def _convert_empty_tips(cls, v: str) -> Optional[str]:
