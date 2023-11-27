@@ -199,6 +199,25 @@ class AmbrAPI:
         data = await self._request(f"avatar/{id}", use_cache=use_cache)
         return CharacterDetail(**data["data"])
 
+    async def fetch_character_fetter(
+        self, id: str, use_cache: bool = True
+    ) -> CharacterFetter:
+        """
+        Fetches a character fetter by ID.
+
+        Parameters
+        ----------
+        id: :class:`str`
+            The ID of the character fetter to fetch.
+
+        Returns
+        -------
+        :class:`CharacterFetter`
+            The character fetter.
+        """
+        data = await self._request(f"avatarFetter/{id}", use_cache=use_cache)
+        return CharacterFetter(**data["data"])
+
     async def fetch_foods(self, use_cache: bool = True) -> List[Food]:
         """
         Fetches all foods.

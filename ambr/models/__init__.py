@@ -3,6 +3,7 @@ from .artifact import *
 from .book import *
 from .change_log import *
 from .character import *
+from .character_fetter import *
 from .domain import *
 from .food import *
 from .furniture import *
