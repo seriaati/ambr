@@ -63,7 +63,7 @@ class AmbrAPI:
     def __init__(self, lang: Language = Language.EN) -> None:
         self.lang = lang
         self.session = aiohttp.ClientSession(headers={"User-Agent": "ambr.py"})
-        self.cache = Cache("ambr_cache")
+        self.cache = Cache(".cache/ambr")
 
     async def __aenter__(self) -> "AmbrAPI":
         return self
