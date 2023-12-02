@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ambr-py"
-version = "0.1.5"
+version = "1.0.0"
 description = "API wrapper for ambr.top written in Python"
 authors = ["seriaati <seria.ati@gmail.com>"]
 license = "GPL-3.0"
