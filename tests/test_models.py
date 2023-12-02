@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 from typing import Any, Awaitable, Callable, List, Union
 
 import pytest
@@ -62,10 +63,8 @@ async def test_character(api_client: ambr.AmbrAPI, _fetch_ids):
 async def test_character_fetter(api_client: ambr.AmbrAPI, _fetch_ids):
     character_ids = _fetch_ids[1]
     for character_id in character_ids:
-        try:
+        with contextlib.suppress(ambr.DataNotFound):
             await api_client.fetch_character_fetter(character_id)
-        except ambr.DataNotFound:
-            pass
 
 
 @pytest.mark.asyncio
