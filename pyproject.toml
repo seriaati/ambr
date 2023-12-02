@@ -52,27 +52,25 @@ body = """
     | filter(attribute="scope")
     | sort(attribute="scope") %}
         - **({{commit.scope}})**{% if commit.breaking %} [**breaking**]{% endif %} \
-            {{ commit.message }} - ([{{ commit.id | truncate(length=7, end="") }}]($REPO/commit/{{ commit.id }})) - {{ commit.author.name }}
+            {{ commit.message }} - ([{{ commit.id | truncate(length=7, end="") }}]({{ commit.id }}))
     {%- endfor -%}
     {% raw %}\n{% endraw %}\
     {%- for commit in commits %}
         {%- if commit.scope -%}
         {% else -%}
             - {% if commit.breaking %} [**breaking**]{% endif %}\
-                {{ commit.message }} - ([{{ commit.id | truncate(length=7, end="") }}]($REPO/commit/{{ commit.id }})) - {{ commit.author.name }}
+                {{ commit.message }} - ([{{ commit.id | truncate(length=7, end="") }}]({{ commit.id }}))
         {% endif -%}
     {% endfor -%}
 {% endfor %}\n
 """
 trim = true
-postprocessors = [
-    { pattern = '\$REPO', replace = "https://github.com/seriaati/ambr" }, # replace repository URL
-]
 
 [tool.git-cliff.git]
 conventional_commits = true
 filter_unconventional = true
-split_commits = falsecommit_parsers = [
+split_commits = false
+commit_parsers = [
     { message = "^feat", group = "Features" },
     { message = "^fix", group = "Bug Fixes" },
     { message = "^doc", group = "Documentation" },
