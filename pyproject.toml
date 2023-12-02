@@ -18,6 +18,7 @@ diskcache = "^5.6.3"
 pytest = "^7.4.3"
 pytest-asyncio = "^0.21.1"
 ruff = "^0.1.6"
+git-cliff = "^1.4.0"
 
 [build-system]
 requires = ["poetry-core"]
