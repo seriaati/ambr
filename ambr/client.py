@@ -83,6 +83,8 @@ class AmbrAPI:
             The endpoint to request from.
         static: :class:`bool`
             Whether to use the static endpoint or not. Defaults to ``False``.
+        use_cache: :class:`bool`
+            Whether to use the cache or not. Defaults to ``True``.
 
         Returns
         -------
