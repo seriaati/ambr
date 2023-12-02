@@ -4,13 +4,7 @@ from pydantic import BaseModel, Field, field_validator
 
 from ..utils import remove_html_tags, replace_pronouns
 
-__all__ = (
-    "Quest",
-    "Task",
-    "Quote",
-    "Story",
-    "CharacterFetter",
-)
+__all__ = ("Quest", "Task", "Quote", "Story", "CharacterFetter")
 
 
 class Quest(BaseModel):
