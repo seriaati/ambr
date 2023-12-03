@@ -18,10 +18,14 @@ poetry add git+https://github.com/seriaati/ambr
 
 ## Quick Example
 ```py
-from ambr import AmbrAPI
+from ambr import AmbrAPI, Language
 
-async with AmbrAPI() as api:
+async with AmbrAPI(Language.CHT) as api:
     characters = await api.fetch_characters()
     for character in characters:
         print(character.name)
+
+    weapons = await api.fetch_weapons(use_cache=False)
+    for weapon in weapons:
+        print(weapon.id)
 ```
