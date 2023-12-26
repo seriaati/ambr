@@ -2,6 +2,8 @@ from typing import Optional
 
 from pydantic import BaseModel, Field, field_validator
 
+from ..utils import remove_html_tags
+
 __all__ = (
     "NamecardDetail",
     "Namecard",
@@ -17,6 +19,10 @@ class NamecardDetail(BaseModel):
     description: str
     description_special: str = Field(alias="descriptionSpecial")
     source: Optional[str]
+
+    @field_validator("description", mode="before")
+    def _format_description(cls, v: str) -> str:
+        return remove_html_tags(v)
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
