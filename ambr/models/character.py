@@ -278,3 +278,8 @@ class Character(BaseModel):
     @field_validator("birthday", mode="before")
     def _convert_birthday(cls, v: List[int]) -> Birthday:
         return Birthday(month=v[0], day=v[1])
+
+    @property
+    def gacha(self) -> str:
+        """The character's gacha image."""
+        return self.icon.replace("AvatarIcon", "Gacha_AvatarImg")
