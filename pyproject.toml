@@ -13,6 +13,8 @@ aiohttp = "^3.8.6"
 pydantic = "^2.4.2"
 diskcache = "^5.6.3"
 
+[tool.poetry.group.dev]
+optional = true
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.3"
