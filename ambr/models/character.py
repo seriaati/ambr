@@ -229,6 +229,11 @@ class CharacterDetail(BaseModel):
     ) -> List[Constellation]:
         return [Constellation(**constellation) for constellation in v.values()]
 
+    @property
+    def gacha(self) -> str:
+        """The character's gacha image."""
+        return self.icon.replace("AvatarIcon", "Gacha_AvatarImg")
+
 
 class Character(BaseModel):
     """
