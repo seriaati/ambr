@@ -26,7 +26,11 @@ class NamecardDetail(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://api.ambr.top/assets/UI/namecard/{v}.png"
+
+    @property
+    def picture(self) -> str:
+        return f"{self.icon.replace('NameCardIcon', 'NameCardPic')[:-4]}_P.png"
 
 
 class Namecard(BaseModel):
@@ -58,4 +62,8 @@ class Namecard(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://api.ambr.top/assets/UI/namecard/{v}.png"
+
+    @property
+    def picture(self) -> str:
+        return f"{self.icon.replace('NameCardIcon', 'NameCardPic')[:-4]}_P.png"
