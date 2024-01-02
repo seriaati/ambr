@@ -44,7 +44,7 @@ class FurnitureDetail(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://api.ambr.top/assets/UI/furniture/{v}.png"
 
     @field_validator("recipe", mode="before")
     def _convert_recipe(cls, v: Optional[Dict[str, Any]]) -> Optional[FurnitureRecipe]:
@@ -91,7 +91,7 @@ class Furniture(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://api.ambr.top/assets/UI/furniture/{v}.png"
 
 
 class FurnitureSet(BaseModel):
@@ -104,4 +104,4 @@ class FurnitureSet(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://api.ambr.top/assets/UI/furniture/{v}.png"
