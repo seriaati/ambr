@@ -52,7 +52,7 @@ class Artifact(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://api.ambr.top/assets/UI/reliquary/{v}.png"
 
 
 class ArtifactSetDetail(BaseModel):
@@ -91,7 +91,7 @@ class ArtifactSetDetail(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://api.ambr.top/assets/UI/reliquary/{v}.png"
 
     @field_validator("artifacts", mode="before")
     def _convert_artifacts(cls, v: Dict[str, Dict[str, Any]]) -> List[Artifact]:
@@ -130,7 +130,7 @@ class ArtifactSet(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://api.ambr.top/assets/UI/reliquary/{v}.png"
 
     @field_validator("affix_list", mode="before")
     def _convert_affix_list(cls, v: Dict[str, str]) -> List[ArtifactAffix]:
