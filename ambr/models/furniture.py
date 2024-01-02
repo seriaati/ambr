@@ -16,6 +16,10 @@ class FurnitureRecipeInput(BaseModel):
     icon: str
     amount: int = Field(alias="count")
 
+    @field_validator("icon", mode="before")
+    def _convert_icon_url(cls, v: str) -> str:
+        return f"https://api.ambr.top/assets/UI/{v}.png"
+
 
 class FurnitureRecipe(BaseModel):
     exp: int
