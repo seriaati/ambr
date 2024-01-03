@@ -18,7 +18,7 @@ class MonsterReward(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://api.ambr.top/assets/UI/monster/{v}.png"
 
 
 class MonsterEntry(BaseModel):
@@ -48,7 +48,7 @@ class MonsterDetail(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://api.ambr.top/assets/UI/monster/{v}.png"
 
     @field_validator("entries", mode="before")
     def _convert_entries(cls, v: Dict[str, Dict[str, Any]]) -> List[MonsterEntry]:
@@ -81,4 +81,4 @@ class Monster(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://api.ambr.top/assets/UI/monster/{v}.png"
