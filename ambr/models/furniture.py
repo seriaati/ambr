@@ -108,4 +108,51 @@ class FurnitureSet(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
+        return f"https://api.ambr.top/assets/UI/furnitureSuite/{v}.png"
+
+    @field_validator("categories", mode="before")
+    def _convert_categories(cls, v: List[str] | None) -> List[str]:
+        return v or []
+
+    @field_validator("types", mode="before")
+    def _convert_types(cls, v: List[str] | None) -> List[str]:
+        return v or []
+
+
+class FurnitureItem(BaseModel):
+    id: int
+    rarity: int = Field(alias="rank")
+    icon: str
+
+    @field_validator("icon", mode="before")
+    def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/furniture/{v}.png"
+
+
+class FurnitureSetDetail(BaseModel):
+    id: int
+    name: str
+    icon: str
+    route: str
+    categories: List[str]
+    types: List[str]
+    description: str
+    furniture_items: List[FurnitureItem] = Field(alias="suiteItemList")
+
+    @field_validator("icon", mode="before")
+    def _convert_icon_url(cls, v: str) -> str:
+        return f"https://api.ambr.top/assets/UI/furnitureSuite/{v}.png"
+
+    @field_validator("categories", mode="before")
+    def _convert_categories(cls, v: List[str] | None) -> List[str]:
+        return v or []
+
+    @field_validator("types", mode="before")
+    def _convert_types(cls, v: List[str] | None) -> List[str]:
+        return v or []
+
+    @field_validator("furniture_items", mode="before")
+    def _convert_furniture_items(
+        cls, v: Dict[str, Dict[str, Any]]
+    ) -> List[FurnitureItem]:
+        return [FurnitureItem(id=int(item_id), **v[item_id]) for item_id in v]

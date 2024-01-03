@@ -35,6 +35,7 @@ from .models import (
     Weapon,
     WeaponDetail,
 )
+from .models.furniture import FurnitureSet, FurnitureSetDetail
 
 __all__ = ("AmbrAPI", "Language")
 
@@ -304,6 +305,40 @@ class AmbrAPI:
         """
         data = await self._request(f"furniture/{id}", use_cache=use_cache)
         return FurnitureDetail(**data["data"])
+
+    async def fetch_furniture_sets(self, use_cache: bool = True) -> List[FurnitureSet]:
+        """
+        Fetches all furniture sets.
+
+        Returns
+        -------
+        List[:class:`FurnitureSet`]
+            The furniture sets.
+        """
+        data = await self._request("furnitureSuite", use_cache=use_cache)
+        return [
+            FurnitureSet(**furniture_set)
+            for furniture_set in data["data"]["items"].values()
+        ]
+
+    async def fetch_furniture_set_detail(
+        self, id: int, use_cache: bool = True
+    ) -> FurnitureSetDetail:
+        """
+        Fetches a furniture set detail by ID.
+
+        Parameters
+        ----------
+        id: :class:`int`
+            The ID of the furniture set detail to fetch.
+
+        Returns
+        -------
+        :class:`FurnitureSetDetail`
+            The furniture set detail.
+        """
+        data = await self._request(f"furnitureSuite/{id}", use_cache=use_cache)
+        return FurnitureSetDetail(**data["data"])
 
     async def fetch_materials(self, use_cache: bool = True) -> List[Material]:
         """

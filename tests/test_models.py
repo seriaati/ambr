@@ -9,7 +9,7 @@ import ambr
 
 
 async def fetch_ids(
-    fetch_func: Callable[[], Awaitable[List[Any]]]
+    fetch_func: Callable[[], Awaitable[List[Any]]],
 ) -> List[Union[int, str]]:
     items = await fetch_func()
     return [item.id for item in items]
@@ -40,6 +40,7 @@ async def _fetch_ids(api_client: ambr.AmbrAPI) -> List[List[Union[int, str]]]:
         api_client.fetch_tcg_cards,
         api_client.fetch_weapons,
         api_client.fetch_artifact_sets,
+        api_client.fetch_furniture_sets,
     ]
     ids = await asyncio.gather(*(fetch_ids(func) for func in fetch_funcs))
     return ids
@@ -121,6 +122,13 @@ async def test_artifact_sets(api_client: ambr.AmbrAPI, _fetch_ids):
     artifact_ids = _fetch_ids[9]
     for artifact_id in artifact_ids:
         await api_client.fetch_artifact_set_detail(artifact_id)
+
+
+@pytest.mark.asyncio
+async def test_furniture_sets(api_client: ambr.AmbrAPI, _fetch_ids):
+    furniture_ids = _fetch_ids[10]
+    for furniture_id in furniture_ids:
+        await api_client.fetch_furniture_set_detail(furniture_id)
 
 
 @pytest.mark.asyncio
