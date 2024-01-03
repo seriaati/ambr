@@ -66,6 +66,10 @@ class CardTalent(BaseModel):
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/gcg/{v}.png"
 
+    @property
+    def small_icon(self) -> str:
+        return self.icon.replace(".png", ".sm.png")
+
 
 class TCGCardDetail(BaseModel):
     id: int
@@ -94,6 +98,10 @@ class TCGCardDetail(BaseModel):
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/gcg/{v}.png"
+
+    @property
+    def small_icon(self) -> str:
+        return self.icon.replace(".png", ".sm.png")
 
     @field_validator("dictionaries", mode="before")
     def _convert_dictionaries(
@@ -154,3 +162,7 @@ class TCGCard(BaseModel):
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/gcg/{v}.png"
+
+    @property
+    def small_icon(self) -> str:
+        return self.icon.replace(".png", ".sm.png")
