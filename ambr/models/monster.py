@@ -2,6 +2,8 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
+from ..utils import remove_html_tags
+
 __all__ = (
     "MonsterReward",
     "MonsterEntry",
@@ -53,6 +55,10 @@ class MonsterDetail(BaseModel):
     @field_validator("entries", mode="before")
     def _convert_entries(cls, v: Dict[str, Dict[str, Any]]) -> List[MonsterEntry]:
         return [MonsterEntry(**v[item_id]) for item_id in v]
+
+    @field_validator("description", mode="before")
+    def _format_description(cls, v: str) -> str:
+        return remove_html_tags(v)
 
 
 class Monster(BaseModel):
