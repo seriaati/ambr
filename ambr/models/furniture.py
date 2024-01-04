@@ -8,6 +8,8 @@ __all__ = (
     "FurnitureDetail",
     "Furniture",
     "FurnitureSet",
+    "FurnitureItem",
+    "FurnitureSetDetail",
 )
 
 
