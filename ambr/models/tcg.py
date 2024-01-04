@@ -32,7 +32,29 @@ class CardProperty(BaseModel):
 
 class CardDictionary(BaseModel):
     name: str
+    params: Optional[Dict[str, Any]] = None
     description: str
+    cost: List[DiceCost] = Field(None, alias="diceCost")
+
+    @field_validator("name", mode="before")
+    def _format_name(cls, v: str) -> str:
+        return remove_html_tags(v)
+
+    @field_validator("cost", mode="before")
+    def _convert_cost(cls, v: Optional[Dict[str, int]]) -> List[DiceCost]:
+        return (
+            [DiceCost(type=type_, count=count) for type_, count in v.items()]
+            if v
+            else []
+        )
+
+    @field_validator("description", mode="before")
+    def _format_description(cls, v: str, values) -> str:
+        print(values)
+        params = values.data.get("params")
+        if params:
+            v = replace_placeholders(v, params)
+        return remove_html_tags(v)
 
 
 class CardTalent(BaseModel):
