@@ -2,6 +2,8 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
+from ..utils import remove_html_tags
+
 __all__ = (
     "FurnitureRecipeInput",
     "FurnitureRecipe",
@@ -152,6 +154,10 @@ class FurnitureSetDetail(BaseModel):
     @field_validator("types", mode="before")
     def _convert_types(cls, v: List[str] | None) -> List[str]:
         return v or []
+
+    @field_validator("description", mode="before")
+    def _format_description(cls, v: str) -> str:
+        return remove_html_tags(v)
 
     @field_validator("furniture_items", mode="before")
     def _convert_furniture_items(
