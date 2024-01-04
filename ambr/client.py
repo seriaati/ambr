@@ -59,6 +59,9 @@ class Language(Enum):
     TR = "tr"
 
 
+LOGGER_ = logging.getLogger("ambr.py")
+
+
 class AmbrAPI:
     BASE_URL: Final[str] = "https://api.ambr.top/v2"
 
@@ -102,7 +105,7 @@ class AmbrAPI:
         if cache is not None and use_cache:
             return cache  # type: ignore
 
-        logging.debug(f"Requesting {url}...")
+        LOGGER_.debug(f"Requesting {url}...")
         async with self.session.get(url) as resp:
             data = await resp.json()
             if "code" in data and data["code"] == 404:
