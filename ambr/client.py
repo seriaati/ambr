@@ -36,6 +36,7 @@ from .models import (
     WeaponDetail,
 )
 from .models.furniture import FurnitureSet, FurnitureSetDetail
+from .utils import remove_html_tags
 
 __all__ = ("AmbrAPI", "Language")
 
@@ -585,7 +586,7 @@ class AmbrAPI:
             The readable.
         """
         data = await self._request(f"readable/{id}", use_cache=use_cache)
-        return data["data"]
+        return remove_html_tags(data["data"])
 
     async def fetch_avatar_curve(
         self, use_cache: bool = True
