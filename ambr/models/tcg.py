@@ -7,7 +7,6 @@ from ..utils import remove_html_tags, replace_placeholders
 __all__ = (
     "CardTag",
     "DiceCost",
-    "CardProperty",
     "CardDictionary",
     "CardTalent",
     "TCGCardDetail",
@@ -23,11 +22,6 @@ class CardTag(BaseModel):
 class DiceCost(BaseModel):
     type: str
     amount: int = Field(alias="count")
-
-
-class CardProperty(BaseModel):
-    id: str
-    value: int
 
 
 class CardDictionary(BaseModel):
@@ -98,7 +92,7 @@ class TCGCardDetail(BaseModel):
     name: str
     type: str
     tags: List[CardTag]
-    props: List[CardProperty]
+    props: Optional[Dict[str, int]]
     icon: str
     route: str
     story_title: str = Field(alias="storyTitle")
@@ -110,12 +104,6 @@ class TCGCardDetail(BaseModel):
     @field_validator("tags", mode="before")
     def _convert_tags(cls, v: Optional[Dict[str, str]]) -> List[CardTag]:
         return [CardTag(id=id_, name=name) for id_, name in v.items()] if v else []
-
-    @field_validator("props", mode="before")
-    def _convert_props(cls, v: Optional[Dict[str, int]]) -> List[CardProperty]:
-        return (
-            [CardProperty(id=id_, value=value) for id_, value in v.items()] if v else []
-        )
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
