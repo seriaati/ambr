@@ -82,7 +82,7 @@ class CardTalent(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/gcg/{v}.png"
+        return f"https://api.ambr.top/assets/UI/{v}.png"
 
     @property
     def small_icon(self) -> str:
