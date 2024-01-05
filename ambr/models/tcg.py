@@ -60,6 +60,7 @@ class CardTalent(BaseModel):
     cost: List[DiceCost]
     tags: List[CardTag]
     icon: str
+    sub_skills: Optional[Dict[str, Any]] = Field(None, alias="subSkills")
 
     @field_validator("description", mode="before")
     def _format_description(cls, v: str, values) -> str:
