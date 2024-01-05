@@ -25,6 +25,7 @@ class DiceCost(BaseModel):
 
 
 class CardDictionary(BaseModel):
+    id: str
     name: str
     params: Optional[Dict[str, Any]] = None
     description: str
@@ -52,6 +53,7 @@ class CardDictionary(BaseModel):
 
 
 class CardTalent(BaseModel):
+    id: str
     name: str
     params: Optional[Dict[str, Any]]
     description: str
@@ -117,11 +119,11 @@ class TCGCardDetail(BaseModel):
     def _convert_dictionaries(
         cls, v: Optional[Dict[str, Dict[str, Any]]]
     ) -> List[CardDictionary]:
-        return [CardDictionary(**v[item_id]) for item_id in v] if v else []
+        return [CardDictionary(id=item_id, **v[item_id]) for item_id in v] if v else []
 
     @field_validator("talents", mode="before")
     def _convert_talents(cls, v: Dict[str, Dict[str, Any]]) -> List[CardTalent]:
-        return [CardTalent(**v[item_id]) for item_id in v]
+        return [CardTalent(id=item_id, **v[item_id]) for item_id in v]
 
 
 class TCGCard(BaseModel):
