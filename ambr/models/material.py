@@ -2,6 +2,8 @@ from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field, field_validator
 
+from ..utils import remove_html_tags
+
 __all__ = (
     "MaterialRecipe",
     "MaterialSource",
@@ -49,6 +51,10 @@ class MaterialDetail(BaseModel):
     icon: str
     rarity: int = Field(alias="rank")
     route: str
+
+    @field_validator("description", mode="before")
+    def _format_description(cls, v: str) -> str:
+        return remove_html_tags(v)
 
     @field_validator("recipe", mode="before")
     def _convert_recipe(
