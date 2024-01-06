@@ -2,6 +2,8 @@ from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field, field_validator
 
+from ..utils import remove_html_tags
+
 __all__ = (
     "FoodSource",
     "FoodEffect",
@@ -19,6 +21,10 @@ class FoodSource(BaseModel):
 class FoodEffect(BaseModel):
     id: str
     description: str
+
+    @field_validator("description", mode="before")
+    def _format_description(cls, v: str) -> str:
+        return remove_html_tags(v)
 
 
 class FoodRecipe(BaseModel):
