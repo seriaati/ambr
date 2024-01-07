@@ -1,31 +1,15 @@
-from enum import StrEnum
 from typing import Dict, List
 
 from pydantic import BaseModel, Field, field_validator
 
 __all__ = (
-    "ItemCategory",
     "Item",
     "ChangeLog",
 )
 
 
-class ItemCategory(StrEnum):
-    CHARACTER = "avatar"
-    WEAPON = "weapon"
-    MATERIAL = "material"
-    ARTIFACT = "reliquary"
-    FOOD = "food"
-    BOOK = "book"
-    NAME_CARD = "namecard"
-    MONSTER = "monster"
-    FURNITURE = "furniture"
-    TCG = "gcg"
-    QUEST = "quest"
-
-
 class Item(BaseModel):
-    category: ItemCategory
+    category: str
     ids: List[str]
 
 
