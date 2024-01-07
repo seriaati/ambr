@@ -10,6 +10,21 @@ __all__ = (
 
 
 class BookVolume(BaseModel):
+    """
+    Represents a book volume.
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The book volume's ID.
+    name: :class:`str`
+        The book volume's name.
+    description: :class:`str`
+        The book volume's description.
+    story_id: :class:`int`
+        The book volume's story ID.
+    """
+
     id: int
     name: str
     description: str
@@ -17,6 +32,23 @@ class BookVolume(BaseModel):
 
 
 class BookDetail(BaseModel):
+    """
+    Represents a book detail.
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The book's ID.
+    name: :class:`str`
+        The book's name.
+    rarity: :class:`int`
+        The book's rarity.
+    icon: :class:`str`
+        The book's icon.
+    volumes: List[:class:`BookVolume`]
+        The book's volumes.
+    """
+
     id: int
     name: str
     rarity: int = Field(alias="rank")

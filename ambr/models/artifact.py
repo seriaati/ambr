@@ -12,14 +12,14 @@ __all__ = (
 
 class ArtifactAffix(BaseModel):
     """
-    Represents an artifact affix.
+    Represents an artifact set's set effect.
 
     Attributes
     ----------
     id: :class:`str`
-        The artifact affix's ID.
+        The effect's ID.
     effect: :class:`str`
-        The artifact affix's effect.
+        The effect's description.
     """
 
     id: str
@@ -62,19 +62,19 @@ class ArtifactSetDetail(BaseModel):
     Attributes
     ----------
     id: :class:`int`
-        The artifact set detail's ID.
+        The artifact set's ID.
     name: :class:`str`
-        The artifact set detail's name.
+        The artifact set's name.
     rarity_list: List[:class:`int`]
-        The artifact set detail's rarity list.
+        The artifact set's rarity list.
     affix_list: List[:class:`ArtifactAffix`]
-        The artifact set detail's affix list.
+        The artifact set's affix list.
     icon: :class:`str`
-        The artifact set detail's icon.
+        The artifact set's icon.
     route: :class:`str`
-        The artifact set detail's route.
+        The artifact set's route.
     artifacts: List[:class:`Artifact`]
-        The artifact set detail's artifacts.
+        Artifacts that belong to the artifact set.
     """
 
     id: int
@@ -109,9 +109,9 @@ class ArtifactSet(BaseModel):
     name: :class:`str`
         The artifact set's name.
     rarity_list: List[:class:`int`]
-        The artifact set's rarity list.
+        Obtainable rarities of the artifact set.
     affix_list: List[:class:`str`]
-        The artifact set's affix list.
+        The artifact set's set effect list.
     icon: :class:`str`
         The artifact set's icon.
     route: :class:`str`

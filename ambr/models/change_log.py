@@ -14,6 +14,21 @@ class Item(BaseModel):
 
 
 class ChangeLog(BaseModel):
+    """
+    Represents a change log.
+
+    Attributes
+    ----------
+    id: :class:`int`
+        The change log's ID.
+    version: :class:`str`
+        The change log's version.
+    items: List[:class:`Item`]
+        The change log's items.
+    beta: :class:`bool`
+        Whether the change log is for beta.
+    """
+
     id: int
     version: str
     items: List[Item]

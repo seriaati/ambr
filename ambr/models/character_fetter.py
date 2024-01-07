@@ -20,6 +20,23 @@ class Task(BaseModel):
 
 
 class Quote(BaseModel):
+    """
+    Represents a quote.
+
+    Attributes
+    ----------
+    title: :class:`str`
+        The quote's title.
+    audio_id: :class:`str`
+        The quote's audio ID.
+    text: :class:`str`
+        The quote's text.
+    tips: Optional[:class:`str`]
+        The quote's tips.
+    tasks: List[:class:`Task`]
+        The quote's tasks.
+    """
+
     title: str
     audio_id: str = Field(alias="audio")
     text: str
