@@ -65,8 +65,10 @@ LOGGER_ = logging.getLogger("ambr.py")
 class AmbrAPI:
     BASE_URL: Final[str] = "https://api.ambr.top/v2"
 
-    def __init__(self, lang: Language = Language.EN) -> None:
+    def __init__(self, lang: Language = Language.EN, cache_ttl: int = 3600) -> None:
         self.lang = lang
+        self.cache_ttl = cache_ttl
+
         self.session = aiohttp.ClientSession(headers={"User-Agent": "ambr.py"})
         self.cache = Cache(".cache/ambr")
 
@@ -110,7 +112,7 @@ class AmbrAPI:
             data = await resp.json()
             if "code" in data and data["code"] == 404:
                 raise DataNotFound(data["data"])
-            await asyncio.to_thread(self.cache.set, url, data, expire=86400)
+            await asyncio.to_thread(self.cache.set, url, data, expire=self.cache_ttl)
             return data
 
     async def close(self) -> None:
