@@ -50,10 +50,7 @@ class MonsterDetail(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        if "MonsterIcon" in v:
-            return f"https://api.ambr.top/assets/UI/monster/{v}.png"
-        else:
-            return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://api.ambr.top/assets/UI{'/monster' if 'MonsterIcon' in v else ''}/{v}.png"  # noqa: E501
 
     @field_validator("entries", mode="before")
     def _convert_entries(cls, v: Dict[str, Dict[str, Any]]) -> List[MonsterEntry]:
