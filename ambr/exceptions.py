@@ -1,9 +1,9 @@
-__all__ = ("DataNotFound",)
+__all__ = ("DataNotFoundError",)
 
 
-class DataNotFound(Exception):
-    def __init__(self, message: str):
+class DataNotFoundError(Exception):
+    def __init__(self, message: str) -> None:
         self.message = message
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.message
