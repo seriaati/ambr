@@ -49,7 +49,7 @@ preview = true
 [tool.ruff.lint.per-file-ignores]
 "**/__init__.py" = ["F403"]
 "playground.*.py" = ["ALL"]
-"**/models/*.py" = ["FA100", "N805"]
+"**/models/*.py" = ["N805"]
 "**/tests/*.py" = ["ANN001"]
 "**/client.py" = ["PLR0904", "A002"]
 
