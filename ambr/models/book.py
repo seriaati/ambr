@@ -1,5 +1,3 @@
-from typing import List
-
 from pydantic import BaseModel, Field, field_validator
 
 __all__ = (
@@ -53,7 +51,7 @@ class BookDetail(BaseModel):
     name: str
     rarity: int = Field(alias="rank")
     icon: str
-    volumes: List[BookVolume] = Field(alias="volume")
+    volumes: list[BookVolume] = Field(alias="volume")
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:

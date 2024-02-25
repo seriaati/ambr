@@ -1,9 +1,21 @@
 import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
 from ..utils import remove_html_tags
+
+__all__ = (
+    "ChallengeTarget",
+    "Chamber",
+    "LeyLineDisorder",
+    "Floor",
+    "AbyssData",
+    "Abyss",
+    "AbyssEnemy",
+    "AbyssResponse",
+    "Blessing",
+)
 
 
 class Blessing(BaseModel):
@@ -21,7 +33,7 @@ class Blessing(BaseModel):
     visible: bool
 
     @field_validator("description", mode="before")
-    def _format_description(cls, v) -> str:
+    def _format_description(cls, v: str) -> str:
         return remove_html_tags(v)
 
 
@@ -36,7 +48,7 @@ class ChallengeTarget(BaseModel):
     """
 
     type: str
-    values: List[int]
+    values: list[int]
 
     @property
     def formatted(self) -> str:
@@ -58,8 +70,8 @@ class Chamber(BaseModel):
     id: int
     challenge_target: ChallengeTarget = Field(..., alias="challengeTarget")
     enemy_level: int = Field(..., alias="monsterLevel")
-    wave_one_enemies: List[int] = Field(..., alias="firstMonsterList")
-    wave_two_enemies: Optional[List[int]] = Field(None, alias="secondMonsterList")
+    wave_one_enemies: list[int] = Field(..., alias="firstMonsterList")
+    wave_two_enemies: list[int] | None = Field(None, alias="secondMonsterList")
 
 
 class LeyLineDisorder(BaseModel):
@@ -77,7 +89,7 @@ class LeyLineDisorder(BaseModel):
     visible: bool
 
     @field_validator("description", mode="before")
-    def _format_description(cls, v) -> str:
+    def _format_description(cls, v: str) -> str:
         return remove_html_tags(v)
 
 
@@ -94,8 +106,8 @@ class Floor(BaseModel):
     """
 
     id: int
-    chambers: List[Chamber] = Field(..., alias="chamberList")
-    ley_line_disorders: List[LeyLineDisorder] = Field(..., alias="leyLineDisorder")
+    chambers: list[Chamber] = Field(..., alias="chamberList")
+    ley_line_disorders: list[LeyLineDisorder] = Field(..., alias="leyLineDisorder")
     override_enemy_level: int = Field(..., alias="overrideMonsterLevel")
     team_num: int = Field(..., alias="teamNum")
 
@@ -109,11 +121,11 @@ class AbyssData(BaseModel):
         floors (List[Floor]): List of floors.
     """
 
-    open_time: Optional[datetime.datetime] = Field(None, alias="openTime")
-    floors: List[Floor] = Field(..., alias="floorList")
+    open_time: datetime.datetime | None = Field(None, alias="openTime")
+    floors: list[Floor] = Field(..., alias="floorList")
 
     @field_validator("open_time", mode="before")
-    def _format_open_time(cls, v) -> Optional[datetime.datetime]:
+    def _format_open_time(cls, v: int) -> datetime.datetime | None:
         return datetime.datetime.fromtimestamp(v) if v else None
 
 
@@ -136,8 +148,8 @@ class Abyss(BaseModel):
     abyssal_moon_spire: AbyssData = Field(..., alias="schedule")
 
     @field_validator("close_time", mode="before")
-    def _format_close_time(cls, v) -> datetime.datetime:
-        # example: 1709258399
+    def _format_close_time(cls, v: int) -> datetime.datetime:
+        # example 1709258399
         return datetime.datetime.fromtimestamp(v)
 
 
@@ -171,13 +183,13 @@ class AbyssResponse(BaseModel):
         abyss_items (List[Abyss]): List of abyss items.
     """
 
-    enemies: List[AbyssEnemy] = Field(..., alias="monsterList")
-    abyss_items: List[Abyss] = Field(..., alias="items")
+    enemies: list[AbyssEnemy] = Field(..., alias="monsterList")
+    abyss_items: list[Abyss] = Field(..., alias="items")
 
     @field_validator("enemies", mode="before")
-    def _convert_enemies(cls, v: Dict[str, Dict[str, Any]]) -> List[AbyssEnemy]:
+    def _convert_enemies(cls, v: dict[str, dict[str, Any]]) -> list[AbyssEnemy]:
         return [AbyssEnemy(**v[item_id]) for item_id in v]
 
     @field_validator("abyss_items", mode="before")
-    def _convert_abyss_items(cls, v: Dict[str, Dict[str, Any]]) -> List[Abyss]:
+    def _convert_abyss_items(cls, v: dict[str, dict[str, Any]]) -> list[Abyss]:
         return [Abyss(**v[item_id]) for item_id in v]

@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -9,14 +9,14 @@ __all__ = ("Quest", "Task", "Quote", "Story", "CharacterFetter")
 
 class Quest(BaseModel):
     id: int
-    quest_title: Optional[str] = Field(None, alias="questTitle")
+    quest_title: str | None = Field(None, alias="questTitle")
     chapter_id: int = Field(alias="chapterId")
     chapter_title: str = Field(alias="chapterTitle")
 
 
 class Task(BaseModel):
     type: str
-    quest_list: List[Quest] = Field(alias="questList")
+    quest_list: list[Quest] = Field(alias="questList")
 
 
 class Quote(BaseModel):
@@ -40,19 +40,19 @@ class Quote(BaseModel):
     title: str
     audio_id: str = Field(alias="audio")
     text: str
-    tips: Optional[str]
-    tasks: List[Task]
+    tips: str | None
+    tasks: list[Task]
 
     @field_validator("text", mode="before")
     def _format_text(cls, v: str) -> str:
         return remove_html_tags(replace_pronouns(v))
 
     @field_validator("tips", mode="before")
-    def _convert_empty_tips(cls, v: str) -> Optional[str]:
+    def _convert_empty_tips(cls, v: str) -> str | None:
         return v if v else None
 
     @field_validator("tasks", mode="before")
-    def _convert_empty_tasks(cls, v: Optional[List[Dict[str, Any]]]) -> List[Task]:
+    def _convert_empty_tasks(cls, v: list[dict[str, Any]] | None) -> list[Task]:
         if v is None:
             return []
         return [Task(**task) for task in v]
@@ -60,32 +60,32 @@ class Quote(BaseModel):
 
 class Story(BaseModel):
     title: str
-    title2: Optional[str]
+    title2: str | None
     text: str
-    text2: Optional[str]
-    tips: Optional[str]
+    text2: str | None
+    tips: str | None
 
     @field_validator("text", mode="before")
     def _format_text(cls, v: str) -> str:
         return remove_html_tags(replace_pronouns(v))
 
     @field_validator("text2", mode="before")
-    def _format_text2(cls, v: Optional[str]) -> Optional[str]:
+    def _format_text2(cls, v: str | None) -> str | None:
         return remove_html_tags(replace_pronouns(v)) if v else None
 
     @field_validator("tips", mode="before")
-    def _convert_empty_tips(cls, v: str) -> Optional[str]:
+    def _convert_empty_tips(cls, v: str) -> str | None:
         return v if v else None
 
 
 class CharacterFetter(BaseModel):
-    quotes: List[Quote]
-    stories: List[Story] = Field(alias="story")
+    quotes: list[Quote]
+    stories: list[Story] = Field(alias="story")
 
     @field_validator("quotes", mode="before")
-    def _flatten_quotes(cls, v: Dict[str, Dict[str, Any]]) -> List[Quote]:
+    def _flatten_quotes(cls, v: dict[str, dict[str, Any]]) -> list[Quote]:
         return [Quote(**quote) for quote in v.values()]
 
     @field_validator("stories", mode="before")
-    def _flatten_stories(cls, v: Dict[str, Dict[str, Any]]) -> List[Story]:
+    def _flatten_stories(cls, v: dict[str, dict[str, Any]]) -> list[Story]:
         return [Story(**story) for story in v.values()]

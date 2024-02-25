@@ -1,5 +1,3 @@
-from typing import Dict, List
-
 from pydantic import BaseModel, Field, field_validator
 
 __all__ = (
@@ -10,7 +8,7 @@ __all__ = (
 
 class Item(BaseModel):
     category: str
-    ids: List[str]
+    ids: list[str]
 
 
 class ChangeLog(BaseModel):
@@ -31,9 +29,9 @@ class ChangeLog(BaseModel):
 
     id: int
     version: str
-    items: List[Item]
+    items: list[Item]
     beta: bool = Field(False)
 
     @field_validator("items", mode="before")
-    def _convert_items(cls, v: Dict[str, List[str]]) -> List[Item]:
+    def _convert_items(cls, v: dict[str, list[str]]) -> list[Item]:
         return [Item(category=k, ids=v) for k, v in v.items()]  # type: ignore

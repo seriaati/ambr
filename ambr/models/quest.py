@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import BaseModel, Field, field_validator
 
 __all__ = ("Quest",)
@@ -30,11 +28,11 @@ class Quest(BaseModel):
     """
 
     id: int
-    type: Optional[str]
-    chapter_num: Optional[str] = Field(alias="chapterNum")
+    type: str | None
+    chapter_num: str | None = Field(alias="chapterNum")
     chapter_title: str = Field(alias="chapterTitle")
-    chapter_icon: Optional[str] = Field(alias="chapterIcon")
-    chapter_image_title: Optional[str] = Field(alias="chapterImageTitle")
+    chapter_icon: str | None = Field(alias="chapterIcon")
+    chapter_image_title: str | None = Field(alias="chapterImageTitle")
     route: str
     chapter_count: int = Field(alias="chapterCount")
 

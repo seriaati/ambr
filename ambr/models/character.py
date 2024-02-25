@@ -1,5 +1,5 @@
 from enum import IntEnum, StrEnum
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -57,7 +57,7 @@ class TalentExtraLevel(BaseModel):
 class Constellation(BaseModel):
     name: str
     description: str
-    extra_level: Optional[TalentExtraLevel] = Field(alias="extraData")
+    extra_level: TalentExtraLevel | None = Field(alias="extraData")
     icon: str
 
     @field_validator("description", mode="before")
@@ -65,9 +65,7 @@ class Constellation(BaseModel):
         return remove_html_tags(v)
 
     @field_validator("extra_level", mode="before")
-    def _convert_extra_level(
-        cls, v: Optional[Dict[str, Dict[str, Any]]]
-    ) -> Optional[TalentExtraLevel]:
+    def _convert_extra_level(cls, v: dict[str, dict[str, Any]] | None) -> TalentExtraLevel | None:
         return TalentExtraLevel(**v["addTalentExtraLevel"]) if v else None
 
     @field_validator("icon", mode="before")
@@ -88,16 +86,19 @@ class TalentUpgradeItem(BaseModel):
 
 class TalentUpgrade(BaseModel):
     level: int
-    cost_items: Optional[List[TalentUpgradeItem]] = Field(None, alias="costItems")
-    mora_cost: Optional[int] = Field(None, alias="coinCost")
-    description: List[str]
-    params: List[Union[int, float]]
+    cost_items: list[TalentUpgradeItem] | None = Field(None, alias="costItems")
+    mora_cost: int | None = Field(None, alias="coinCost")
+    description: list[str]
+    params: list[int | float]
 
     @field_validator("cost_items", mode="before")
-    def _convert_cost_items(
-        cls, v: Optional[Dict[str, int]]
-    ) -> Optional[List[TalentUpgradeItem]]:
+    def _convert_cost_items(cls, v: dict[str, int] | None) -> list[TalentUpgradeItem] | None:
         return [TalentUpgradeItem(id=int(k), amount=v[k]) for k in v] if v else None
+
+    @field_validator("description", mode="before")
+    def _fix_descriptions(cls, v: list[str | int]) -> list[str]:
+        # NOTE: This is a temporary fix for the issue with the API.
+        return [remove_html_tags(str(desc)) for desc in v]
 
 
 class Talent(BaseModel):
@@ -105,9 +106,9 @@ class Talent(BaseModel):
     name: str
     description: str
     icon: str
-    upgrades: Optional[List[TalentUpgrade]] = Field(None, alias="promote")
-    cooldown: Optional[float] = Field(None)
-    cost: Optional[int] = Field(None)
+    upgrades: list[TalentUpgrade] | None = Field(None, alias="promote")
+    cooldown: float | None = Field(None)
+    cost: int | None = Field(None)
 
     @field_validator("description", mode="before")
     def _format_description(cls, v: str) -> str:
@@ -118,7 +119,7 @@ class Talent(BaseModel):
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
     @field_validator("upgrades", mode="before")
-    def _convert_upgrades(cls, v: Dict[str, Dict[str, Any]]) -> List[TalentUpgrade]:
+    def _convert_upgrades(cls, v: dict[str, dict[str, Any]]) -> list[TalentUpgrade]:
         return [TalentUpgrade(**upgrade) for upgrade in v.values()]
 
 
@@ -140,21 +141,17 @@ class CharacterPromoteMaterial(BaseModel):
 class CharacterPromote(BaseModel):
     promote_level: int = Field(alias="promoteLevel")
     unlock_max_level: int = Field(alias="unlockMaxLevel")
-    cost_items: Optional[List[CharacterPromoteMaterial]] = Field(
-        None, alias="costItems"
-    )
-    add_stats: Optional[List[CharacterPromoteStat]] = Field(None, alias="addProps")
-    required_player_level: Optional[int] = Field(None, alias="requiredPlayerLevel")
-    coin_cost: Optional[int] = Field(None, alias="coinCost")
+    cost_items: list[CharacterPromoteMaterial] | None = Field(None, alias="costItems")
+    add_stats: list[CharacterPromoteStat] | None = Field(None, alias="addProps")
+    required_player_level: int | None = Field(None, alias="requiredPlayerLevel")
+    coin_cost: int | None = Field(None, alias="coinCost")
 
     @field_validator("cost_items", mode="before")
-    def _convert_cost_items(cls, v: Dict[str, int]) -> List[CharacterPromoteMaterial]:
-        return [
-            CharacterPromoteMaterial(id=int(item_id), count=v[item_id]) for item_id in v
-        ]
+    def _convert_cost_items(cls, v: dict[str, int]) -> list[CharacterPromoteMaterial]:
+        return [CharacterPromoteMaterial(id=int(item_id), count=v[item_id]) for item_id in v]
 
     @field_validator("add_stats", mode="before")
-    def _convert_add_stats(cls, v: Dict[str, float]) -> List[CharacterPromoteStat]:
+    def _convert_add_stats(cls, v: dict[str, float]) -> list[CharacterPromoteStat]:
         return [CharacterPromoteStat(id=stat_id, value=v[stat_id]) for stat_id in v]
 
 
@@ -165,8 +162,8 @@ class CharacterBaseStat(BaseModel):
 
 
 class CharacterUpgrade(BaseModel):
-    base_stats: List[CharacterBaseStat] = Field(alias="prop")
-    promotes: List[CharacterPromote] = Field(alias="promote")
+    base_stats: list[CharacterBaseStat] = Field(alias="prop")
+    promotes: list[CharacterPromote] = Field(alias="promote")
 
 
 class CharacterCV(BaseModel):
@@ -179,10 +176,10 @@ class CharacterInfo(BaseModel):
     detail: str
     constellation: str
     native: str
-    cv: List[CharacterCV]
+    cv: list[CharacterCV]
 
     @field_validator("cv", mode="before")
-    def _convert_cv(cls, v: Dict[str, str]) -> List[CharacterCV]:
+    def _convert_cv(cls, v: dict[str, str]) -> list[CharacterCV]:
         return [CharacterCV(lang=lang, va=v[lang]) for lang in v]
 
 
@@ -194,13 +191,13 @@ class CharacterDetail(BaseModel):
     weapon_type: str = Field(alias="weaponType")
     icon: str
     birthday: Birthday
-    release: Optional[int] = Field(None)
+    release: int | None = Field(None)
     route: str
     info: CharacterInfo = Field(alias="fetter")
     upgrade: CharacterUpgrade
-    ascension_materials: List[AscensionMaterial] = Field(alias="ascension")
-    talents: List[Talent] = Field(alias="talent")
-    constellations: List[Constellation] = Field(alias="constellation")
+    ascension_materials: list[AscensionMaterial] = Field(alias="ascension")
+    talents: list[Talent] = Field(alias="talent")
+    constellations: list[Constellation] = Field(alias="constellation")
     beta: bool = Field(False)
 
     @field_validator("id", mode="before")
@@ -212,21 +209,19 @@ class CharacterDetail(BaseModel):
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
     @field_validator("birthday", mode="before")
-    def _convert_birthday(cls, v: List[int]) -> Birthday:
+    def _convert_birthday(cls, v: list[int]) -> Birthday:
         return Birthday(month=v[0], day=v[1])
 
     @field_validator("ascension_materials", mode="before")
-    def _convert_ascension_materials(cls, v: Dict[str, int]) -> List[AscensionMaterial]:
+    def _convert_ascension_materials(cls, v: dict[str, int]) -> list[AscensionMaterial]:
         return [AscensionMaterial(id=int(item_id), rarity=v[item_id]) for item_id in v]
 
     @field_validator("talents", mode="before")
-    def _convert_talents(cls, v: Dict[str, Dict[str, Any]]) -> List[Talent]:
+    def _convert_talents(cls, v: dict[str, dict[str, Any]]) -> list[Talent]:
         return [Talent(**talent) for talent in v.values()]
 
     @field_validator("constellations", mode="before")
-    def _convert_constellations(
-        cls, v: Dict[str, Dict[str, Any]]
-    ) -> List[Constellation]:
+    def _convert_constellations(cls, v: dict[str, dict[str, Any]]) -> list[Constellation]:
         return [Constellation(**constellation) for constellation in v.values()]
 
     @property
@@ -268,12 +263,12 @@ class Character(BaseModel):
     weapon_type: str = Field(alias="weaponType")
     icon: str
     birthday: Birthday
-    release: Optional[int] = Field(None)
+    release: int | None = Field(None)
     route: str
     beta: bool = Field(False)
 
     @field_validator("id", mode="before")
-    def _stringify_id(cls, v: Union[int, str]) -> str:
+    def _stringify_id(cls, v: int | str) -> str:
         return str(v)
 
     @field_validator("icon", mode="before")
@@ -281,7 +276,7 @@ class Character(BaseModel):
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
     @field_validator("birthday", mode="before")
-    def _convert_birthday(cls, v: List[int]) -> Birthday:
+    def _convert_birthday(cls, v: list[int]) -> Birthday:
         return Birthday(month=v[0], day=v[1])
 
     @property

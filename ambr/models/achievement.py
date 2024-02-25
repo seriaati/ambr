@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -52,10 +52,10 @@ class AchievementDetail(BaseModel):
     id: int
     title: str
     description: str
-    rewards: List[AchievementReward]
+    rewards: list[AchievementReward]
 
     @field_validator("rewards", mode="before")
-    def _convert_rewards(cls, v: Dict[str, Dict[str, Any]]) -> List[AchievementReward]:
+    def _convert_rewards(cls, v: dict[str, dict[str, Any]]) -> list[AchievementReward]:
         return [AchievementReward(**v[item_id]) for item_id in v]
 
 
@@ -75,7 +75,7 @@ class Achievement(BaseModel):
 
     id: int
     order: int
-    details: List[AchievementDetail]
+    details: list[AchievementDetail]
 
 
 class AchievementCategory(BaseModel):
@@ -100,12 +100,12 @@ class AchievementCategory(BaseModel):
     name: str
     order: int
     icon: str
-    achievements: List[Achievement] = Field(alias="achievementList")
+    achievements: list[Achievement] = Field(alias="achievementList")
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
     @field_validator("achievements", mode="before")
-    def _convert_achievements(cls, v: Dict[str, Dict[str, Any]]) -> List[Achievement]:
+    def _convert_achievements(cls, v: dict[str, dict[str, Any]]) -> list[Achievement]:
         return [Achievement(**v[achievement_id]) for achievement_id in v]

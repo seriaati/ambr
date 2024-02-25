@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -34,10 +34,15 @@ class MaterialRecipe(BaseModel):
 class MaterialSource(BaseModel):
     name: str
     type: str
-    days: Optional[List[int]] = Field(None)
+    days: list[int] | None = Field(None)
+
+    @field_validator("name", mode="before")
+    def _fix_name(cls, v: str | int) -> str:
+        # NOTE: This is a temporary fix for the issue with the API.
+        return str(v)
 
     @field_validator("days", mode="before")
-    def _convert_days(cls, v: List[str]) -> List[int]:
+    def _convert_days(cls, v: list[str]) -> list[int]:
         return [WEEKDAYS[day] for day in v]
 
 
@@ -45,9 +50,9 @@ class MaterialDetail(BaseModel):
     name: str
     description: str
     type: str
-    recipe: List[MaterialRecipe]
+    recipe: list[MaterialRecipe]
     map_mark: bool = Field(alias="mapMark")
-    sources: List[MaterialSource] = Field(alias="source")
+    sources: list[MaterialSource] = Field(alias="source")
     icon: str
     rarity: int = Field(alias="rank")
     route: str
@@ -58,15 +63,15 @@ class MaterialDetail(BaseModel):
 
     @field_validator("recipe", mode="before")
     def _convert_recipe(
-        cls, v: Union[bool, Dict[str, Dict[str, Dict[str, Any]]]]
-    ) -> List[MaterialRecipe]:
+        cls, v: bool | dict[str, dict[str, dict[str, Any]]]
+    ) -> list[MaterialRecipe]:
         if isinstance(v, dict):
             recipe = list(v.values())[0]
             return [MaterialRecipe(**item) for item in recipe.values()]
         return []
 
     @field_validator("sources", mode="before")
-    def _convert_sources(cls, v: Optional[List[dict]]) -> List[MaterialSource]:
+    def _convert_sources(cls, v: list[dict] | None) -> list[MaterialSource]:
         return [MaterialSource(**item) for item in v] if v else []
 
     @field_validator("icon", mode="before")
@@ -106,6 +111,10 @@ class Material(BaseModel):
     icon: str
     rarity: int = Field(alias="rank")
     route: str
+
+    @field_validator("recipe", mode="before")
+    def _convert_recipe(cls, v: bool | None) -> bool:
+        return bool(v)
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:

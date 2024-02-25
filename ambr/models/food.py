@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional, Union
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -29,14 +29,14 @@ class FoodEffect(BaseModel):
 
 class FoodRecipe(BaseModel):
     effect_icon: str = Field(alias="effectIcon")
-    effects: List[FoodEffect] = Field(alias="effect")
+    effects: list[FoodEffect] = Field(alias="effect")
 
     @field_validator("effect_icon", mode="before")
     def _convert_effect_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
     @field_validator("effects", mode="before")
-    def _convert_effects(cls, v: Dict[str, str]) -> List[FoodEffect]:
+    def _convert_effects(cls, v: dict[str, str]) -> list[FoodEffect]:
         return [FoodEffect(id=item_id, description=v[item_id]) for item_id in v]
 
 
@@ -44,15 +44,15 @@ class FoodDetail(BaseModel):
     name: str
     description: str
     type: str
-    recipe: Union[FoodRecipe, bool]
+    recipe: FoodRecipe | bool
     map_mark: bool = Field(alias="mapMark")
-    sources: List[FoodSource] = Field(alias="source")
+    sources: list[FoodSource] = Field(alias="source")
     icon: str
     rarity: int = Field(alias="rank")
     route: str
 
     @field_validator("recipe", mode="before")
-    def _convert_recipe(cls, v: Union[bool, Dict[str, Any]]) -> Union[FoodRecipe, bool]:
+    def _convert_recipe(cls, v: bool | dict[str, Any]) -> FoodRecipe | bool:
         if isinstance(v, dict):
             return FoodRecipe(**v)
         return False
@@ -96,12 +96,16 @@ class Food(BaseModel):
     icon: str
     rarity: int = Field(alias="rank")
     route: str
-    effect_icon: Optional[str] = Field(None, alias="effectIcon")
+    effect_icon: str | None = Field(None, alias="effectIcon")
+
+    @field_validator("recipe", mode="before")
+    def _convert_recipe(cls, v: bool | None) -> bool:
+        return bool(v)
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI/{v}.png"
 
     @field_validator("effect_icon", mode="before")
-    def _convert_effect_icon_url(cls, v: Optional[str]) -> Optional[str]:
+    def _convert_effect_icon_url(cls, v: str | None) -> str | None:
         return f"https://api.ambr.top/assets/UI/{v}.png" if v else None

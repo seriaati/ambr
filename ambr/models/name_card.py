@@ -1,5 +1,3 @@
-from typing import Optional
-
 from pydantic import BaseModel, Field, field_validator
 
 from ..utils import remove_html_tags
@@ -18,7 +16,7 @@ class NamecardDetail(BaseModel):
     route: str
     description: str
     description_special: str = Field(alias="descriptionSpecial")
-    source: Optional[str]
+    source: str | None
 
     @field_validator("description", mode="before")
     def _format_description(cls, v: str) -> str:

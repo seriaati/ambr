@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -16,7 +16,7 @@ class MonsterReward(BaseModel):
     id: int
     rarity: int = Field(alias="rank")
     icon: str
-    count: Optional[float] = Field(None)
+    count: float | None = Field(None)
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
@@ -26,15 +26,11 @@ class MonsterReward(BaseModel):
 class MonsterEntry(BaseModel):
     id: int
     type: str
-    rewards: List[MonsterReward] = Field(alias="reward")
+    rewards: list[MonsterReward] = Field(alias="reward")
 
     @field_validator("rewards", mode="before")
-    def _convert_rewards(
-        cls, v: Optional[Dict[str, Dict[str, Any]]]
-    ) -> List[MonsterReward]:
-        return (
-            [MonsterReward(id=int(item_id), **v[item_id]) for item_id in v] if v else []
-        )
+    def _convert_rewards(cls, v: dict[str, dict[str, Any]] | None) -> list[MonsterReward]:
+        return [MonsterReward(id=int(item_id), **v[item_id]) for item_id in v] if v else []
 
 
 class MonsterDetail(BaseModel):
@@ -43,17 +39,17 @@ class MonsterDetail(BaseModel):
     type: str
     icon: str
     route: str
-    title: Optional[str]
-    special_name: Optional[str] = Field(alias="specialName")
+    title: str | None
+    special_name: str | None = Field(alias="specialName")
     description: str
-    entries: List[MonsterEntry]
+    entries: list[MonsterEntry]
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI{'/monster' if 'MonsterIcon' in v else ''}/{v}.png"  # noqa: E501
 
     @field_validator("entries", mode="before")
-    def _convert_entries(cls, v: Dict[str, Dict[str, Any]]) -> List[MonsterEntry]:
+    def _convert_entries(cls, v: dict[str, dict[str, Any]]) -> list[MonsterEntry]:
         return [MonsterEntry(**v[item_id]) for item_id in v]
 
     @field_validator("description", mode="before")

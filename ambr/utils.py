@@ -1,5 +1,5 @@
 import re
-from typing import Any, Dict
+from typing import Any
 
 
 def remove_html_tags(text: str) -> str:
@@ -7,7 +7,7 @@ def remove_html_tags(text: str) -> str:
     return re.sub(clean, "", text).replace("\\n", "\n")
 
 
-def replace_placeholders(string: str, params: Dict[str, Any]) -> str:
+def replace_placeholders(string: str, params: dict[str, Any]) -> str:
     for key, value in params.items():
         string = string.replace(f"$[{key}]", str(value))
     string = re.sub(r"\{SPRITE_PRESET#[^\}]+\}", "", string)
