@@ -79,6 +79,7 @@ class AmbrAPI:
         self._headers = headers or {"User-Agent": "ambr-py"}
 
     async def __aenter__(self) -> "AmbrAPI":
+        await self.start()
         return self
 
     async def __aexit__(self, exc_type, exc, tb) -> None:  # noqa: ANN001
