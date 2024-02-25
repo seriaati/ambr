@@ -66,6 +66,7 @@ class AmbrAPI:
 
     def __init__(
         self,
+        *,
         lang: Language = Language.EN,
         cache_ttl: int = 3600,
         headers: dict[str, Any] | None = None,
