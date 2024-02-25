@@ -2,7 +2,7 @@ from .abyss import *
 from .achievement import *
 from .artifact import *
 from .book import *
-from .change_log import *
+from .changelog import *
 from .character import *
 from .character_fetter import *
 from .domain import *

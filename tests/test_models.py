@@ -152,7 +152,7 @@ async def test_domains(api_client: ambr.AmbrAPI) -> None:
 
 @pytest.mark.asyncio
 async def test_change_logs(api_client: ambr.AmbrAPI) -> None:
-    await api_client.fetch_change_logs()
+    await api_client.fetch_changelogs()
 
 
 @pytest.mark.asyncio

@@ -13,7 +13,7 @@ from .models import (
     ArtifactSetDetail,
     Book,
     BookDetail,
-    ChangeLog,
+    Changelog,
     Character,
     CharacterDetail,
     CharacterFetter,
@@ -513,20 +513,20 @@ class AmbrAPI:
         data = await self._request("dailyDungeon", use_cache=use_cache)
         return Domains(**data["data"])
 
-    async def fetch_change_logs(self, use_cache: bool = True) -> list[ChangeLog]:
+    async def fetch_changelogs(self, use_cache: bool = True) -> list[Changelog]:
         """
-        Fetch change logs from the API.
+        Fetch changelogs from the API.
 
         Returns
         -------
-        List[ChangeLog]
-            A list of ChangeLog objects.
+        List[Changelog]
+            A list of Changelog objects.
         """
         data = await self._request("changelog", static=True, use_cache=use_cache)
-        change_logs: list[ChangeLog] = []
-        for change_log_id, log in data["data"].items():
-            change_logs.append(ChangeLog(id=int(change_log_id), **log))
-        return change_logs
+        changelogs: list[Changelog] = []
+        for changelog_id, log in data["data"].items():
+            changelogs.append(Changelog(id=int(changelog_id), **log))
+        return changelogs
 
     async def fetch_upgrade_data(self, use_cache: bool = True) -> UpgradeData:
         """

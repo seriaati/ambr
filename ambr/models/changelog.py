@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, field_validator
 
 __all__ = (
     "Item",
-    "ChangeLog",
+    "Changelog",
 )
 
 
@@ -11,7 +11,7 @@ class Item(BaseModel):
     ids: list[str]
 
 
-class ChangeLog(BaseModel):
+class Changelog(BaseModel):
     """
     Represents a change log.
 
