@@ -1,10 +1,9 @@
-import asyncio
 import logging
 from enum import Enum
 from typing import Any, Final
 
-import aiohttp
-from diskcache import Cache
+from aiohttp_client_cache.backends.sqlite import SQLiteBackend
+from aiohttp_client_cache.session import CachedSession
 
 from .exceptions import DataNotFoundError
 from .models import (
@@ -65,12 +64,19 @@ LOGGER_ = logging.getLogger("ambr.py")
 class AmbrAPI:
     BASE_URL: Final[str] = "https://api.ambr.top/v2"
 
-    def __init__(self, lang: Language = Language.EN, cache_ttl: int = 3600) -> None:
+    def __init__(
+        self,
+        lang: Language = Language.EN,
+        cache_ttl: int = 3600,
+        headers: dict[str, Any] | None = None,
+    ) -> None:
         self.lang = lang
         self.cache_ttl = cache_ttl
 
-        self.session = aiohttp.ClientSession(headers={"User-Agent": "ambr.py"})
-        self.cache = Cache(".cache/ambr")
+        self._cache = SQLiteBackend("./.cache/ambr/aiohttp-cache.db", expire_after=cache_ttl)
+        self._session = CachedSession(
+            headers=headers or {"User-Agent": "ambr-py"}, cache=self._cache
+        )
 
     async def __aenter__(self) -> "AmbrAPI":
         return self
@@ -103,24 +109,24 @@ class AmbrAPI:
         else:
             url = f"{self.BASE_URL}/{self.lang.value}/{endpoint}"
 
-        cache = await asyncio.to_thread(self.cache.get, url)
-        if cache is not None and use_cache:
-            return cache  # type: ignore
-
         LOGGER_.debug("Requesting %s...", url)
-        async with self.session.get(url) as resp:
-            data = await resp.json()
-            if "code" in data and data["code"] == 404:
-                raise DataNotFoundError(data["data"])
-            await asyncio.to_thread(self.cache.set, url, data, expire=self.cache_ttl)
-            return data
+
+        if not use_cache:
+            async with self._session.disabled(), self._session.get(url) as resp:
+                data = await resp.json()
+        else:
+            async with self._session.get(url) as resp:
+                data = await resp.json()
+
+        if "code" in data and data["code"] == 404:
+            raise DataNotFoundError(data["data"])
+        return data
 
     async def close(self) -> None:
         """
         Closes the client session.
         """
-        await self.session.close()
-        self.cache.close()
+        await self._session.close()
 
     async def fetch_achievement_categories(
         self, use_cache: bool = True
