@@ -34,9 +34,9 @@ async with AmbrAPI(lang=Language.CHT) as api:
     for character in characters:
         print(character.name)
 
-    light_cones = await api.fetch_light_cones(use_cache=False)
-    for light_cone in light_cones:
-        print(light_cone.id)
+    weapons = await api.fetch_weapons(use_cache=False)
+    for weapon in weapons:
+        print(weapon.id)
 ```
 
 # Usage
@@ -70,11 +70,11 @@ asyncio.run(main())
 > You ***need*** to call `start()` or the api client will not function properly; the `close()` method closes the request session and database properly.
 
 ## Client parameters
-Currently, the `EnkaAPI` class allows you to pass in 4 parameters:
+Currently, the `AmbrAPI` class allows you to pass in 3 parameters:
 ### Language
 This will affect the languages of names of weapon, character, constellations, etc. You can find all the languages [here](https://github.com/seriaati/ambr/blob/d20969fb0e69d398391040afa823c798c3acac22/ambr/client.py#L43-L58).
 ### Headers
-Custom headers used when requesting the Enka API, it is recommended to set a user agent, the default is `{"User-Agent": "ambr-py"}`.
+Custom headers used when requesting the Amber API, it is recommended to set a user agent, the default is `{"User-Agent": "ambr-py"}`.
 ### Cache TTL
 Default is 3600 seconds (1 hour), the cache is evicted when this time expires. Note that setting a longer TTL might result in inconsistent data.
 
