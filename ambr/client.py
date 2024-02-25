@@ -73,10 +73,9 @@ class AmbrAPI:
         self.lang = lang
         self.cache_ttl = cache_ttl
 
+        self._session: CachedSession | None = None
         self._cache = SQLiteBackend("./.cache/ambr/aiohttp-cache.db", expire_after=cache_ttl)
-        self._session = CachedSession(
-            headers=headers or {"User-Agent": "ambr-py"}, cache=self._cache
-        )
+        self._headers = headers or {"User-Agent": "ambr-py"}
 
     async def __aenter__(self) -> "AmbrAPI":
         return self
@@ -104,6 +103,10 @@ class AmbrAPI:
         Dict[str, Any]
             The response from the API.
         """
+        if self._session is None:
+            msg = "Call `start` before making requests."
+            raise RuntimeError(msg)
+
         if static:
             url = f"{self.BASE_URL}/static/{endpoint}"
         else:
@@ -122,11 +125,18 @@ class AmbrAPI:
             raise DataNotFoundError(data["data"])
         return data
 
+    async def start(self) -> None:
+        """
+        Starts the client session.
+        """
+        self._session = CachedSession(headers=self._headers, cache=self._cache)
+
     async def close(self) -> None:
         """
         Closes the client session.
         """
-        await self._session.close()
+        if self._session is not None:
+            await self._session.close()
 
     async def fetch_achievement_categories(
         self, use_cache: bool = True
