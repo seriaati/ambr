@@ -136,3 +136,9 @@ async def test_invalid_id() -> None:
     with pytest.raises(ambr.DataNotFoundError):
         async with ambr.AmbrAPI() as api:
             await api.fetch_character_detail("invalid")
+
+
+@pytest.mark.asyncio
+async def test_abyss_data() -> None:
+    async with ambr.AmbrAPI() as api:
+        await api.fetch_abyss_data()
