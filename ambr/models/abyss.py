@@ -153,6 +153,21 @@ class Abyss(BaseModel):
         return datetime.datetime.fromtimestamp(v)
 
 
+class AbyssEnemyProperty(BaseModel):
+    """
+    AbyssEnemyProperty model.
+
+    Attributes:
+        initial_value (float): Initial value.
+        type (str): Type of the property, e.g. "FIGHT_PROP_BASE_HP".
+        growth_type (str): Growth type, e.g. "GROW_CURVE_HP".
+    """
+
+    initial_value: float = Field(..., alias="initValue")
+    type: str = Field(..., alias="propType")
+    growth_type: str = Field(..., alias="type")
+
+
 class AbyssEnemy(BaseModel):
     """
     AbyssEnemy model.
@@ -168,10 +183,15 @@ class AbyssEnemy(BaseModel):
     id: int
     link: bool
     name: str
+    properties: list[AbyssEnemyProperty] = Field(..., alias="prop")
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://api.ambr.top/assets/UI{'/monster' if 'MonsterIcon' in v else ''}/{v}.png"  # noqa: E501
+
+    @field_validator("properties", mode="before")
+    def _convert_properties(cls, v: list[dict[str, Any]]) -> list[AbyssEnemyProperty]:
+        return [AbyssEnemyProperty(**prop) for prop in v]
 
 
 class AbyssResponse(BaseModel):
