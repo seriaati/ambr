@@ -95,11 +95,6 @@ class TalentUpgrade(BaseModel):
     def _convert_cost_items(cls, v: dict[str, int] | None) -> list[TalentUpgradeItem] | None:
         return [TalentUpgradeItem(id=int(k), amount=v[k]) for k in v] if v else None
 
-    @field_validator("description", mode="before")
-    def _fix_descriptions(cls, v: list[str | int]) -> list[str]:
-        # NOTE: This is a temporary fix for the issue with the API.
-        return [remove_html_tags(str(desc)) for desc in v]
-
 
 class Talent(BaseModel):
     type: TalentType

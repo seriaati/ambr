@@ -115,11 +115,6 @@ class TCGCardDetail(BaseModel):
     def _convert_talents(cls, v: dict[str, dict[str, Any]]) -> list[CardTalent]:
         return [CardTalent(id=item_id, **v[item_id]) for item_id in v]
 
-    @field_validator("story_detail", mode="before")
-    def _fix_story_detail(cls, v: str | int) -> str:
-        # NOTE: This is a temporary fix for the issue with the API.
-        return str(v)
-
 
 class TCGCard(BaseModel):
     """

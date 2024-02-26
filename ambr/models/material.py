@@ -36,11 +36,6 @@ class MaterialSource(BaseModel):
     type: str
     days: list[int] | None = Field(None)
 
-    @field_validator("name", mode="before")
-    def _fix_name(cls, v: str | int) -> str:
-        # NOTE: This is a temporary fix for the issue with the API.
-        return str(v)
-
     @field_validator("days", mode="before")
     def _convert_days(cls, v: list[str]) -> list[int]:
         return [WEEKDAYS[day] for day in v]

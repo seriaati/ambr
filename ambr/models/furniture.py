@@ -58,16 +58,6 @@ class FurnitureDetail(BaseModel):
             return None
         return FurnitureRecipe(**v)
 
-    @field_validator("categories", mode="before")
-    def _fix_categories(cls, v: list[str | int]) -> list[str]:
-        # NOTE: This is a temporary fix for the issue with the API.
-        return [remove_html_tags(str(cat)) for cat in v]
-
-    @field_validator("types", mode="before")
-    def _fix_types(cls, v: list[str | int]) -> list[str]:
-        # NOTE: This is a temporary fix for the issue with the API.
-        return [remove_html_tags(str(type_)) for type_ in v]
-
 
 class Furniture(BaseModel):
     """
