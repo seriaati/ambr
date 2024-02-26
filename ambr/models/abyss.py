@@ -152,6 +152,10 @@ class Abyss(BaseModel):
         # example 1709258399
         return datetime.datetime.fromtimestamp(v)
 
+    @field_validator("blessing", mode="before")
+    def _format_blessing(cls, v: list[dict[str, Any]]) -> Blessing:
+        return Blessing(**v[0])
+
 
 class AbyssEnemyProperty(BaseModel):
     """
