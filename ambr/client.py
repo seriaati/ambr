@@ -7,6 +7,7 @@ from aiohttp_client_cache.session import CachedSession
 
 from .exceptions import DataNotFoundError
 from .models import (
+    AbyssResponse,
     AchievementCategory,
     ArtifactSet,
     ArtifactSetDetail,
@@ -614,3 +615,15 @@ class AmbrAPI:
         """
         data = await self._request("weaponCurve", static=True, use_cache=use_cache)
         return data["data"]
+
+    async def fetch_abyss_data(self, use_cache: bool = True) -> AbyssResponse:
+        """
+        Fetches abyss data from the API.
+
+        Returns
+        -------
+        AbyssResponse
+            The abyss data.
+        """
+        data = await self._request("tower", use_cache=use_cache)
+        return AbyssResponse(**data["data"])
