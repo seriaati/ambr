@@ -616,6 +616,20 @@ class AmbrAPI:
         data = await self._request("weaponCurve", static=True, use_cache=use_cache)
         return data["data"]
 
+    async def fetch_monster_curve(
+        self, use_cache: bool = True
+    ) -> dict[str, dict[str, dict[str, float]]]:
+        """
+        Fetch monster curve from the API.
+
+        Returns
+        -------
+        Dict[str, Dict[str, Dict[str, float]]]
+            The monster curve.
+        """
+        data = await self._request("monsterCurve", static=True, use_cache=use_cache)
+        return data["data"]
+
     async def fetch_abyss_data(self, use_cache: bool = True) -> AbyssResponse:
         """
         Fetches abyss data from the API.

@@ -29,3 +29,10 @@ async def test_fetch_weapon_curve() -> None:
     async with ambr.AmbrAPI() as api:
         data = await api.fetch_weapon_curve()
         assert isinstance(data, dict)
+
+
+@pytest.mark.asyncio
+async def test_fetch_monster_curve() -> None:
+    async with ambr.AmbrAPI() as api:
+        data = await api.fetch_monster_curve()
+        assert isinstance(data, dict)
