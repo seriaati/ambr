@@ -194,6 +194,8 @@ class CharacterDetail(BaseModel):
     talents: list[Talent] = Field(alias="talent")
     constellations: list[Constellation] = Field(alias="constellation")
     beta: bool = Field(False)
+    special_stat: str = Field(alias="specialProp")
+    region: str
 
     @field_validator("id", mode="before")
     def _stringify_id(cls, v: int) -> str:
@@ -249,6 +251,10 @@ class Character(BaseModel):
         The character's release date.
     route: :class:`str`
         The character's route.
+    special_stat: :class:`str`
+        The character's special stat, e.g. FIGHT_PROP_CRITICAL_HURT.
+    region: :class:`str`
+        The character's region.
     """
 
     id: str
@@ -261,6 +267,8 @@ class Character(BaseModel):
     release: int | None = Field(None)
     route: str
     beta: bool = Field(False)
+    special_stat: str = Field(alias="specialProp")
+    region: str
 
     @field_validator("id", mode="before")
     def _stringify_id(cls, v: int | str) -> str:
