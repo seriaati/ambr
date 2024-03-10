@@ -18,11 +18,23 @@ class City(IntEnum):
     FONTAINE = 5
 
 
+class DomainReward(BaseModel):
+    id: int
+
+    @property
+    def icon(self) -> str:
+        return f"https://api.ambr.top/assets/UI/{self.id}.png"
+
+
 class Domain(BaseModel):
     id: int
     name: str
-    rewards: list[int] = Field(alias="reward")
+    rewards: list[DomainReward] = Field(alias="reward")
     city: City
+
+    @field_validator("rewards", mode="before")
+    def convert_rewards(cls, v: list[int]) -> list[DomainReward]:
+        return [DomainReward(id=id_) for id_ in v]
 
 
 class Domains(BaseModel):
