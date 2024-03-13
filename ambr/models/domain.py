@@ -11,7 +11,7 @@ __all__ = (
 
 
 class City(IntEnum):
-    MONDSTAT = 1
+    MONDSTADT = 1
     LIYUE = 2
     INAZUMA = 3
     SUMERU = 4
