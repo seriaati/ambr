@@ -223,4 +223,8 @@ class AbyssResponse(BaseModel):
 
     @field_validator("abyss_items", mode="before")
     def _convert_abyss_items(cls, v: dict[str, dict[str, Any]]) -> list[Abyss]:
-        return [Abyss(**v[item_id]) for item_id in v]
+        result: list[Abyss] = []
+        for item_id in v:
+            v[item_id]["openTime"] = v[item_id]["schedule"]["openTime"]
+            result.append(Abyss(**v[item_id]))
+        return result
