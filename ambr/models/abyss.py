@@ -135,6 +135,7 @@ class Abyss(BaseModel):
 
     Attributes:
         id (int): ID of the abyss.
+        open_time (datetime.datetime): Opening time.
         close_time (datetime.datetime): Closing time.
         blessing (Blessing): Blessing.
         abyss_corridor (AbyssData): Abyss corridor.
@@ -142,10 +143,16 @@ class Abyss(BaseModel):
     """
 
     id: int
+    open_time: datetime.datetime = Field(..., alias="openTime")
     close_time: datetime.datetime = Field(..., alias="closeTime")
     blessing: Blessing
     abyss_corridor: AbyssData = Field(..., alias="entrance")
     abyssal_moon_spire: AbyssData = Field(..., alias="schedule")
+
+    @field_validator("open_time", mode="before")
+    def _format_open_time(cls, v: int) -> datetime.datetime:
+        # example 1709258399
+        return datetime.datetime.fromtimestamp(v)
 
     @field_validator("close_time", mode="before")
     def _format_close_time(cls, v: int) -> datetime.datetime:
