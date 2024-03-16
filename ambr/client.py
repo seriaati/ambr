@@ -119,20 +119,28 @@ class AmbrAPI:
 
         if not use_cache:
             async with self._session.disabled(), self._session.get(url) as resp:
+                if resp.status != 200:
+                    self._handle_error(resp.status)
                 data = await resp.json()
         else:
             async with self._session.get(url) as resp:
+                if resp.status != 200:
+                    self._handle_error(resp.status)
                 data = await resp.json()
 
-        match resp.status:
-            case 200:
-                return data
+        return data
+
+    def _handle_error(self, code: int) -> None:
+        """
+        A helper function to handle errors.
+        """
+        match code:
             case 404:
                 raise DataNotFoundError
             case 504:
                 raise ConnectionTimeoutError
             case _:
-                raise AmbrAPIError(resp.status)
+                raise AmbrAPIError(code)
 
     async def start(self) -> None:
         """
