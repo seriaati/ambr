@@ -137,7 +137,7 @@ class AmbrAPI:
         match code:
             case 404:
                 raise DataNotFoundError
-            case 522:
+            case 522 | 524:
                 raise ConnectionTimeoutError
             case _:
                 raise AmbrAPIError(code)
