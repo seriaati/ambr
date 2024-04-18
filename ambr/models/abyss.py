@@ -210,16 +210,16 @@ class AbyssResponse(BaseModel):
     AbyssResponse model.
 
     Attributes:
-        enemies (List[AbyssEnemy]): List of abyss enemies.
+        enemies (Dict[str, AbyssEnemy]): Dictionary of abyss enemies.
         abyss_items (List[Abyss]): List of abyss items.
     """
 
-    enemies: list[AbyssEnemy] = Field(..., alias="monsterList")
+    enemies: dict[str, AbyssEnemy] = Field(..., alias="monsterList")
     abyss_items: list[Abyss] = Field(..., alias="items")
 
     @field_validator("enemies", mode="before")
-    def _convert_enemies(cls, v: dict[str, dict[str, Any]]) -> list[AbyssEnemy]:
-        return [AbyssEnemy(**v[item_id]) for item_id in v]
+    def _convert_enemies(cls, v: dict[str, dict[str, Any]]) -> dict[str, AbyssEnemy]:
+        return {item_id: AbyssEnemy(**v[item_id]) for item_id in v}
 
     @field_validator("abyss_items", mode="before")
     def _convert_abyss_items(cls, v: dict[str, dict[str, Any]]) -> list[Abyss]:
