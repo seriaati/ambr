@@ -3,9 +3,13 @@
  > Note: I am not the developer of Project Amber.  
 
 ## Quick Links
-Developing something for Hoyoverse games? Check out my other API wrappers:
- - [enka.py](https://github.com/seriaati/enka-py) is an Enka Network API wrapper for fetching in-game showcase.
- - [yatta](https://github.com/seriaati/yatta) is a Project Yatta API wrapper for fetching Honkai Star Rail game data.
+
+Developing something for Hoyoverse games? Here's a collection of Python async API wrappers for Hoyoverse games made by me:
+
+- [enka.py](https://github.com/seriaati/enka-py) is an Enka Network API wrapper for fetching in-game showcase.
+- [yatta.py](https://github.com/seriaati/yatta) is a Project Yatta API wrapper for fetching Honkai Star Rail game data.
+- [ambr.py](https://github.com/seriaati/yatta) is a Project Ambr API wrapper for fetching Genshin Impact game data.
+- [hakushin.py](https://github.com/seriaati/hakushin) is a Hakushin API wrapper for fetching Genshin Impact and Honkai Star Rail beta game data.
 
 ## Features
  - Fully typed.
