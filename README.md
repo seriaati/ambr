@@ -21,12 +21,10 @@ Project Ambr is a beautiful website that displays Genshin Impact game data.
 - Fully typed.
 - Fully asynchronous by using `aiofiles`, `aiohttp`, and `asyncio`, suitable for Discord bots.
 - Provides direct icon URLs.
-- Supports Python 3.10+.
+- Supports Python 3.11+.
 - Supports all game languages.
-- Supports both Genshin Impact and Honkai Star Rail.
 - Supports persistent caching using SQLite.
 - Supports [Pydantic V2](https://github.com/pydantic/pydantic), this also means full autocomplete support.
-- Seamlessly integrates with [GenshinData](https://gitlab.com/Dimbreath/AnimeGameData) and [StarRailData](https://github.com/Dimbreath/StarRailData).
 
 ## Installation
 
