@@ -167,7 +167,7 @@ class FurnitureSetDetail(BaseModel):
     def _convert_furniture_items(cls, v: dict[str, dict[str, Any]]) -> list[FurnitureItem]:
         return [FurnitureItem(id=int(item_id), **v[item_id]) for item_id in v]
 
-    @field_validator("favored_npc_ids", mode="before")
+    @field_validator("favorite_npcs", mode="before")
     def _convert_favored_ids(
         cls, v: dict[str, dict[str, Any]] | None
     ) -> list[FurnitureSetFavoriteNPC]:
