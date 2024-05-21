@@ -89,3 +89,6 @@ select = [
 
 [tool.ruff.lint.flake8-type-checking]
 quote-annotations = true
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
