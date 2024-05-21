@@ -3,10 +3,10 @@ from typing import Any
 from pydantic import BaseModel, Field, field_validator
 
 __all__ = (
-    "ArtifactAffix",
     "Artifact",
-    "ArtifactSetDetail",
+    "ArtifactAffix",
     "ArtifactSet",
+    "ArtifactSetDetail",
 )
 
 
@@ -14,12 +14,9 @@ class ArtifactAffix(BaseModel):
     """
     Represents an artifact set's set effect.
 
-    Attributes
-    ----------
-    id: :class:`str`
-        The effect's ID.
-    effect: :class:`str`
-        The effect's description.
+    Attributes:
+        id (str): The effect's ID.
+        effect (str): The effect's description.
     """
 
     id: str
@@ -30,18 +27,12 @@ class Artifact(BaseModel):
     """
     Represents an artifact.
 
-    Attributes
-    ----------
-    pos: :class:`str`
-        The position of the artifact.
-    name: :class:`str`
-        The name of the artifact.
-    description: :class:`str`
-        The description of the artifact.
-    max_rarity: :class:`int`
-        The maximum rarity of the artifact.
-    icon: :class:`str`
-        The name of the icon file for the artifact.
+    Attributes:
+        pos (str): The position of the artifact.
+        name (str): The name of the artifact.
+        description (str): The description of the artifact.
+        max_rarity (int): The maximum rarity of the artifact.
+        icon (str): The name of the icon file for the artifact.
     """
 
     pos: str
@@ -59,22 +50,14 @@ class ArtifactSetDetail(BaseModel):
     """
     Represents an artifact set detail.
 
-    Attributes
-    ----------
-    id: :class:`int`
-        The artifact set's ID.
-    name: :class:`str`
-        The artifact set's name.
-    rarity_list: List[:class:`int`]
-        The artifact set's rarity list.
-    affix_list: List[:class:`ArtifactAffix`]
-        The artifact set's affix list.
-    icon: :class:`str`
-        The artifact set's icon.
-    route: :class:`str`
-        The artifact set's route.
-    artifacts: List[:class:`Artifact`]
-        Artifacts that belong to the artifact set.
+    Attributes:
+        id (int): The artifact set's ID.
+        name (str): The artifact set's name.
+        rarity_list (list[int]): The artifact set's rarity list.
+        affix_list (list[ArtifactAffix]): The artifact set's affix list.
+        icon (str): The artifact set's icon.
+        route (str): The artifact set's route.
+        artifacts (list[Artifact]): Artifacts that belong to the artifact set.
     """
 
     id: int
@@ -102,22 +85,14 @@ class ArtifactSet(BaseModel):
     """
     Represents an artifact set.
 
-    Attributes
-    ----------
-    id: :class:`int`
-        The artifact set's ID.
-    name: :class:`str`
-        The artifact set's name.
-    rarity_list: List[:class:`int`]
-        Obtainable rarities of the artifact set.
-    affix_list: List[:class:`str`]
-        The artifact set's set effect list.
-    icon: :class:`str`
-        The artifact set's icon.
-    route: :class:`str`
-        The artifact set's route.
-    sort_order: :class:`int`
-        The artifact set's sort order.
+    Attributes:
+        id (int): The artifact set's ID.
+        name (str): The artifact set's name.
+        rarity_list (list[int]): Obtainable rarities of the artifact set.
+        affix_list (list[ArtifactAffix]): The artifact set's set effect list.
+        icon (str): The artifact set's icon.
+        route (str): The artifact set's route.
+        sort_order (int): The artifact set's sort order.
     """
 
     id: int

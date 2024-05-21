@@ -5,11 +5,11 @@ from pydantic import BaseModel, Field, field_validator
 from ..utils import remove_html_tags
 
 __all__ = (
-    "FoodSource",
+    "Food",
+    "FoodDetail",
     "FoodEffect",
     "FoodRecipe",
-    "FoodDetail",
-    "Food",
+    "FoodSource",
 )
 
 

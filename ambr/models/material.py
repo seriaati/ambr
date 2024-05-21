@@ -5,10 +5,10 @@ from pydantic import BaseModel, Field, field_validator
 from ..utils import remove_html_tags
 
 __all__ = (
+    "Material",
+    "MaterialDetail",
     "MaterialRecipe",
     "MaterialSource",
-    "MaterialDetail",
-    "Material",
 )
 
 WEEKDAYS = {
@@ -61,7 +61,7 @@ class MaterialDetail(BaseModel):
         cls, v: bool | dict[str, dict[str, dict[str, Any]]]
     ) -> list[MaterialRecipe]:
         if isinstance(v, dict):
-            recipe = list(v.values())[0]
+            recipe = next(iter(v.values()))
             return [MaterialRecipe(**item) for item in recipe.values()]
         return []
 

@@ -5,10 +5,10 @@ from pydantic import BaseModel, Field, field_validator
 from ..utils import remove_html_tags
 
 __all__ = (
-    "MonsterReward",
-    "MonsterEntry",
-    "MonsterDetail",
     "Monster",
+    "MonsterDetail",
+    "MonsterEntry",
+    "MonsterReward",
 )
 
 
@@ -46,7 +46,7 @@ class MonsterDetail(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI{'/monster' if 'MonsterIcon' in v else ''}/{v}.png"  # noqa: E501
+        return f"https://api.ambr.top/assets/UI{'/monster' if 'MonsterIcon' in v else ''}/{v}.png"
 
     @field_validator("entries", mode="before")
     def _convert_entries(cls, v: dict[str, dict[str, Any]]) -> list[MonsterEntry]:

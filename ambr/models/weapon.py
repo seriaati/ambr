@@ -5,15 +5,15 @@ from pydantic import BaseModel, Field, field_validator
 from ..utils import remove_html_tags
 
 __all__ = (
-    "WeaponAscensionMaterial",
-    "WeaponPromoteCostItem",
-    "WeaponPromote",
-    "WeaponBaseStat",
-    "WeaponUpgrade",
-    "WeaponAffixUpgrade",
-    "WeaponAffix",
-    "WeaponDetail",
     "Weapon",
+    "WeaponAffix",
+    "WeaponAffixUpgrade",
+    "WeaponAscensionMaterial",
+    "WeaponBaseStat",
+    "WeaponDetail",
+    "WeaponPromote",
+    "WeaponPromoteCostItem",
+    "WeaponUpgrade",
 )
 
 
@@ -104,7 +104,7 @@ class WeaponDetail(BaseModel):
     def _convert_affix(cls, v: dict[str, dict[str, Any]] | None) -> WeaponAffix | None:
         if v is None:
             return None
-        affix = list(v.values())[0]
+        affix = next(iter(v.values()))
         return WeaponAffix(**affix)
 
     @field_validator("ascension_materials", mode="before")

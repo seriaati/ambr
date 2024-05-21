@@ -6,15 +6,15 @@ from pydantic import BaseModel, Field, field_validator
 from ..utils import remove_html_tags
 
 __all__ = (
-    "ChallengeTarget",
-    "Chamber",
-    "LeyLineDisorder",
-    "Floor",
-    "AbyssData",
     "Abyss",
+    "AbyssData",
     "AbyssEnemy",
     "AbyssResponse",
     "Blessing",
+    "ChallengeTarget",
+    "Chamber",
+    "Floor",
+    "LeyLineDisorder",
 )
 
 
@@ -43,7 +43,7 @@ class ChallengeTarget(BaseModel):
 
     Attributes:
         type (str): Type of the challenge target.
-        values (List[int]): List of values.
+        values (list[int]): list of values.
         formatted (str): Formatted challenge target.
     """
 
@@ -63,8 +63,8 @@ class Chamber(BaseModel):
         id (int): ID of the chamber.
         challenge_target (ChallengeTarget): Challenge target.
         enemy_level (int): Enemy level.
-        wave_one_enemies (List[int]): List of enemies in the first wave.
-        wave_two_enemies (Optional[List[int]]): List of enemies in the second wave.
+        wave_one_enemies (list[int]): list of enemies in the first wave.
+        wave_two_enemies (list[int] | None): list of enemies in the second wave.
     """
 
     id: int
@@ -99,8 +99,8 @@ class Floor(BaseModel):
 
     Attributes:
         id (int): ID of the floor.
-        chambers (List[Chamber]): List of chambers.
-        ley_line_disorders (List[LeyLineDisorder]): List of ley line disorders.
+        chambers (list[Chamber]): list of chambers.
+        ley_line_disorders (list[LeyLineDisorder]): list of ley line disorders.
         override_enemy_level (int): Override enemy level.
         team_num (int): Number of teams.
     """
@@ -117,8 +117,8 @@ class AbyssData(BaseModel):
     AbyssData model.
 
     Attributes:
-        open_time (Optional[datetime.datetime]): Opening time.
-        floors (List[Floor]): List of floors.
+        open_time (datetime.datetime | None): Opening time.
+        floors (list[Floor]): list of floors.
     """
 
     open_time: datetime.datetime | None = Field(None, alias="openTime")
@@ -198,7 +198,7 @@ class AbyssEnemy(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI{'/monster' if 'MonsterIcon' in v else ''}/{v}.png"  # noqa: E501
+        return f"https://api.ambr.top/assets/UI{'/monster' if 'MonsterIcon' in v else ''}/{v}.png"
 
     @field_validator("properties", mode="before")
     def _convert_properties(cls, v: list[dict[str, Any]]) -> list[AbyssEnemyProperty]:
@@ -210,8 +210,8 @@ class AbyssResponse(BaseModel):
     AbyssResponse model.
 
     Attributes:
-        enemies (Dict[str, AbyssEnemy]): Dictionary of abyss enemies.
-        abyss_items (List[Abyss]): List of abyss items.
+        enemies (dict[str, AbyssEnemy]): Dictionary of abyss enemies.
+        abyss_items (list[Abyss]): list of abyss items.
     """
 
     enemies: dict[str, AbyssEnemy] = Field(..., alias="monsterList")

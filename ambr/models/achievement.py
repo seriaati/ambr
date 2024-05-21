@@ -3,10 +3,10 @@ from typing import Any
 from pydantic import BaseModel, Field, field_validator
 
 __all__ = (
-    "AchievementReward",
-    "AchievementDetail",
     "Achievement",
     "AchievementCategory",
+    "AchievementDetail",
+    "AchievementReward",
 )
 
 
@@ -14,14 +14,10 @@ class AchievementReward(BaseModel):
     """
     Represents an achievement reward.
 
-    Attributes
-    ----------
-    rarity: :class:`int`
-        The achievement reward's rarity.
-    amount: :class:`int`
-        The achievement reward's amount.
-    icon: :class:`str`
-        The achievement reward's icon.
+    Attributes:
+        rarity (int): The achievement reward's rarity.
+        amount (int): The achievement reward's amount.
+        icon (str): The achievement reward's icon.
     """
 
     rarity: int = Field(alias="rank")
@@ -37,16 +33,11 @@ class AchievementDetail(BaseModel):
     """
     Represents an achievement detail.
 
-    Attributes
-    ----------
-    id: :class:`int`
-        The achievement's ID.
-    title: :class:`str`
-        The achievement's title.
-    description: :class:`str`
-        The achievement's description.
-    rewards: List[:class:`AchievementReward`]
-        The achievement's rewards.
+    Attributes:
+        id (int): The achievement's ID.
+        title (str): The achievement's title.
+        description (str): The achievement's description.
+        rewards (list[AchievementReward]): The achievement's rewards.
     """
 
     id: int
@@ -63,14 +54,10 @@ class Achievement(BaseModel):
     """
     Represents an achievement.
 
-    Attributes
-    ----------
-    id: :class:`int`
-        The achievement's ID.
-    order: :class:`int`
-        The achievement's order.
-    details: List[:class:`AchievementDetail`]
-        The achievement's details.
+    Attributes:
+        id (int): The achievement's ID.
+        order (int): The achievement's order.
+        details (list[AchievementDetail]): The achievement's details.
     """
 
     id: int
@@ -82,18 +69,12 @@ class AchievementCategory(BaseModel):
     """
     Represents an achievement category.
 
-    Attributes
-    ----------
-    id: :class:`int`
-        The achievement category's ID.
-    name: :class:`str`
-        The achievement category's name.
-    order: :class:`int`
-        The achievement category's order.
-    icon: :class:`str`
-        The achievement category's icon.
-    achievements: List[:class:`Achievement`]
-        The achievement category's achievements.
+    Attributes:
+        id (int): The achievement category's ID.
+        name (str): The achievement category's name.
+        order (int): The achievement category's order.
+        icon (str): The achievement category's icon.
+        achievements (list[Achievement]): The achievement category's achievements.
     """
 
     id: int

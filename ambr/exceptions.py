@@ -1,4 +1,4 @@
-__all__ = ("AmbrAPIError", "DataNotFoundError", "ConnectionTimeoutError")
+__all__ = ("AmbrAPIError", "ConnectionTimeoutError", "DataNotFoundError")
 
 
 class AmbrAPIError(Exception):

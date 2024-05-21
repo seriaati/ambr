@@ -3,9 +3,9 @@ from typing import Any
 from pydantic import BaseModel, Field, field_validator
 
 __all__ = (
-    "UpgradeItem",
     "Upgrade",
     "UpgradeData",
+    "UpgradeItem",
 )
 
 

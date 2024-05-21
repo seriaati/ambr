@@ -1,9 +1,9 @@
 from pydantic import BaseModel, Field, field_validator
 
 __all__ = (
-    "BookVolume",
-    "BookDetail",
     "Book",
+    "BookDetail",
+    "BookVolume",
 )
 
 
@@ -11,16 +11,11 @@ class BookVolume(BaseModel):
     """
     Represents a book volume.
 
-    Attributes
-    ----------
-    id: :class:`int`
-        The book volume's ID.
-    name: :class:`str`
-        The book volume's name.
-    description: :class:`str`
-        The book volume's description.
-    story_id: :class:`int`
-        The book volume's story ID.
+    Attributes:
+        id (int): The book volume's ID.
+        name (str): The book volume's name.
+        description (str): The book volume's description.
+        story_id (int): The book volume's story ID.
     """
 
     id: int
@@ -33,18 +28,12 @@ class BookDetail(BaseModel):
     """
     Represents a book detail.
 
-    Attributes
-    ----------
-    id: :class:`int`
-        The book's ID.
-    name: :class:`str`
-        The book's name.
-    rarity: :class:`int`
-        The book's rarity.
-    icon: :class:`str`
-        The book's icon.
-    volumes: List[:class:`BookVolume`]
-        The book's volumes.
+    Attributes:
+        id (int): The book's ID.
+        name (str): The book's name.
+        rarity (int): The book's rarity.
+        icon (str): The book's icon.
+        volumes (list[BookVolume]): The book's volumes.
     """
 
     id: int
@@ -62,18 +51,12 @@ class Book(BaseModel):
     """
     Represents a book.
 
-    Attributes
-    ----------
-    id: :class:`int`
-        The book's ID.
-    name: :class:`str`
-        The book's name.
-    rarity: :class:`int`
-        The book's rarity.
-    icon: :class:`str`
-        The book's icon.
-    route: :class:`str`
-        The book's route.
+    Attributes:
+        id (int): The book's ID.
+        name (str): The book's name.
+        rarity (int): The book's rarity.
+        icon (str): The book's icon.
+        route (str): The book's route.
     """
 
     id: int

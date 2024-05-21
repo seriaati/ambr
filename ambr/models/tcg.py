@@ -5,12 +5,12 @@ from pydantic import BaseModel, Field, field_validator
 from ..utils import remove_html_tags, replace_placeholders
 
 __all__ = (
-    "CardTag",
-    "DiceCost",
     "CardDictionary",
+    "CardTag",
     "CardTalent",
-    "TCGCardDetail",
+    "DiceCost",
     "TCGCard",
+    "TCGCardDetail",
 )
 
 
