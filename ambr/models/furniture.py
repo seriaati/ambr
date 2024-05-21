@@ -131,6 +131,11 @@ class FurnitureItem(BaseModel):
         return f"https://api.ambr.top/assets/UI/furniture/{v}.png"
 
 
+class FurnitureSetFavoriteNPC(BaseModel):
+    id: str
+    icon: str
+
+
 class FurnitureSetDetail(BaseModel):
     id: int
     name: str
@@ -140,6 +145,7 @@ class FurnitureSetDetail(BaseModel):
     types: list[str]
     description: str
     furniture_items: list[FurnitureItem] = Field(alias="suiteItemList")
+    favorite_npcs: list[FurnitureSetFavoriteNPC] = Field(alias="favoriteNpcList")
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
@@ -160,3 +166,13 @@ class FurnitureSetDetail(BaseModel):
     @field_validator("furniture_items", mode="before")
     def _convert_furniture_items(cls, v: dict[str, dict[str, Any]]) -> list[FurnitureItem]:
         return [FurnitureItem(id=int(item_id), **v[item_id]) for item_id in v]
+
+    @field_validator("favorite_npcs", mode="before")
+    def _convert_favored_ids(
+        cls, v: dict[str, dict[str, Any]] | None
+    ) -> list[FurnitureSetFavoriteNPC]:
+        return (
+            [FurnitureSetFavoriteNPC(id=id_, icon=data["icon"]) for id_, data in v.items()]
+            if v is not None
+            else []
+        )
