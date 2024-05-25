@@ -13,7 +13,7 @@ license = "GPL-3.0"
 name = "ambr-py"
 packages = [{include = "ambr"}]
 readme = "README.md"
-version = "1.7.4"
+version = "1.7.5"
 
 [tool.poetry.dependencies]
 aiohttp = "^3.8.6"
