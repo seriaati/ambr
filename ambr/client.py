@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import logging
 from enum import Enum
-from typing import Any, Final
+from typing import TYPE_CHECKING, Any, Final, Self
 
 from aiohttp_client_cache.backends.sqlite import SQLiteBackend
 from aiohttp_client_cache.session import CachedSession
@@ -38,6 +40,9 @@ from .models import (
 from .models.furniture import FurnitureSet, FurnitureSetDetail
 from .utils import remove_html_tags
 
+if TYPE_CHECKING:
+    import aiohttp
+
 __all__ = ("AmbrAPI", "Language")
 
 
@@ -71,15 +76,15 @@ class AmbrAPI:
         lang: Language = Language.EN,
         cache_ttl: int = 3600,
         headers: dict[str, Any] | None = None,
+        session: aiohttp.ClientSession | None = None,
     ) -> None:
         self.lang = lang
-        self.cache_ttl = cache_ttl
+        self._cache_ttl = cache_ttl
 
-        self._session: CachedSession | None = None
-        self._cache = SQLiteBackend("./.cache/ambr/aiohttp-cache.db", expire_after=cache_ttl)
+        self._session: aiohttp.ClientSession | None = session
         self._headers = headers or {"User-Agent": "ambr-py"}
 
-    async def __aenter__(self) -> "AmbrAPI":
+    async def __aenter__(self) -> Self:
         await self.start()
         return self
 
@@ -117,7 +122,7 @@ class AmbrAPI:
 
         LOGGER_.debug("Requesting %s...", url)
 
-        if not use_cache:
+        if not use_cache and isinstance(self._session, CachedSession):
             async with self._session.disabled(), self._session.get(url) as resp:
                 if resp.status != 200:
                     self._handle_error(resp.status)
@@ -146,7 +151,10 @@ class AmbrAPI:
         """
         Starts the client session.
         """
-        self._session = CachedSession(headers=self._headers, cache=self._cache)
+        self._session = self._session or CachedSession(
+            headers=self._headers,
+            cache=SQLiteBackend("./.cache/ambr/aiohttp-cache.db", expire_after=self._cache_ttl),
+        )
 
     async def close(self) -> None:
         """
