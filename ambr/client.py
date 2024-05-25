@@ -81,7 +81,7 @@ class AmbrAPI:
         self.lang = lang
         self._cache_ttl = cache_ttl
 
-        self._session: aiohttp.ClientSession | None = session
+        self._session = session
         self._headers = headers or {"User-Agent": "ambr-py"}
 
     async def __aenter__(self) -> Self:
