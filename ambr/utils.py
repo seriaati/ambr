@@ -17,6 +17,7 @@ __all__ = (
     "get_params",
     "get_skill_attributes",
     "remove_html_tags",
+    "replace_fight_prop_with_name",
     "replace_placeholders",
     "replace_pronouns",
 )
@@ -144,4 +145,14 @@ def get_skill_attributes(descriptions: list[str], params: list[int | float]) -> 
         except ValueError:
             continue
         result += f"{k}: {v}\n"
+    return result
+
+
+def replace_fight_prop_with_name(
+    stat_values: dict[str, Any], manual_weapon: dict[str, str]
+) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for fight_prop, value in stat_values.items():
+        fight_prop_name = manual_weapon.get(fight_prop, fight_prop)
+        result[fight_prop_name] = value
     return result
