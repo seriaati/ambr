@@ -81,7 +81,7 @@ select = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
-"**/__init__.py" = ["F403"]
+"**/__init__.py" = ["F403", "F401"]
 "**/client.py" = ["PLR0904", "A002"]
 "**/models/*.py" = ["N805"]
 "**/tests/*.py" = ["ANN001"]
