@@ -1,3 +1,4 @@
+import datetime
 from enum import IntEnum, StrEnum
 from typing import Any
 
@@ -186,7 +187,7 @@ class CharacterDetail(BaseModel):
     weapon_type: str = Field(alias="weaponType")
     icon: str
     birthday: Birthday
-    release: int | None = Field(None)
+    release: datetime.datetime | None = Field(None)
     route: str
     info: CharacterInfo = Field(alias="fetter")
     upgrade: CharacterUpgrade
@@ -221,6 +222,10 @@ class CharacterDetail(BaseModel):
     def _convert_constellations(cls, v: dict[str, dict[str, Any]]) -> list[Constellation]:
         return [Constellation(**constellation) for constellation in v.values()]
 
+    @field_validator("release", mode="before")
+    def _convert_release(cls, v: int | None) -> datetime.datetime | None:
+        return datetime.datetime.fromtimestamp(v) if v is not None else None
+
     @property
     def gacha(self) -> str:
         """The character's gacha image."""
@@ -247,7 +252,7 @@ class Character(BaseModel):
         The character's icon.
     birthday: List[:class:`str`]
         The character's birthday.
-    release: :class:`int`
+    release: :class:`datetime.datetime`
         The character's release date.
     route: :class:`str`
         The character's route.
@@ -264,7 +269,7 @@ class Character(BaseModel):
     weapon_type: str = Field(alias="weaponType")
     icon: str
     birthday: Birthday
-    release: int | None = Field(None)
+    release: datetime.datetime | None = Field(None)
     route: str
     beta: bool = Field(False)
     special_stat: str = Field(alias="specialProp")
@@ -281,6 +286,10 @@ class Character(BaseModel):
     @field_validator("birthday", mode="before")
     def _convert_birthday(cls, v: list[int]) -> Birthday:
         return Birthday(month=v[0], day=v[1])
+
+    @field_validator("release", mode="before")
+    def _convert_release(cls, v: int | None) -> datetime.datetime | None:
+        return datetime.datetime.fromtimestamp(v) if v is not None else None
 
     @property
     def gacha(self) -> str:
