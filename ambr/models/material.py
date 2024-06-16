@@ -2,6 +2,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
+from ..constants import WEEKDAYS
 from ..utils import remove_html_tags
 
 __all__ = (
@@ -10,16 +11,6 @@ __all__ = (
     "MaterialRecipe",
     "MaterialSource",
 )
-
-WEEKDAYS = {
-    "monday": 1,
-    "tuesday": 2,
-    "wednesday": 3,
-    "thursday": 4,
-    "friday": 5,
-    "saturday": 6,
-    "sunday": 0,
-}
 
 
 class MaterialRecipe(BaseModel):

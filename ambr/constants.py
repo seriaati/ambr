@@ -1,4 +1,4 @@
-__all__ = ("AUDIO_LANGUAGES", "PERCENTAGE_FIGHT_PROPS")
+__all__ = ("AUDIO_LANGUAGES", "PERCENTAGE_FIGHT_PROPS", "WEEKDAYS")
 
 PERCENTAGE_FIGHT_PROPS = {
     "FIGHT_PROP_HP_PERCENT",
@@ -26,3 +26,13 @@ PERCENTAGE_FIGHT_PROPS = {
 }
 
 AUDIO_LANGUAGES = ("EN", "CHS", "JP", "KR")
+
+WEEKDAYS = {
+    "monday": 0,
+    "tuesday": 1,
+    "wednesday": 2,
+    "thursday": 3,
+    "friday": 4,
+    "saturday": 5,
+    "sunday": 6,
+}
