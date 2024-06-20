@@ -11,7 +11,7 @@ name = "ambr-py"
 packages = [{include = "ambr"}]
 readme = "README.md"
 repository = "https://github.com/seriaati/ambr"
-version = "1.7.8"
+version = "1.7.9"
 
 [tool.poetry.dependencies]
 aiohttp = "^3.8.6"
