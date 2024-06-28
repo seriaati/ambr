@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field, field_validator
 
+from ambr.utils import remove_html_tags
+
 __all__ = (
     "Book",
     "BookDetail",
@@ -22,6 +24,11 @@ class BookVolume(BaseModel):
     name: str
     description: str
     story_id: int = Field(alias="storyId")
+
+    @field_validator("description", mode="before")
+    @classmethod
+    def __format_description(cls, v: str) -> str:
+        return remove_html_tags(v)
 
 
 class BookDetail(BaseModel):
