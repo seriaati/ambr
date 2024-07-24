@@ -45,7 +45,6 @@ class FoodDetail(BaseModel):
     description: str
     type: str
     recipe: FoodRecipe | bool
-    map_mark: bool = Field(alias="mapMark")
     sources: list[FoodSource] = Field(alias="source")
     icon: str
     rarity: int = Field(alias="rank")
@@ -76,8 +75,6 @@ class Food(BaseModel):
         The food's type.
     recipe: :class:`bool`
         Whether the food is a recipe.
-    map_mark: :class:`bool`
-        Whether the food has a map mark.
     icon: :class:`str`
         The food's icon.
     rarity: :class:`int`
@@ -92,7 +89,6 @@ class Food(BaseModel):
     name: str
     type: str
     recipe: bool
-    map_mark: bool = Field(alias="mapMark")
     icon: str
     rarity: int = Field(alias="rank")
     route: str

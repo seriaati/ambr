@@ -37,7 +37,6 @@ class MaterialDetail(BaseModel):
     description: str
     type: str
     recipe: list[MaterialRecipe]
-    map_mark: bool = Field(alias="mapMark")
     sources: list[MaterialSource] = Field(alias="source")
     icon: str
     rarity: int = Field(alias="rank")
@@ -79,8 +78,6 @@ class Material(BaseModel):
         The material's type.
     recipe: :class:`bool`
         Whether the material is a recipe.
-    map_mark: :class:`bool`
-        Whether the material has a map mark.
     icon: :class:`str`
         The material's icon.
     rarity: :class:`int`
@@ -93,7 +90,6 @@ class Material(BaseModel):
     name: str
     type: str
     recipe: bool
-    map_mark: bool = Field(alias="mapMark")
     icon: str
     rarity: int = Field(alias="rank")
     route: str
