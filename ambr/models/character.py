@@ -92,6 +92,11 @@ class TalentUpgrade(BaseModel):
     description: list[str]
     params: list[int | float]
 
+    @field_validator("description", mode="before")
+    @classmethod
+    def __stringify_descriptions(cls, v: list[Any]) -> list[str]:
+        return [str(i) for i in v]
+
     @field_validator("cost_items", mode="before")
     def _convert_cost_items(cls, v: dict[str, int] | None) -> list[TalentUpgradeItem] | None:
         return [TalentUpgradeItem(id=int(k), amount=v[k]) for k in v] if v else None
