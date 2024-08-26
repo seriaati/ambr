@@ -16,6 +16,7 @@ class City(IntEnum):
     INAZUMA = 3
     SUMERU = 4
     FONTAINE = 5
+    NATLAN = 6
 
 
 class DomainReward(BaseModel):
