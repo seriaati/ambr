@@ -24,7 +24,7 @@ class DomainReward(BaseModel):
 
     @property
     def icon(self) -> str:
-        return f"https://api.ambr.top/assets/UI/UI_ItemIcon_{self.id}.png"
+        return f"https://gi.yatta.top/assets/UI/UI_ItemIcon_{self.id}.png"
 
 
 class Domain(BaseModel):

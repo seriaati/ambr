@@ -38,4 +38,4 @@ class Quest(BaseModel):
 
     @field_validator("chapter_icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/{v}.png"

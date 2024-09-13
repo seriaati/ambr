@@ -71,7 +71,7 @@ class Constellation(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/{v}.png"
 
 
 class TalentType(IntEnum):
@@ -117,7 +117,7 @@ class Talent(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/{v}.png"
 
     @field_validator("upgrades", mode="before")
     def _convert_upgrades(cls, v: dict[str, dict[str, Any]]) -> list[TalentUpgrade]:
@@ -209,7 +209,7 @@ class CharacterDetail(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/{v}.png"
 
     @field_validator("birthday", mode="before")
     def _convert_birthday(cls, v: list[int]) -> Birthday:
@@ -286,7 +286,7 @@ class Character(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/{v}.png"
 
     @field_validator("birthday", mode="before")
     def _convert_birthday(cls, v: list[int]) -> Birthday:

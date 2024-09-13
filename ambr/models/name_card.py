@@ -24,7 +24,7 @@ class NamecardDetail(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/namecard/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/namecard/{v}.png"
 
     @property
     def picture(self) -> str:
@@ -60,7 +60,7 @@ class Namecard(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/namecard/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/namecard/{v}.png"
 
     @property
     def picture(self) -> str:

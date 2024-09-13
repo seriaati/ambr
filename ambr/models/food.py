@@ -33,7 +33,7 @@ class FoodRecipe(BaseModel):
 
     @field_validator("effect_icon", mode="before")
     def _convert_effect_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/{v}.png"
 
     @field_validator("effects", mode="before")
     def _convert_effects(cls, v: dict[str, str]) -> list[FoodEffect]:
@@ -58,7 +58,7 @@ class FoodDetail(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/{v}.png"
 
 
 class Food(BaseModel):
@@ -100,8 +100,8 @@ class Food(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/{v}.png"
 
     @field_validator("effect_icon", mode="before")
     def _convert_effect_icon_url(cls, v: str | None) -> str | None:
-        return f"https://api.ambr.top/assets/UI/{v}.png" if v else None
+        return f"https://gi.yatta.top/assets/UI/{v}.png" if v else None

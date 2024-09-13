@@ -98,7 +98,7 @@ class WeaponDetail(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/{v}.png"
 
     @field_validator("affix", mode="before")
     def _convert_affix(cls, v: dict[str, dict[str, Any]] | None) -> WeaponAffix | None:
@@ -141,4 +141,4 @@ class Weapon(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/{v}.png"

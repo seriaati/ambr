@@ -198,7 +198,7 @@ class AbyssEnemy(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI{'/monster' if 'MonsterIcon' in v else ''}/{v}.png"
+        return f"https://gi.yatta.top/assets/UI{'/monster' if 'MonsterIcon' in v else ''}/{v}.png"
 
     @field_validator("properties", mode="before")
     def _convert_properties(cls, v: list[dict[str, Any]]) -> list[AbyssEnemyProperty]:

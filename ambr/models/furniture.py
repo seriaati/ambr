@@ -22,7 +22,7 @@ class FurnitureRecipeInput(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/{v}.png"
 
 
 class FurnitureRecipe(BaseModel):
@@ -50,7 +50,7 @@ class FurnitureDetail(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/furniture/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/furniture/{v}.png"
 
     @field_validator("recipe", mode="before")
     def _convert_recipe(cls, v: dict[str, Any] | None) -> FurnitureRecipe | None:
@@ -97,7 +97,7 @@ class Furniture(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/furniture/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/furniture/{v}.png"
 
 
 class FurnitureSet(BaseModel):
@@ -110,7 +110,7 @@ class FurnitureSet(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/furnitureSuite/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/furnitureSuite/{v}.png"
 
     @field_validator("categories", mode="before")
     def _convert_categories(cls, v: list[str] | None) -> list[str]:
@@ -128,7 +128,7 @@ class FurnitureItem(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/furniture/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/furniture/{v}.png"
 
 
 class FurnitureSetFavoriteNPC(BaseModel):
@@ -149,7 +149,7 @@ class FurnitureSetDetail(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://api.ambr.top/assets/UI/furnitureSuite/{v}.png"
+        return f"https://gi.yatta.top/assets/UI/furnitureSuite/{v}.png"
 
     @field_validator("categories", mode="before")
     def _convert_categories(cls, v: list[str] | None) -> list[str]:
