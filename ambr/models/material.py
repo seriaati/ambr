@@ -19,7 +19,7 @@ class MaterialRecipe(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://gi.yatta.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.moe/assets/UI/{v}.png"
 
 
 class MaterialSource(BaseModel):
@@ -61,7 +61,7 @@ class MaterialDetail(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://gi.yatta.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.moe/assets/UI/{v}.png"
 
 
 class Material(BaseModel):
@@ -100,4 +100,4 @@ class Material(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://gi.yatta.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.moe/assets/UI/{v}.png"

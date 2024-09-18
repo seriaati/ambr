@@ -26,7 +26,7 @@ class AchievementReward(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://gi.yatta.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.moe/assets/UI/{v}.png"
 
 
 class AchievementDetail(BaseModel):
@@ -85,7 +85,7 @@ class AchievementCategory(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://gi.yatta.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.moe/assets/UI/{v}.png"
 
     @field_validator("achievements", mode="before")
     def _convert_achievements(cls, v: dict[str, dict[str, Any]]) -> list[Achievement]:

@@ -74,7 +74,7 @@ class CardTalent(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://gi.yatta.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.moe/assets/UI/{v}.png"
 
     @property
     def small_icon(self) -> str:
@@ -101,7 +101,7 @@ class TCGCardDetail(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://gi.yatta.top/assets/UI/gcg/{v}.png"
+        return f"https://gi.yatta.moe/assets/UI/gcg/{v}.png"
 
     @property
     def small_icon(self) -> str:
@@ -159,7 +159,7 @@ class TCGCard(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://gi.yatta.top/assets/UI/gcg/{v}.png"
+        return f"https://gi.yatta.moe/assets/UI/gcg/{v}.png"
 
     @property
     def small_icon(self) -> str:

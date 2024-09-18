@@ -22,7 +22,7 @@ class Upgrade(BaseModel):
 
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
-        return f"https://gi.yatta.top/assets/UI/{v}.png"
+        return f"https://gi.yatta.moe/assets/UI/{v}.png"
 
     @field_validator("items", mode="before")
     def _convert_items(cls, v: dict[str, int]) -> list[UpgradeItem]:

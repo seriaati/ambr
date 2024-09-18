@@ -68,7 +68,7 @@ LOGGER_ = logging.getLogger("ambr.py")
 
 
 class AmbrAPI:
-    BASE_URL: Final[str] = "https://gi.yatta.top/api/v2"
+    BASE_URL: Final[str] = "https://gi.yatta.moe/api/v2"
 
     def __init__(
         self,

@@ -2,7 +2,7 @@
 
 ## Introduction
 
-ambr-py is an async API wrapper for [Project Ambr](https://gi.yatta.top/) written in Python.  
+ambr-py is an async API wrapper for [Project Ambr](https://gi.yatta.moe/) written in Python.  
 Project Ambr is a beautiful website that displays Genshin Impact game data.  
 Developing something for Hoyoverse games? You might be interested in [other API wrappers](https://github.com/seriaati#api-wrappers) written by me.
   
