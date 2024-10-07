@@ -1,9 +1,8 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field, field_validator
 
-__all__ = (
-    "Changelog",
-    "Item",
-)
+__all__ = ("Changelog", "Item")
 
 
 class Item(BaseModel):

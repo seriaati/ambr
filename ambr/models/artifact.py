@@ -1,13 +1,10 @@
+from __future__ import annotations
+
 from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
-__all__ = (
-    "Artifact",
-    "ArtifactAffix",
-    "ArtifactSet",
-    "ArtifactSetDetail",
-)
+__all__ = ("Artifact", "ArtifactAffix", "ArtifactSet", "ArtifactSetDetail")
 
 
 class ArtifactAffix(BaseModel):

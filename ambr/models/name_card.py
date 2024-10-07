@@ -1,11 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field, field_validator
 
 from ..utils import remove_html_tags
 
-__all__ = (
-    "Namecard",
-    "NamecardDetail",
-)
+__all__ = ("Namecard", "NamecardDetail")
 
 
 class NamecardDetail(BaseModel):

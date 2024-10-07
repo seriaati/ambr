@@ -1,12 +1,10 @@
+from __future__ import annotations
+
 from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
-__all__ = (
-    "Upgrade",
-    "UpgradeData",
-    "UpgradeItem",
-)
+__all__ = ("Upgrade", "UpgradeData", "UpgradeItem")
 
 
 class UpgradeItem(BaseModel):

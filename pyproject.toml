@@ -1,92 +1,35 @@
 [project]
 name = "ambr-py"
-requires-python = ">=3.11"
-
-[tool.poetry]
-authors = ["seriaati <seria.ati@gmail.com>"]
-description = "API wrapper for ambr.top written in Python"
-documentation = "https://github.com/seriaati/ambr/wiki"
-license = "GPL-3.0"
-name = "ambr-py"
-packages = [{include = "ambr"}]
+description = "Async API wrapper for Project Amber (gi.yatta.moe) written in Python"
 readme = "README.md"
-repository = "https://github.com/seriaati/ambr"
 version = "1.7.15"
+requires-python = ">=3.11"
+dependencies = [
+    "aiohttp-client-cache[sqlite]>=0.12.3",
+    "aiohttp>=3.10.9",
+    "pydantic>=2.9.2",
+]
+authors = [{ "name" = "seriaati", "email" = "seria.ati@gmail.com" }]
+license = { file = "LICENSE" }
 
-[tool.poetry.dependencies]
-aiohttp = "^3.8.6"
-aiohttp-client-cache = {extras = ["sqlite"], version = "^0.12.0"}
-pydantic = "^2.4.2"
-python = "^3.11"
-
-[tool.poetry.group.dev]
-optional = true
-
-[tool.poetry.group.dev.dependencies]
-pre-commit = "^4.0.0"
-pytest = "^8.0.0"
-pytest-asyncio = "^0.24.0"
+[project.urls]
+Homepage = "https://github.com/seriaati/ambr"
+Repository = "https://github.com/seriaati/ambr.git"
+Issues = "https://github.com/seriaati/ambr/issues"
 
 [build-system]
-build-backend = "poetry.core.masonry.api"
-requires = ["poetry-core"]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.ruff]
-line-length = 100
-target-version = "py311"
+[tool.hatch.build.targets.wheel]
+packages = ["ambr"]
 
-[tool.ruff.lint]
-ignore = [
-  "E501",
-  "ANN401",
-  "ANN101",
-  "ANN102",
-  "ANN003",
-  "PLR0913",
-  "PLR2004",
-  "PLR0917",
-  "PLR6301",
-  "ANN002",
-]
-preview = true
-select = [
-  "E",
-  "W",
-  "C90",
-  "F",
-  "UP",
-  "B",
-  "SIM",
-  "I",
-  "N",
-  "TCH",
-  "ANN",
-  "ASYNC",
-  "A",
-  "C4",
-  "EM",
-  "FA",
-  "ICN",
-  "G",
-  "PIE",
-  "T20",
-  "ARG",
-  "ERA",
-  "LOG",
-  "PL",
-  "TRY",
-  "RUF",
-]
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 
-[tool.ruff.lint.per-file-ignores]
-"**/__init__.py" = ["F403", "F401"]
-"**/client.py" = ["PLR0904", "A002"]
-"**/models/*.py" = ["N805"]
-"**/tests/*.py" = ["ANN001"]
-"playground.*.py" = ["ALL"]
+[tool.pyright]
+typeCheckingMode = "standard"
 
-[tool.ruff.lint.flake8-type-checking]
-quote-annotations = true
-
-[tool.ruff.lint.pydocstyle]
-convention = "google"
+[tool.uv]
+dev-dependencies = ["pytest-asyncio>=0.24.0", "pytest>=8.3.3"]

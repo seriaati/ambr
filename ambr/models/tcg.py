@@ -1,17 +1,12 @@
+from __future__ import annotations
+
 from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
 from ..utils import remove_html_tags, replace_placeholders
 
-__all__ = (
-    "CardDictionary",
-    "CardTag",
-    "CardTalent",
-    "DiceCost",
-    "TCGCard",
-    "TCGCardDetail",
-)
+__all__ = ("CardDictionary", "CardTag", "CardTalent", "DiceCost", "TCGCard", "TCGCardDetail")
 
 
 class CardTag(BaseModel):

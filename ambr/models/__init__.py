@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .abyss import *
 from .achievement import *
 from .artifact import *

@@ -1,13 +1,11 @@
+from __future__ import annotations
+
 from enum import IntEnum
 from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
-__all__ = (
-    "City",
-    "Domain",
-    "Domains",
-)
+__all__ = ("City", "Domain", "Domains")
 
 
 class City(IntEnum):

@@ -1,16 +1,12 @@
+from __future__ import annotations
+
 from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
 from ..utils import remove_html_tags
 
-__all__ = (
-    "Food",
-    "FoodDetail",
-    "FoodEffect",
-    "FoodRecipe",
-    "FoodSource",
-)
+__all__ = ("Food", "FoodDetail", "FoodEffect", "FoodRecipe", "FoodSource")
 
 
 class FoodSource(BaseModel):

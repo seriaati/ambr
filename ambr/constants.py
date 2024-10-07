@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 __all__ = ("AUDIO_LANGUAGES", "PERCENTAGE_FIGHT_PROPS", "WEEKDAYS")
 
 PERCENTAGE_FIGHT_PROPS = {

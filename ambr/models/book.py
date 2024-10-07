@@ -1,12 +1,10 @@
+from __future__ import annotations
+
 from pydantic import BaseModel, Field, field_validator
 
 from ambr.utils import remove_html_tags
 
-__all__ = (
-    "Book",
-    "BookDetail",
-    "BookVolume",
-)
+__all__ = ("Book", "BookDetail", "BookVolume")
 
 
 class BookVolume(BaseModel):

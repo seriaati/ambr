@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
@@ -5,12 +7,7 @@ from pydantic import BaseModel, Field, field_validator
 from ..constants import WEEKDAYS
 from ..utils import remove_html_tags
 
-__all__ = (
-    "Material",
-    "MaterialDetail",
-    "MaterialRecipe",
-    "MaterialSource",
-)
+__all__ = ("Material", "MaterialDetail", "MaterialRecipe", "MaterialSource")
 
 
 class MaterialRecipe(BaseModel):

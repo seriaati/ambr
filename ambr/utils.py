@@ -76,10 +76,7 @@ def calculate_upgrade_stat_values(
             for stat in promote.add_stats:
                 if stat.value != 0:
                     result[stat.id] += stat.value
-                    if stat.id in {
-                        "FIGHT_PROP_CRITICAL_HURT",
-                        "FIGHT_PROP_CRITICAL",
-                    }:
+                    if stat.id in {"FIGHT_PROP_CRITICAL_HURT", "FIGHT_PROP_CRITICAL"}:
                         result[stat.id] += 0.5
             break
 
