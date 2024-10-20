@@ -5,7 +5,6 @@ import pytest
 import ambr
 
 
-@pytest.mark.asyncio
 async def test_book() -> None:
     async with ambr.AmbrAPI() as api:
         books = await api.fetch_books()
@@ -13,7 +12,6 @@ async def test_book() -> None:
             await api.fetch_book_detail(book.id)
 
 
-@pytest.mark.asyncio
 async def test_character() -> None:
     async with ambr.AmbrAPI() as api:
         characters = await api.fetch_characters()
@@ -21,7 +19,6 @@ async def test_character() -> None:
             await api.fetch_character_detail(character.id)
 
 
-@pytest.mark.asyncio
 async def test_character_fetter() -> None:
     async with ambr.AmbrAPI() as api:
         characters = await api.fetch_characters()
@@ -31,7 +28,6 @@ async def test_character_fetter() -> None:
             await api.fetch_character_fetter(character.id)
 
 
-@pytest.mark.asyncio
 async def test_food() -> None:
     async with ambr.AmbrAPI() as api:
         foods = await api.fetch_foods()
@@ -39,7 +35,6 @@ async def test_food() -> None:
             await api.fetch_food_detail(food.id)
 
 
-@pytest.mark.asyncio
 async def test_furniture() -> None:
     async with ambr.AmbrAPI() as api:
         furniture_sets = await api.fetch_furniture_sets()
@@ -47,7 +42,6 @@ async def test_furniture() -> None:
             await api.fetch_furniture_set_detail(furniture_set.id)
 
 
-@pytest.mark.asyncio
 async def test_material() -> None:
     async with ambr.AmbrAPI() as api:
         materials = await api.fetch_materials()
@@ -55,7 +49,6 @@ async def test_material() -> None:
             await api.fetch_material_detail(material.id)
 
 
-@pytest.mark.asyncio
 async def test_monster() -> None:
     async with ambr.AmbrAPI() as api:
         monsters = await api.fetch_monsters()
@@ -63,7 +56,6 @@ async def test_monster() -> None:
             await api.fetch_monster_detail(monster.id)
 
 
-@pytest.mark.asyncio
 async def test_namecard() -> None:
     async with ambr.AmbrAPI() as api:
         namecards = await api.fetch_namecards()
@@ -71,7 +63,6 @@ async def test_namecard() -> None:
             await api.fetch_namecard_detail(namecard.id)
 
 
-@pytest.mark.asyncio
 async def test_tcg_card() -> None:
     async with ambr.AmbrAPI() as api:
         tcg_cards = await api.fetch_tcg_cards()
@@ -79,7 +70,6 @@ async def test_tcg_card() -> None:
             await api.fetch_tcg_card_detail(tcg_card.id)
 
 
-@pytest.mark.asyncio
 async def test_weapon() -> None:
     async with ambr.AmbrAPI() as api:
         weapons = await api.fetch_weapons()
@@ -87,7 +77,6 @@ async def test_weapon() -> None:
             await api.fetch_weapon_detail(weapon.id)
 
 
-@pytest.mark.asyncio
 async def test_artifact_sets() -> None:
     async with ambr.AmbrAPI() as api:
         artifact_sets = await api.fetch_artifact_sets()
@@ -95,7 +84,6 @@ async def test_artifact_sets() -> None:
             await api.fetch_artifact_set_detail(artifact_set.id)
 
 
-@pytest.mark.asyncio
 async def test_furniture_sets() -> None:
     async with ambr.AmbrAPI() as api:
         furniture_sets = await api.fetch_furniture_sets()
@@ -103,44 +91,37 @@ async def test_furniture_sets() -> None:
             await api.fetch_furniture_set_detail(furniture_set.id)
 
 
-@pytest.mark.asyncio
 async def test_achievement_categories() -> None:
     async with ambr.AmbrAPI() as api:
         await api.fetch_achievement_categories()
 
 
-@pytest.mark.asyncio
 async def test_quests() -> None:
     async with ambr.AmbrAPI() as api:
         await api.fetch_quests()
 
 
-@pytest.mark.asyncio
 async def test_domains() -> None:
     async with ambr.AmbrAPI() as api:
         await api.fetch_domains()
 
 
-@pytest.mark.asyncio
 async def test_changelogs() -> None:
     async with ambr.AmbrAPI() as api:
         await api.fetch_changelogs()
 
 
-@pytest.mark.asyncio
 async def test_upgrade_data() -> None:
     async with ambr.AmbrAPI() as api:
         await api.fetch_upgrade_data()
 
 
-@pytest.mark.asyncio
 async def test_invalid_id() -> None:
     with pytest.raises(ambr.DataNotFoundError):
         async with ambr.AmbrAPI() as api:
             await api.fetch_character_detail("invalid")
 
 
-@pytest.mark.asyncio
 async def test_abyss_data() -> None:
     async with ambr.AmbrAPI() as api:
         await api.fetch_abyss_data()
