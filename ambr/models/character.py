@@ -6,6 +6,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
+from ..enums import SpecialStat, WeaponType
 from ..utils import remove_html_tags
 
 __all__ = (
@@ -191,7 +192,7 @@ class CharacterDetail(BaseModel):
     rarity: int = Field(alias="rank")
     name: str
     element: Element
-    weapon_type: str = Field(alias="weaponType")
+    weapon_type: WeaponType = Field(alias="weaponType")
     icon: str
     birthday: Birthday
     release: datetime.datetime | None = Field(None)
@@ -202,7 +203,7 @@ class CharacterDetail(BaseModel):
     talents: list[Talent] = Field(alias="talent")
     constellations: list[Constellation] = Field(alias="constellation")
     beta: bool = Field(False)
-    special_stat: str = Field(alias="specialProp")
+    special_stat: SpecialStat = Field(alias="specialProp")
     region: str
 
     @field_validator("id", mode="before")
@@ -253,7 +254,7 @@ class Character(BaseModel):
         The character's name.
     element: :class:`Element`
         The character's element.
-    weapon_type: :class:`str`
+    weapon_type: :class:`WeaponType`
         The character's weapon type.
     icon: :class:`str`
         The character's icon.
@@ -263,7 +264,7 @@ class Character(BaseModel):
         The character's release date.
     route: :class:`str`
         The character's route.
-    special_stat: :class:`str`
+    special_stat: :class:`SpecialStat`
         The character's special stat, e.g. FIGHT_PROP_CRITICAL_HURT.
     region: :class:`str`
         The character's region.
@@ -273,13 +274,13 @@ class Character(BaseModel):
     rarity: int = Field(alias="rank")
     name: str
     element: Element
-    weapon_type: str = Field(alias="weaponType")
+    weapon_type: WeaponType = Field(alias="weaponType")
     icon: str
     birthday: Birthday
     release: datetime.datetime | None = Field(None)
     route: str
     beta: bool = Field(False)
-    special_stat: str = Field(alias="specialProp")
+    special_stat: SpecialStat = Field(alias="specialProp")
     region: str
 
     @field_validator("id", mode="before")
