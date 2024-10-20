@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 import datetime
-from enum import IntEnum, StrEnum
 from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
-from ..enums import SpecialStat, WeaponType
+from ..enums import Element, ExtraLevelType, SpecialStat, TalentType, WeaponType
 from ..utils import remove_html_tags
 
 __all__ = (
@@ -22,35 +21,16 @@ __all__ = (
     "CharacterPromoteStat",
     "CharacterUpgrade",
     "Constellation",
-    "Element",
-    "ExtraLevelType",
     "Talent",
     "TalentExtraLevel",
-    "TalentType",
     "TalentUpgrade",
     "TalentUpgradeItem",
 )
 
 
-class Element(StrEnum):
-    ANEMO = "Wind"
-    GEO = "Rock"
-    ELECTRO = "Electric"
-    PYRO = "Fire"
-    HYDRO = "Water"
-    CRYO = "Ice"
-    DENDRO = "Grass"
-
-
 class Birthday(BaseModel):
     month: int
     day: int
-
-
-class ExtraLevelType(IntEnum):
-    NORMAL = 1
-    ULTIMATE = 9
-    SKILL = 2
 
 
 class TalentExtraLevel(BaseModel):
@@ -75,12 +55,6 @@ class Constellation(BaseModel):
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://gi.yatta.moe/assets/UI/{v}.png"
-
-
-class TalentType(IntEnum):
-    NORMAL = 0
-    ULTIMATE = 1
-    PASSIVE = 2
 
 
 class TalentUpgradeItem(BaseModel):

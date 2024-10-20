@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from enum import StrEnum
+from enum import IntEnum, StrEnum
 
 __all__ = ("SpecialStat", "WeaponType")
 
@@ -37,3 +37,25 @@ class SpecialStat(StrEnum):
     GEO_DMG_BONUS = "FIGHT_PROP_ROCK_ADD_HURT"
     DENDRO_DMG_BONUS = "FIGHT_PROP_GRASS_ADD_HURT"
     PHYSICAL_DMG_BONUS = "FIGHT_PROP_PHYSICAL_ADD_HURT"
+
+
+class Element(StrEnum):
+    ANEMO = "Wind"
+    GEO = "Rock"
+    ELECTRO = "Electric"
+    PYRO = "Fire"
+    HYDRO = "Water"
+    CRYO = "Ice"
+    DENDRO = "Grass"
+
+
+class TalentType(IntEnum):
+    NORMAL = 0
+    ULTIMATE = 1
+    PASSIVE = 2
+
+
+class ExtraLevelType(IntEnum):
+    NORMAL = 1
+    ULTIMATE = 9
+    SKILL = 2
