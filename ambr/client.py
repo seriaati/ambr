@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-import logging
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Final, Self
 
 from aiohttp_client_cache.backends.sqlite import SQLiteBackend
 from aiohttp_client_cache.session import CachedSession
+from loguru import logger
 
 from .exceptions import AmbrAPIError, ConnectionTimeoutError, DataNotFoundError
 from .models import (
@@ -19,6 +19,7 @@ from .models import (
     Character,
     CharacterDetail,
     CharacterFetter,
+    CharacterGuide,
     Domains,
     Food,
     FoodDetail,
@@ -62,9 +63,6 @@ class Language(Enum):
     VI = "vi"
     IT = "it"
     TR = "tr"
-
-
-LOGGER_ = logging.getLogger("ambr.py")
 
 
 class AmbrAPI:
@@ -120,7 +118,7 @@ class AmbrAPI:
         else:
             url = f"{self.BASE_URL}/{self.lang.value}/{endpoint}"
 
-        LOGGER_.debug("Requesting %s...", url)
+        logger.debug("Requesting %s...", url)
 
         if not use_cache and isinstance(self._session, CachedSession):
             async with self._session.disabled(), self._session.get(url) as resp:
@@ -663,3 +661,24 @@ class AmbrAPI:
         """
         data = await self._request("tower", use_cache=use_cache)
         return AbyssResponse(**data["data"])
+
+    async def fetch_character_guide(
+        self, character_id: str, *, use_cache: bool = True
+    ) -> CharacterGuide:
+        """
+        Fetches a character guide from the API.
+
+        Parameters
+        ----------
+        character_id: :class:`str`
+            The character ID to fetch the guide for.
+
+        Returns
+        -------
+        CharacterGuide
+            The character guide.
+        """
+        data = await self._request(
+            f"advanced/avatarGuides/{character_id}", use_cache=use_cache, static=True
+        )
+        return CharacterGuide(**data["data"])

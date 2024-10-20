@@ -125,3 +125,10 @@ async def test_invalid_id() -> None:
 async def test_abyss_data() -> None:
     async with ambr.AmbrAPI() as api:
         await api.fetch_abyss_data()
+
+
+async def test_character_guide() -> None:
+    async with ambr.AmbrAPI() as api:
+        characters = await api.fetch_characters()
+        for character in characters:
+            await api.fetch_character_guide(character.id)
