@@ -10,6 +10,7 @@ from .character_fetter import *
 from .domain import *
 from .food import *
 from .furniture import *
+from .guides import *
 from .material import *
 from .monster import *
 from .name_card import *
