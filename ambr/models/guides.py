@@ -166,7 +166,7 @@ class AzaData(BaseModel):
 
 class CharacterGuide(BaseModel):
     available_items: AvailableItems = Field(alias="dataList")
-    gw_data: GWData = Field(alias="gwData")
+    gw_data: GWData | None = Field(None, alias="gwData")
     """Genshin Wizard data."""
     aza_data: AzaData | None = Field(None, alias="azaData")
     """genshin.aza.gg data."""
