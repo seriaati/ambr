@@ -24,7 +24,7 @@ class CardDictionary(BaseModel):
     name: str
     params: dict[str, Any] | None = None
     description: str
-    cost: list[DiceCost] = Field(None, alias="diceCost")
+    cost: list[DiceCost] = Field(alias="diceCost", default_factory=list)
 
     @field_validator("name", mode="before")
     def _format_name(cls, v: str) -> str:
@@ -139,7 +139,7 @@ class TCGCard(BaseModel):
     name: str
     type: str
     tags: list[CardTag]
-    dice_cost: list[DiceCost] = Field(None, alias="props")
+    dice_cost: list[DiceCost] = Field(alias="props", default_factory=list)
     icon: str
     route: str
     sort_order: int = Field(alias="sortOrder")
