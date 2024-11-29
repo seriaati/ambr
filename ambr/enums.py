@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from enum import IntEnum, StrEnum
 
-__all__ = ("SpecialStat", "WeaponType")
+__all__ = ("Element", "ExtraLevelType", "SpecialStat", "TalentType", "WeaponType")
 
 
 class WeaponType(StrEnum):
