@@ -118,7 +118,7 @@ class AmbrAPI:
         else:
             url = f"{self.BASE_URL}/{self.lang.value}/{endpoint}"
 
-        logger.debug("Requesting %s...", url)
+        logger.debug(f"Requesting {url}...")
 
         if not use_cache and isinstance(self._session, CachedSession):
             async with self._session.disabled(), self._session.get(url) as resp:
