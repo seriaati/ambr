@@ -125,7 +125,7 @@ class GWSynergy(BaseModel):
 
 class GWData(BaseModel):
     builds: list[GWBuild]
-    playstyle: GWPlaystyle
+    playstyle: GWPlaystyle | None = None
     synergies: GWSynergy
 
 
