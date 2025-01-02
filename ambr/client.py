@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import random
+import string
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Final, Self
 
@@ -75,12 +77,14 @@ class AmbrAPI:
         cache_ttl: int = 3600,
         headers: dict[str, Any] | None = None,
         session: aiohttp.ClientSession | None = None,
+        add_random_letters: bool = False,
     ) -> None:
         self.lang = lang
         self._cache_ttl = cache_ttl
 
         self._session = session
         self._headers = headers or {"User-Agent": "ambr-py"}
+        self._add_random_letters = add_random_letters
 
     async def __aenter__(self) -> Self:
         await self.start()
@@ -117,6 +121,9 @@ class AmbrAPI:
             url = f"{self.BASE_URL}/static/{endpoint}"
         else:
             url = f"{self.BASE_URL}/{self.lang.value}/{endpoint}"
+
+        if self._add_random_letters:
+            url += f"?{''.join(random.choices(string.ascii_letters, k=5))}"
 
         logger.debug(f"Requesting {url}")
 
