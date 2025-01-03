@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pathlib
+
 __all__ = ("AUDIO_LANGUAGES", "PERCENTAGE_FIGHT_PROPS", "WEEKDAYS")
 
 PERCENTAGE_FIGHT_PROPS = {
@@ -38,3 +40,5 @@ WEEKDAYS = {
     "saturday": 5,
     "sunday": 6,
 }
+
+CACHE_PATH = pathlib.Path("./.cache/ambr")

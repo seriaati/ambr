@@ -1,14 +1,15 @@
 from __future__ import annotations
 
-import random
-import string
+import time
 from enum import Enum
 from typing import TYPE_CHECKING, Any, Final, Self
 
+import aiofiles
 from aiohttp_client_cache.backends.sqlite import SQLiteBackend
 from aiohttp_client_cache.session import CachedSession
 from loguru import logger
 
+from .constants import CACHE_PATH
 from .exceptions import AmbrAPIError, ConnectionTimeoutError, DataNotFoundError
 from .models import (
     AbyssResponse,
@@ -77,14 +78,12 @@ class AmbrAPI:
         cache_ttl: int = 3600,
         headers: dict[str, Any] | None = None,
         session: aiohttp.ClientSession | None = None,
-        add_random_letters: bool = False,
     ) -> None:
         self.lang = lang
         self._cache_ttl = cache_ttl
 
         self._session = session
         self._headers = headers or {"User-Agent": "ambr-py"}
-        self._add_random_letters = add_random_letters
 
     async def __aenter__(self) -> Self:
         await self.start()
@@ -114,7 +113,7 @@ class AmbrAPI:
             The response from the API.
         """
         if self._session is None:
-            msg = "Call `start` before making requests."
+            msg = f"Call `{self.__class__.__name__}.start()` before making requests."
             raise RuntimeError(msg)
 
         if static:
@@ -122,8 +121,13 @@ class AmbrAPI:
         else:
             url = f"{self.BASE_URL}/{self.lang.value}/{endpoint}"
 
-        if self._add_random_letters:
-            url += f"?{''.join(random.choices(string.ascii_letters, k=5))}"
+        if endpoint != "version":
+            version = await self._get_version()
+            if version is None:
+                logger.debug("Version not found or outdated, fetching latest version.")
+                version = await self.fetch_latest_version()
+                await self._save_version(version)
+            url += f"?vh={version}"
 
         logger.debug(f"Requesting {url}")
 
@@ -689,3 +693,24 @@ class AmbrAPI:
             f"advanced/avatarGuides/{character_id}", use_cache=use_cache, static=True
         )
         return CharacterGuide(**data["data"])
+
+    async def _save_version(self, version: str) -> None:
+        CACHE_PATH.mkdir(parents=True, exist_ok=True)
+        async with aiofiles.open(CACHE_PATH / "version.txt", "w") as f:
+            await f.write(f"{version},{time.time()}")
+
+    async def _get_version(self) -> str | None:
+        try:
+            async with aiofiles.open(CACHE_PATH / "version.txt") as f:
+                data = await f.read()
+                version, timestamp = data.split(",")
+                if time.time() - float(timestamp) > 60 * 60 * 24:  # 24 hours
+                    return None
+                return version
+        except FileNotFoundError:
+            return None
+
+    async def fetch_latest_version(self) -> str:
+        data = await self._request("version", static=True, use_cache=False)
+        version = data["data"]["vh"]
+        return version
