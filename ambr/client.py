@@ -707,7 +707,7 @@ class AmbrAPI:
                 if time.time() - float(timestamp) > 60 * 60 * 24:  # 24 hours
                     return None
                 return version
-        except FileNotFoundError:
+        except (FileNotFoundError, ValueError):
             return None
 
     async def fetch_latest_version(self) -> str:
