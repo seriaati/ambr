@@ -31,7 +31,7 @@ __all__ = (
 
 
 class GuideCharacter(BaseModel):
-    id: int
+    id: str | int
     rarity: Literal[4, 5] = Field(alias="rank")
     weapon_type: WeaponType = Field(alias="weaponType")
     icon: str
@@ -95,7 +95,7 @@ class GWPlaystyle(BaseModel):
 
 
 class GWSynergyNormalCharacter(BaseModel):
-    id: int
+    id: str | int
     type: Literal["normal"]
 
 
