@@ -3,6 +3,7 @@ from __future__ import annotations
 import datetime
 from typing import Any
 
+from loguru import logger
 from pydantic import BaseModel, Field, field_validator
 
 from ..enums import Element, ExtraLevelType, SpecialStat, TalentType, WeaponType
@@ -177,7 +178,7 @@ class CharacterDetail(BaseModel):
     talents: list[Talent] = Field(alias="talent")
     constellations: list[Constellation] = Field(alias="constellation")
     beta: bool = Field(False)
-    special_stat: SpecialStat = Field(alias="specialProp")
+    special_stat: SpecialStat | str = Field(alias="specialProp")
     region: str
 
     @field_validator("id", mode="before")
@@ -207,6 +208,14 @@ class CharacterDetail(BaseModel):
     @field_validator("release", mode="before")
     def _convert_release(cls, v: int | None) -> datetime.datetime | None:
         return datetime.datetime.fromtimestamp(v) if v is not None else None
+
+    @field_validator("special_stat", mode="before")
+    def __convert_special_stat(cls, v: str) -> SpecialStat | str:
+        try:
+            return SpecialStat(v)
+        except ValueError:
+            logger.error(f"Unknown specialProp: {v!r}")
+            return v
 
     @property
     def gacha(self) -> str:
@@ -254,7 +263,7 @@ class Character(BaseModel):
     release: datetime.datetime | None = Field(None)
     route: str
     beta: bool = Field(False)
-    special_stat: SpecialStat = Field(alias="specialProp")
+    special_stat: SpecialStat | str = Field(alias="specialProp")
     region: str
 
     @field_validator("id", mode="before")
@@ -272,6 +281,14 @@ class Character(BaseModel):
     @field_validator("release", mode="before")
     def _convert_release(cls, v: int | None) -> datetime.datetime | None:
         return datetime.datetime.fromtimestamp(v) if v is not None else None
+
+    @field_validator("special_stat", mode="before")
+    def __convert_special_stat(cls, v: str) -> SpecialStat | str:
+        try:
+            return SpecialStat(v)
+        except ValueError:
+            logger.error(f"Unknown specialProp: {v!r}")
+            return v
 
     @property
     def gacha(self) -> str:
