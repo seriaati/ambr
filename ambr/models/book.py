@@ -28,6 +28,10 @@ class BookVolume(BaseModel):
     def __format_description(cls, v: str) -> str:
         return remove_html_tags(v)
 
+    @field_validator("name", "description", mode="before")
+    def __convert_name(cls, v: str | int) -> str:
+        return str(v)
+
 
 class BookDetail(BaseModel):
     """
@@ -51,6 +55,10 @@ class BookDetail(BaseModel):
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://gi.yatta.moe/assets/UI/{v}.png"
 
+    @field_validator("name", mode="before")
+    def __convert_name(cls, v: str | int) -> str:
+        return str(v)
+
 
 class Book(BaseModel):
     """
@@ -73,3 +81,7 @@ class Book(BaseModel):
     @field_validator("icon", mode="before")
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://gi.yatta.moe/assets/UI/{v}.png"
+
+    @field_validator("name", mode="before")
+    def __convert_name(cls, v: str | int) -> str:
+        return str(v)
