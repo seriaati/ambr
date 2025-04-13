@@ -19,6 +19,12 @@ Homepage = "https://github.com/seriaati/ambr"
 Repository = "https://github.com/seriaati/ambr.git"
 Issues = "https://github.com/seriaati/ambr/issues"
 
+[project.optional-dependencies]
+docs = [
+    "mkdocs-material>=9.6.11",
+    "mkdocstrings[python]>=0.29.1",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
