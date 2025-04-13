@@ -45,10 +45,18 @@ theme:
 
 plugins:
   - search
-  - mkdocstrings
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
 
 nav:
   - Home: index.md
+  - Getting Started: getting_started.md
   - API Reference:
       - Client: client.md
       - Models: models.md
+      - Exceptions: exceptions.md
+      - Enums: enums.md
+      - Utils: utils.md

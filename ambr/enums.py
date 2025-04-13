@@ -6,7 +6,7 @@ __all__ = ("Element", "ExtraLevelType", "SpecialStat", "TalentType", "WeaponType
 
 
 class WeaponType(StrEnum):
-    """Character weapon types."""
+    """Enumeration of character weapon types."""
 
     BOW = "WEAPON_BOW"
     CATALYST = "WEAPON_CATALYST"
@@ -16,7 +16,7 @@ class WeaponType(StrEnum):
 
 
 class SpecialStat(StrEnum):
-    """Character specialized stat."""
+    """Enumeration of character specialized ascension stats."""
 
     CRIT_RATE = "FIGHT_PROP_CRITICAL"
     CRITI_DMG = "FIGHT_PROP_CRITICAL_HURT"
@@ -41,6 +41,8 @@ class SpecialStat(StrEnum):
 
 
 class Element(StrEnum):
+    """Enumeration of character elements."""
+
     ANEMO = "Wind"
     GEO = "Rock"
     ELECTRO = "Electric"
@@ -51,12 +53,17 @@ class Element(StrEnum):
 
 
 class TalentType(IntEnum):
+    """Enumeration of character talent types."""
+
     NORMAL = 0
-    ULTIMATE = 1
-    PASSIVE = 2
+    SKILL = 1  # Often referred to as Elemental Skill
+    ULTIMATE = 2  # Often referred to as Elemental Burst
+    PASSIVE = 3  # Passive talents
 
 
 class ExtraLevelType(IntEnum):
+    """Enumeration for identifying which talent gets extra levels from constellations."""
+
     NORMAL = 1
-    ULTIMATE = 9
     SKILL = 2
+    ULTIMATE = 9

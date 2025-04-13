@@ -24,18 +24,44 @@ __all__ = (
 
 
 def remove_html_tags(text: str) -> str:
+    """Removes HTML tags and sprite presets from a string.
+
+    Args:
+        text: The input string containing HTML tags.
+
+    Returns:
+        The string with HTML tags and sprite presets removed.
+    """
     clean = re.compile(r"<.*?>|\{SPRITE_PRESET#[^\}]+\}")
     return re.sub(clean, "", text).replace("\\n", "\n")
 
 
 def replace_placeholders(string: str, params: dict[str, Any]) -> str:
+    """Replaces placeholders in a string with values from a dictionary.
+
+    Placeholders are in the format $[key].
+
+    Args:
+        string: The input string containing placeholders.
+        params: A dictionary mapping placeholder keys to their values.
+
+    Returns:
+        The string with placeholders replaced and sprite presets removed.
+    """
     for key, value in params.items():
         string = string.replace(f"$[{key}]", str(value))
-    string = re.sub(r"\{SPRITE_PRESET#[^\}]+\}", "", string)
-    return string
+    return re.sub(r"\{SPRITE_PRESET#[^\}]+\}", "", string)
 
 
 def replace_pronouns(text: str) -> str:
+    """Replaces gendered pronouns in the format {F#She}/{M#He} with She/He.
+
+    Args:
+        text: The input string containing gendered pronouns.
+
+    Returns:
+        The string with pronouns replaced.
+    """
     female_pronoun_pattern = r"\{F#(.*?)\}"
     male_pronoun_pattern = r"\{M#(.*?)\}"
 
@@ -60,6 +86,17 @@ def calculate_upgrade_stat_values(
     level: int,
     ascended: bool,
 ) -> dict[str, float]:
+    """Calculates the stat values for a character or weapon at a specific level and ascension status.
+
+    Args:
+        upgrade_data: The upgrade data for the character or weapon.
+        curve_data: The growth curve data.
+        level: The target level.
+        ascended: Whether the character/weapon is ascended at the target level.
+
+    Returns:
+        A dictionary mapping fight property IDs to their calculated values.
+    """
     result: defaultdict[str, float] = defaultdict(float)
 
     for stat in upgrade_data.base_stats:
@@ -84,6 +121,14 @@ def calculate_upgrade_stat_values(
 
 
 def format_stat_values(stat_values: dict[str, float]) -> dict[str, str]:
+    """Formats calculated stat values into strings, adding '%' for percentage stats.
+
+    Args:
+        stat_values: A dictionary mapping fight property IDs to their numerical values.
+
+    Returns:
+        A dictionary mapping fight property IDs to their formatted string values.
+    """
     result: dict[str, str] = {}
     for fight_prop, value in stat_values.items():
         if fight_prop in PERCENTAGE_FIGHT_PROPS:
@@ -94,10 +139,27 @@ def format_stat_values(stat_values: dict[str, float]) -> dict[str, str]:
 
 
 def format_num(digits: int, calculation: int | float) -> str:
+    """Formats a number to a specified number of decimal places.
+
+    Args:
+        digits: The number of decimal places.
+        calculation: The number to format.
+
+    Returns:
+        The formatted number as a string.
+    """
     return f"{calculation:.{digits}f}"
 
 
 def format_layout(text: str) -> str:
+    """Extracts and replaces layout placeholders like {LAYOUT_MOBILE#Character Skill}.
+
+    Args:
+        text: The input string potentially containing layout placeholders.
+
+    Returns:
+        The string with layout placeholders replaced by their content.
+    """
     if "LAYOUT" in text:
         brackets = re.findall(r"{LAYOUT.*?}", text)
         word_to_replace = re.findall(r"{LAYOUT.*?#(.*?)}", brackets[0])[0]
@@ -106,6 +168,22 @@ def format_layout(text: str) -> str:
 
 
 def get_params(text: str, param_list: list[int | float]) -> list[str]:
+    """Replaces parameter placeholders in text with formatted values from a list.
+
+    Placeholders are in the format {param<index>:<format>}, e.g., {param1:F1P}.
+    Formats include:
+        F1P, F2P: Float multiplied by 100, formatted to 1 or 2 decimal places with '%'.
+        F1, F2: Float formatted to 1 or 2 decimal places.
+        P: Float multiplied by 100, formatted to 0 decimal places with '%'.
+        I: Integer.
+
+    Args:
+        text: The input string containing parameter placeholders.
+        param_list: A list of numerical parameter values.
+
+    Returns:
+        A list of strings, typically split by '|', after parameter replacement and formatting.
+    """
     params: list[str] = re.findall(r"{[^}]*}", text)
 
     for item in params:
@@ -135,6 +213,18 @@ def get_params(text: str, param_list: list[int | float]) -> list[str]:
 
 
 def get_skill_attributes(descriptions: list[str], params: list[int | float]) -> str:
+    """Generates a formatted string of skill attributes from descriptions and parameters.
+
+    Each description is processed by `get_params` and expected to return a key-value pair
+    separated by '|'.
+
+    Args:
+        descriptions: A list of strings containing parameter placeholders, often separated by '|'.
+        params: A list of numerical parameter values for substitution.
+
+    Returns:
+        A newline-separated string of "key: value" pairs for the skill attributes.
+    """
     result = ""
     for desc in descriptions:
         try:
@@ -148,6 +238,15 @@ def get_skill_attributes(descriptions: list[str], params: list[int | float]) -> 
 def replace_fight_prop_with_name(
     stat_values: dict[str, Any], manual_weapon: dict[str, str]
 ) -> dict[str, Any]:
+    """Replaces fight property IDs (e.g., FIGHT_PROP_HP) with their human-readable names.
+
+    Args:
+        stat_values: A dictionary mapping fight property IDs to their values.
+        manual_weapon: A dictionary mapping fight property IDs to their names.
+
+    Returns:
+        A dictionary mapping fight property names to their values.
+    """
     result: dict[str, Any] = {}
     for fight_prop, value in stat_values.items():
         fight_prop_name = manual_weapon.get(fight_prop, fight_prop)

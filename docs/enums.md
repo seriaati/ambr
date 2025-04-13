@@ -1,5 +1,5 @@
 # API Reference
 
-::: ambr.models
+::: ambr.enums
     options:
       show_source: false

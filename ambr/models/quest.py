@@ -6,27 +6,17 @@ __all__ = ("Quest",)
 
 
 class Quest(BaseModel):
-    """
-    Represents a quest.
+    """Represents a quest summary.
 
-    Attributes
-    ----------
-    id: :class:`int`
-        The quest's ID.
-    type: :class:`str`
-        The quest's type.
-    chapter_num: Optional[:class:`str`]
-        The quest's chapter number.
-    chapter_title: :class:`str`
-        The quest's chapter title.
-    chapter_icon: Optional[:class:`str`]
-        The quest's chapter icon.
-    chapter_image_title: :class:`str`
-        The quest's chapter image title.
-    route: :class:`str`
-        The quest's route.
-    chapter_count: :class:`int`
-        The quest's chapter count.
+    Attributes:
+        id: The quest's unique ID.
+        type: The type or category of the quest (optional).
+        chapter_num: The chapter number associated with the quest (optional).
+        chapter_title: The title of the quest chapter.
+        chapter_icon: The icon URL for the quest chapter (optional).
+        chapter_image_title: The title associated with the chapter image (optional).
+        route: The route identifier for the quest.
+        chapter_count: The count related to the quest chapter.
     """
 
     id: int
@@ -39,5 +29,6 @@ class Quest(BaseModel):
     chapter_count: int = Field(alias="chapterCount")
 
     @field_validator("chapter_icon", mode="before")
+    @classmethod
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://gi.yatta.moe/assets/UI/{v}.png"

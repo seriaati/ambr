@@ -8,12 +8,11 @@ __all__ = ("Artifact", "ArtifactAffix", "ArtifactSet", "ArtifactSetDetail")
 
 
 class ArtifactAffix(BaseModel):
-    """
-    Represents an artifact set's set effect.
+    """Represents an artifact set's bonus effect (2-piece or 4-piece).
 
     Attributes:
-        id (str): The effect's ID.
-        effect (str): The effect's description.
+        id: The identifier for the set effect (e.g., "2" or "4").
+        effect: The description of the set effect.
     """
 
     id: str
@@ -21,15 +20,14 @@ class ArtifactAffix(BaseModel):
 
 
 class Artifact(BaseModel):
-    """
-    Represents an artifact.
+    """Represents a single artifact piece within a set.
 
     Attributes:
-        pos (str): The position of the artifact.
-        name (str): The name of the artifact.
-        description (str): The description of the artifact.
-        max_rarity (int): The maximum rarity of the artifact.
-        icon (str): The name of the icon file for the artifact.
+        pos: The position or slot of the artifact (e.g., "flower", "plume", "sands", "goblet", "circlet").
+        name: The name of the specific artifact piece.
+        description: The flavor text or description of the artifact piece.
+        max_rarity: The maximum rarity level this artifact piece can have.
+        icon: The icon URL for the artifact piece.
     """
 
     pos: str
@@ -39,22 +37,22 @@ class Artifact(BaseModel):
     icon: str
 
     @field_validator("icon", mode="before")
+    @classmethod
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://gi.yatta.moe/assets/UI/reliquary/{v}.png"
 
 
 class ArtifactSetDetail(BaseModel):
-    """
-    Represents an artifact set detail.
+    """Represents detailed information about an artifact set.
 
     Attributes:
-        id (int): The artifact set's ID.
-        name (str): The artifact set's name.
-        rarity_list (list[int]): The artifact set's rarity list.
-        affix_list (list[ArtifactAffix]): The artifact set's affix list.
-        icon (str): The artifact set's icon.
-        route (str): The artifact set's route.
-        artifacts (list[Artifact]): Artifacts that belong to the artifact set.
+        id: The unique ID of the artifact set.
+        name: The name of the artifact set.
+        rarity_list: A list of possible rarity levels for artifacts in this set.
+        affix_list: A list of the set bonus effects (2-piece and 4-piece).
+        icon: The icon URL representing the artifact set (usually the flower piece).
+        route: The route identifier for the artifact set.
+        artifacts: A list of the individual artifact pieces belonging to this set.
     """
 
     id: int
@@ -66,30 +64,32 @@ class ArtifactSetDetail(BaseModel):
     artifacts: list[Artifact] = Field(alias="suit")
 
     @field_validator("affix_list", mode="before")
+    @classmethod
     def _convert_affix_list(cls, v: dict[str, str]) -> list[ArtifactAffix]:
         return [ArtifactAffix(id=k, effect=v[k]) for k in v]
 
     @field_validator("icon", mode="before")
+    @classmethod
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://gi.yatta.moe/assets/UI/reliquary/{v}.png"
 
     @field_validator("artifacts", mode="before")
+    @classmethod
     def _convert_artifacts(cls, v: dict[str, dict[str, Any]]) -> list[Artifact]:
         return [Artifact(pos=artifact_pos, **v[artifact_pos]) for artifact_pos in v]
 
 
 class ArtifactSet(BaseModel):
-    """
-    Represents an artifact set.
+    """Represents an artifact set summary.
 
     Attributes:
-        id (int): The artifact set's ID.
-        name (str): The artifact set's name.
-        rarity_list (list[int]): Obtainable rarities of the artifact set.
-        affix_list (list[ArtifactAffix]): The artifact set's set effect list.
-        icon (str): The artifact set's icon.
-        route (str): The artifact set's route.
-        sort_order (int): The artifact set's sort order.
+        id: The unique ID of the artifact set.
+        name: The name of the artifact set.
+        rarity_list: A list of possible rarity levels for artifacts in this set.
+        affix_list: A list of the set bonus effects (2-piece and 4-piece).
+        icon: The icon URL representing the artifact set (usually the flower piece).
+        route: The route identifier for the artifact set.
+        sort_order: The sorting order value for the artifact set.
     """
 
     id: int
@@ -101,9 +101,11 @@ class ArtifactSet(BaseModel):
     sort_order: int = Field(alias="sortOrder")
 
     @field_validator("icon", mode="before")
+    @classmethod
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://gi.yatta.moe/assets/UI/reliquary/{v}.png"
 
     @field_validator("affix_list", mode="before")
+    @classmethod
     def _convert_affix_list(cls, v: dict[str, str]) -> list[ArtifactAffix]:
         return [ArtifactAffix(id=k, effect=v[k]) for k in v]

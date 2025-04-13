@@ -11,6 +11,7 @@ __all__ = (
     "Abyss",
     "AbyssData",
     "AbyssEnemy",
+    "AbyssEnemyProperty",
     "AbyssResponse",
     "Blessing",
     "ChallengeTarget",
@@ -21,13 +22,12 @@ __all__ = (
 
 
 class Blessing(BaseModel):
-    """
-    Blessing model.
+    """Represents the Benediction of the Abyssal Moon (Blessing) for a Spiral Abyss cycle.
 
     Attributes:
-        description (str): Description of the blessing.
-        level_config_name (str): Level configuration name.
-        visible (bool): Visibility status.
+        description: The description of the blessing's effect.
+        level_config_name: Internal configuration name for the blessing.
+        visible: Whether the blessing is currently visible or active.
     """
 
     description: str
@@ -35,18 +35,17 @@ class Blessing(BaseModel):
     visible: bool
 
     @field_validator("description", mode="before")
+    @classmethod
     def _format_description(cls, v: str) -> str:
         return remove_html_tags(v)
 
 
 class ChallengeTarget(BaseModel):
-    """
-    ChallengeTarget model.
+    """Represents the challenge targets for a Spiral Abyss chamber (e.g., time limits).
 
     Attributes:
-        type (str): Type of the challenge target.
-        values (list[int]): list of values.
-        formatted (str): Formatted challenge target.
+        type: A format string describing the challenge type (e.g., "Challenge time limit: {}s").
+        values: A list of numerical values corresponding to the targets (e.g., time limits for 1, 2, 3 stars).
     """
 
     type: str
@@ -54,19 +53,19 @@ class ChallengeTarget(BaseModel):
 
     @property
     def formatted(self) -> str:
+        """Returns the challenge target description with values formatted in."""
         return self.type.format("/".join(str(v) for v in self.values))
 
 
 class Chamber(BaseModel):
-    """
-    Chamber model.
+    """Represents a single chamber within a Spiral Abyss floor.
 
     Attributes:
-        id (int): ID of the chamber.
-        challenge_target (ChallengeTarget): Challenge target.
-        enemy_level (int): Enemy level.
-        wave_one_enemies (list[int]): list of enemies in the first wave.
-        wave_two_enemies (list[int] | None): list of enemies in the second wave.
+        id: The ID of the chamber (usually 1, 2, or 3).
+        challenge_target: The challenge targets (e.g., time limits) for this chamber.
+        enemy_level: The base level of the enemies in this chamber.
+        wave_one_enemies: A list of enemy IDs appearing in the first half/wave.
+        wave_two_enemies: An optional list of enemy IDs appearing in the second half/wave.
     """
 
     id: int
@@ -77,13 +76,12 @@ class Chamber(BaseModel):
 
 
 class LeyLineDisorder(BaseModel):
-    """
-    LeyLineDisorder model.
+    """Represents a Ley Line Disorder effect active on a Spiral Abyss floor.
 
     Attributes:
-        description (str): Description of the disorder.
-        level_config_name (str): Level configuration name.
-        visible (bool): Visibility status.
+        description: The description of the disorder's effect.
+        level_config_name: Internal configuration name for the disorder.
+        visible: Whether the disorder is currently visible or active.
     """
 
     description: str
@@ -91,20 +89,20 @@ class LeyLineDisorder(BaseModel):
     visible: bool
 
     @field_validator("description", mode="before")
+    @classmethod
     def _format_description(cls, v: str) -> str:
         return remove_html_tags(v)
 
 
 class Floor(BaseModel):
-    """
-    Floor model.
+    """Represents a floor within the Spiral Abyss (either Corridor or Spire).
 
     Attributes:
-        id (int): ID of the floor.
-        chambers (list[Chamber]): list of chambers.
-        ley_line_disorders (list[LeyLineDisorder]): list of ley line disorders.
-        override_enemy_level (int): Override enemy level.
-        team_num (int): Number of teams.
+        id: The ID of the floor (e.g., 9, 10, 11, 12).
+        chambers: A list of chambers within this floor.
+        ley_line_disorders: A list of Ley Line Disorders active on this floor.
+        override_enemy_level: An optional override for the enemy level on this floor.
+        team_num: The number of teams required for this floor (usually 1 or 2).
     """
 
     id: int
@@ -115,33 +113,32 @@ class Floor(BaseModel):
 
 
 class AbyssData(BaseModel):
-    """
-    AbyssData model.
+    """Represents data for either the Abyss Corridor or the Abyssal Moon Spire.
 
     Attributes:
-        open_time (datetime.datetime | None): Opening time.
-        floors (list[Floor]): list of floors.
+        open_time: The time when this specific section (usually Spire) becomes available (optional).
+        floors: A list of floors within this section.
     """
 
     open_time: datetime.datetime | None = Field(None, alias="openTime")
     floors: list[Floor] = Field(..., alias="floorList")
 
     @field_validator("open_time", mode="before")
+    @classmethod
     def _format_open_time(cls, v: int) -> datetime.datetime | None:
         return datetime.datetime.fromtimestamp(v) if v else None
 
 
 class Abyss(BaseModel):
-    """
-    Abyss model.
+    """Represents a full Spiral Abyss cycle configuration.
 
     Attributes:
-        id (int): ID of the abyss.
-        open_time (datetime.datetime): Opening time.
-        close_time (datetime.datetime): Closing time.
-        blessing (Blessing): Blessing.
-        abyss_corridor (AbyssData): Abyss corridor.
-        abyssal_moon_spire (AbyssData): Abyssal moon spire.
+        id: The unique ID identifying this Spiral Abyss cycle.
+        open_time: The start date and time of this cycle.
+        close_time: The end date and time of this cycle.
+        blessing: The Benediction of the Abyssal Moon active during this cycle.
+        abyss_corridor: Data for the Abyss Corridor floors (usually 1-8).
+        abyssal_moon_spire: Data for the Abyssal Moon Spire floors (usually 9-12).
     """
 
     id: int
@@ -152,28 +149,30 @@ class Abyss(BaseModel):
     abyssal_moon_spire: AbyssData = Field(..., alias="schedule")
 
     @field_validator("open_time", mode="before")
+    @classmethod
     def _format_open_time(cls, v: int) -> datetime.datetime:
         # example 1709258399
         return datetime.datetime.fromtimestamp(v)
 
     @field_validator("close_time", mode="before")
+    @classmethod
     def _format_close_time(cls, v: int) -> datetime.datetime:
         # example 1709258399
         return datetime.datetime.fromtimestamp(v)
 
     @field_validator("blessing", mode="before")
+    @classmethod
     def _format_blessing(cls, v: list[dict[str, Any]]) -> Blessing:
         return Blessing(**v[0])
 
 
 class AbyssEnemyProperty(BaseModel):
-    """
-    AbyssEnemyProperty model.
+    """Represents a base property of an enemy found in the Spiral Abyss.
 
     Attributes:
-        initial_value (float): Initial value.
-        type (str): Type of the property, e.g. "FIGHT_PROP_BASE_HP".
-        growth_type (str): Growth type, e.g. "GROW_CURVE_HP".
+        initial_value: The base value of the property at level 1.
+        type: The identifier string for the property (e.g., "FIGHT_PROP_BASE_HP").
+        growth_type: The identifier string for the property's growth curve.
     """
 
     initial_value: float = Field(..., alias="initValue")
@@ -182,14 +181,14 @@ class AbyssEnemyProperty(BaseModel):
 
 
 class AbyssEnemy(BaseModel):
-    """
-    AbyssEnemy model.
+    """Represents an enemy that can appear in the Spiral Abyss.
 
     Attributes:
-        icon (str): Icon URL.
-        id (int): ID of the enemy.
-        link (bool): Link status.
-        name (str): Name of the enemy.
+        icon: The icon URL for the enemy.
+        id: The unique ID of the enemy.
+        link: A boolean indicating if there's a link available (purpose unclear).
+        name: The name of the enemy.
+        properties: A list of base properties (like HP, ATK, DEF) and their growth curves.
     """
 
     icon: str
@@ -199,31 +198,34 @@ class AbyssEnemy(BaseModel):
     properties: list[AbyssEnemyProperty] = Field(..., alias="prop")
 
     @field_validator("icon", mode="before")
+    @classmethod
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://gi.yatta.moe/assets/UI{'/monster' if 'MonsterIcon' in v else ''}/{v}.png"
 
     @field_validator("properties", mode="before")
+    @classmethod
     def _convert_properties(cls, v: list[dict[str, Any]]) -> list[AbyssEnemyProperty]:
         return [AbyssEnemyProperty(**prop) for prop in v]
 
 
 class AbyssResponse(BaseModel):
-    """
-    AbyssResponse model.
+    """Represents the complete response for Spiral Abyss data.
 
     Attributes:
-        enemies (dict[str, AbyssEnemy]): Dictionary of abyss enemies.
-        abyss_items (list[Abyss]): list of abyss items.
+        enemies: A dictionary mapping enemy IDs to their details (AbyssEnemy).
+        abyss_items: A list containing data for one or more Spiral Abyss cycles (Abyss).
     """
 
     enemies: dict[str, AbyssEnemy] = Field(..., alias="monsterList")
     abyss_items: list[Abyss] = Field(..., alias="items")
 
     @field_validator("enemies", mode="before")
+    @classmethod
     def _convert_enemies(cls, v: dict[str, dict[str, Any]]) -> dict[str, AbyssEnemy]:
         return {item_id: AbyssEnemy(**v[item_id]) for item_id in v}
 
     @field_validator("abyss_items", mode="before")
+    @classmethod
     def _convert_abyss_items(cls, v: dict[str, dict[str, Any]]) -> list[Abyss]:
         result: list[Abyss] = []
         for item_data in v.values():

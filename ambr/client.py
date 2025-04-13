@@ -51,24 +51,56 @@ __all__ = ("AmbrAPI", "Language")
 
 
 class Language(Enum):
+    """Supported languages for the API data."""
+
     CHT = "cht"
+    """Traditional Chinese."""
     CHS = "chs"
+    """Simplified Chinese."""
     DE = "de"
+    """German."""
     EN = "en"
+    """English."""
     ES = "es"
+    """Spanish."""
     FR = "fr"
+    """French."""
     ID = "id"
+    """Indonesian."""
     JP = "jp"
+    """Japanese."""
     KR = "kr"
+    """Korean."""
     PT = "pt"
+    """Portuguese."""
     RU = "ru"
+    """Russian."""
     TH = "th"
+    """Thai."""
     VI = "vi"
+    """Vietnamese."""
     IT = "it"
+    """Italian."""
     TR = "tr"
+    """Turkish."""
 
 
-class AmbrAPI:
+class AmbrAPI:  # noqa: PLR0904
+    """Asynchronous client for interacting with the Ambr project API (gi.yatta.moe).
+
+    Provides methods to fetch various Genshin Impact game data.
+
+    Args:
+        lang: The language for the API responses. Defaults to English (EN).
+        cache_ttl: Time-to-live for cached responses in seconds. Defaults to 3600 (1 hour).
+        headers: Optional custom headers for HTTP requests.
+        session: Optional existing aiohttp.ClientSession to use. If None, a new CachedSession is created.
+
+    Attributes:
+        lang: The language used for API requests.
+        BASE_URL: The base URL for the Ambr API v2.
+    """
+
     BASE_URL: Final[str] = "https://gi.yatta.moe/api/v2"
 
     def __init__(
@@ -95,23 +127,6 @@ class AmbrAPI:
     async def _request(
         self, endpoint: str, *, static: bool = False, use_cache: bool
     ) -> dict[str, Any]:
-        """
-        A helper function to make requests to the API.
-
-        Parameters
-        ----------
-        endpoint: :class:`str`
-            The endpoint to request from.
-        static: :class:`bool`
-            Whether to use the static endpoint or not. Defaults to ``False``.
-        use_cache: :class:`bool`
-            Whether to use the cache or not. Defaults to ``True``.
-
-        Returns
-        -------
-        Dict[str, Any]
-            The response from the API.
-        """
         if self._session is None:
             msg = f"Call `{self.__class__.__name__}.start()` before making requests."
             raise RuntimeError(msg)
@@ -145,9 +160,6 @@ class AmbrAPI:
         return data
 
     def _handle_error(self, code: int) -> None:
-        """
-        A helper function to handle errors.
-        """
         match code:
             case 404:
                 raise DataNotFoundError
@@ -157,8 +169,11 @@ class AmbrAPI:
                 raise AmbrAPIError(code)
 
     async def start(self) -> None:
-        """
-        Starts the client session.
+        """Initializes the internal aiohttp client session.
+
+        Must be called before making any API requests if not using the client
+        as an async context manager. Creates a CachedSession if no
+        session was provided during initialization.
         """
         self._session = self._session or CachedSession(
             headers=self._headers,
@@ -166,8 +181,10 @@ class AmbrAPI:
         )
 
     async def close(self) -> None:
-        """
-        Closes the client session.
+        """Closes the internal aiohttp client session.
+
+        Should be called to gracefully shut down the session if not using
+        the client as an async context manager.
         """
         if self._session is not None:
             await self._session.close()
@@ -175,13 +192,18 @@ class AmbrAPI:
     async def fetch_achievement_categories(
         self, use_cache: bool = True
     ) -> list[AchievementCategory]:
-        """
-        Fetches all achievement categories.
+        """Fetches all achievement categories.
 
-        Returns
-        -------
-        List[:class:`AchievementCategory`]
-            The achievement categories.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A list of AchievementCategory objects.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("achievement", use_cache=use_cache)
         return [
@@ -190,175 +212,211 @@ class AmbrAPI:
         ]
 
     async def fetch_artifact_sets(self, use_cache: bool = True) -> list[ArtifactSet]:
-        """
-        Fetches all artifact sets.
+        """Fetches summary information for all artifact sets.
 
-        Returns
-        -------
-        List[:class:`ArtifactSet`]
-            The artifact sets.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A list of ArtifactSet objects.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("reliquary", use_cache=use_cache)
         return [ArtifactSet(**artifact_set) for artifact_set in data["data"]["items"].values()]
 
     async def fetch_artifact_set_detail(self, id: int, use_cache: bool = True) -> ArtifactSetDetail:
-        """
-        Fetches an artifact set detail by ID.
+        """Fetches detailed information for a specific artifact set by its ID.
 
-        Parameters
-        ----------
-        id: :class:`int`
-            The ID of the artifact set detail to fetch.
+        Args:
+            id: The ID of the artifact set to fetch.
+            use_cache: Whether to use cached data if available. Defaults to True.
 
-        Returns
-        -------
-        :class:`ArtifactSetDetail`
-            The artifact set detail.
+        Returns:
+            An ArtifactSetDetail object.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"reliquary/{id}", use_cache=use_cache)
         return ArtifactSetDetail(**data["data"])
 
     async def fetch_books(self, use_cache: bool = True) -> list[Book]:
-        """
-        Fetches all books.
+        """Fetches summary information for all readable books.
 
-        Returns
-        -------
-        List[:class:`Book`]
-            The books.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A list of Book objects.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("book", use_cache=use_cache)
         return [Book(**book) for book in data["data"]["items"].values()]
 
     async def fetch_book_detail(self, id: int, use_cache: bool = True) -> BookDetail:
-        """
-        Fetches a book detail by ID.
+        """Fetches detailed information for a specific book by its ID, including volumes.
 
-        Parameters
-        ----------
-        id: :class:`int`
-            The ID of the book detail to fetch.
+        Args:
+            id: The ID of the book to fetch.
+            use_cache: Whether to use cached data if available. Defaults to True.
 
-        Returns
-        -------
-        :class:`BookDetail`
-            The book detail.
+        Returns:
+            A BookDetail object.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"book/{id}", use_cache=use_cache)
         return BookDetail(**data["data"])
 
     async def fetch_characters(self, use_cache: bool = True) -> list[Character]:
-        """
-        Fetches all characters.
+        """Fetches summary information for all characters.
 
-        Returns
-        -------
-        List[:class:`Character`]
-            The characters.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A list of Character objects.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("avatar", use_cache=use_cache)
         return [Character(**character) for character in data["data"]["items"].values()]
 
     async def fetch_character_detail(self, id: str, use_cache: bool = True) -> CharacterDetail:
-        """
-        Fetches a character detail by ID.
+        """Fetches detailed information for a specific character by their ID.
 
-        Parameters
-        ----------
-        id: :class:`str`
-            The ID of the character detail to fetch.
+        Args:
+            id: The ID of the character to fetch (e.g., "10000002" for Ayaka).
+            use_cache: Whether to use cached data if available. Defaults to True.
 
-        Returns
-        -------
-        :class:`CharacterDetail`
-            The character detail.
+        Returns:
+            A CharacterDetail object.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"avatar/{id}", use_cache=use_cache)
         return CharacterDetail(**data["data"])
 
     async def fetch_character_fetter(self, id: str, use_cache: bool = True) -> CharacterFetter:
-        """
-        Fetches a character fetter by ID.
+        """Fetches character stories and voice-over quotes (fetter information) by character ID.
 
-        Parameters
-        ----------
-        id: :class:`str`
-            The ID of the character fetter to fetch.
+        Args:
+            id: The ID of the character to fetch fetter data for.
+            use_cache: Whether to use cached data if available. Defaults to True.
 
-        Returns
-        -------
-        :class:`CharacterFetter`
-            The character fetter.
+        Returns:
+            A CharacterFetter object.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"avatarFetter/{id}", use_cache=use_cache)
         return CharacterFetter(**data["data"])
 
     async def fetch_foods(self, use_cache: bool = True) -> list[Food]:
-        """
-        Fetches all foods.
+        """Fetches summary information for all food items.
 
-        Returns
-        -------
-        List[:class:`Food`]
-            The foods.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A list of Food objects.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("food", use_cache=use_cache)
         return [Food(**food) for food in data["data"]["items"].values()]
 
     async def fetch_food_detail(self, id: int, use_cache: bool = True) -> FoodDetail:
-        """
-        Fetches a food detail by ID.
+        """Fetches detailed information for a specific food item by its ID.
 
-        Parameters
-        ----------
-        id: :class:`int`
-            The ID of the food detail to fetch.
+        Args:
+            id: The ID of the food item to fetch.
+            use_cache: Whether to use cached data if available. Defaults to True.
 
-        Returns
-        -------
-        :class:`FoodDetail`
-            The food detail.
+        Returns:
+            A FoodDetail object.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"food/{id}", use_cache=use_cache)
         return FoodDetail(**data["data"])
 
     async def fetch_furnitures(self, use_cache: bool = True) -> list[Furniture]:
-        """
-        Fetches all furnitures.
+        """Fetches summary information for all furniture items (Serenitea Pot).
 
-        Returns
-        -------
-        List[:class:`Furniture`]
-            The furnitures.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A list of Furniture objects.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("furniture", use_cache=use_cache)
         return [Furniture(**furniture) for furniture in data["data"]["items"].values()]
 
     async def fetch_furniture_detail(self, id: int, use_cache: bool = True) -> FurnitureDetail:
-        """
-        Fetches a furniture detail by ID.
+        """Fetches detailed information for a specific furniture item by its ID.
 
-        Parameters
-        ----------
-        id: :class:`int`
-            The ID of the furniture detail to fetch.
+        Args:
+            id: The ID of the furniture item to fetch.
+            use_cache: Whether to use cached data if available. Defaults to True.
 
-        Returns
-        -------
-        :class:`FurnitureDetail`
-            The furniture detail.
+        Returns:
+            A FurnitureDetail object.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"furniture/{id}", use_cache=use_cache)
         return FurnitureDetail(**data["data"])
 
     async def fetch_furniture_sets(self, use_cache: bool = True) -> list[FurnitureSet]:
-        """
-        Fetches all furniture sets.
+        """Fetches summary information for all furniture sets (Serenitea Pot).
 
-        Returns
-        -------
-        List[:class:`FurnitureSet`]
-            The furniture sets.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A list of FurnitureSet objects.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("furnitureSuite", use_cache=use_cache)
         return [FurnitureSet(**furniture_set) for furniture_set in data["data"]["items"].values()]
@@ -366,211 +424,262 @@ class AmbrAPI:
     async def fetch_furniture_set_detail(
         self, id: int, use_cache: bool = True
     ) -> FurnitureSetDetail:
-        """
-        Fetches a furniture set detail by ID.
+        """Fetches detailed information for a specific furniture set by its ID.
 
-        Parameters
-        ----------
-        id: :class:`int`
-            The ID of the furniture set detail to fetch.
+        Args:
+            id: The ID of the furniture set to fetch.
+            use_cache: Whether to use cached data if available. Defaults to True.
 
-        Returns
-        -------
-        :class:`FurnitureSetDetail`
-            The furniture set detail.
+        Returns:
+            A FurnitureSetDetail object.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"furnitureSuite/{id}", use_cache=use_cache)
         return FurnitureSetDetail(**data["data"])
 
     async def fetch_materials(self, use_cache: bool = True) -> list[Material]:
-        """
-        Fetches all materials.
+        """Fetches summary information for all materials (includes ingredients, ascension items, etc.).
 
-        Returns
-        -------
-        List[:class:`Material`]
-            The materials.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A list of Material objects.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("material", use_cache=use_cache)
         return [Material(**material) for material in data["data"]["items"].values()]
 
     async def fetch_material_detail(self, id: int, use_cache: bool = True) -> MaterialDetail:
-        """
-        Fetches a material detail by ID.
+        """Fetches detailed information for a specific material by its ID.
 
-        Parameters
-        ----------
-        id: :class:`int`
-            The ID of the material detail to fetch.
+        Args:
+            id: The ID of the material to fetch.
+            use_cache: Whether to use cached data if available. Defaults to True.
 
-        Returns
-        -------
-        :class:`MaterialDetail`
-            The material detail.
+        Returns:
+            A MaterialDetail object.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"material/{id}", use_cache=use_cache)
         return MaterialDetail(**data["data"])
 
     async def fetch_monsters(self, use_cache: bool = True) -> list[Monster]:
-        """
-        Fetches all monsters.
+        """Fetches summary information for all monsters and living beings.
 
-        Returns
-        -------
-        List[:class:`Monster`]
-            The monsters.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A list of Monster objects.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("monster", use_cache=use_cache)
         return [Monster(**monster) for monster in data["data"]["items"].values()]
 
     async def fetch_monster_detail(self, id: int, use_cache: bool = True) -> MonsterDetail:
-        """
-        Fetches a monster detail by ID.
+        """Fetches detailed information for a specific monster or living being by its ID.
 
-        Parameters
-        ----------
-        id: :class:`int`
-            The ID of the monster detail to fetch.
+        Args:
+            id: The ID of the monster/being to fetch.
+            use_cache: Whether to use cached data if available. Defaults to True.
 
-        Returns
-        -------
-        :class:`MonsterDetail`
-            The monster detail.
+        Returns:
+            A MonsterDetail object.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"monster/{id}", use_cache=use_cache)
         return MonsterDetail(**data["data"])
 
     async def fetch_namecards(self, use_cache: bool = True) -> list[Namecard]:
-        """
-        Fetches all name cards.
+        """Fetches summary information for all namecards.
 
-        Returns
-        -------
-        List[:class:`NameCard`]
-            The name cards.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A list of Namecard objects.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("namecard", use_cache=use_cache)
         return [Namecard(**name_card) for name_card in data["data"]["items"].values()]
 
     async def fetch_namecard_detail(self, id: int, use_cache: bool = True) -> NamecardDetail:
-        """
-        Fetches a name card detail by ID.
+        """Fetches detailed information for a specific namecard by its ID.
 
-        Parameters
-        ----------
-        id: :class:`int`
-            The ID of the name card detail to fetch.
+        Args:
+            id: The ID of the namecard to fetch.
+            use_cache: Whether to use cached data if available. Defaults to True.
 
-        Returns
-        -------
-        :class:`NameCardDetail`
-            The name card detail.
+        Returns:
+            A NamecardDetail object.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"namecard/{id}", use_cache=use_cache)
         return NamecardDetail(**data["data"])
 
     async def fetch_quests(self, use_cache: bool = True) -> list[Quest]:
-        """
-        Fetches all quests.
+        """Fetches summary information for all quests.
 
-        Returns
-        -------
-        List[:class:`Quest`]
-            The quests.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A list of Quest objects.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("quest", use_cache=use_cache)
         return [Quest(**quest) for quest in data["data"]["items"].values()]
 
     async def fetch_tcg_cards(self, use_cache: bool = True) -> list[TCGCard]:
-        """
-        Fetches all TCG cards.
+        """Fetches summary information for all Genius Invokation TCG cards.
 
-        Returns
-        -------
-        List[:class:`TCGCard`]
-            The TCG cards.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A list of TCGCard objects.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("gcg", use_cache=use_cache)
         return [TCGCard(**tcg_card) for tcg_card in data["data"]["items"].values()]
 
     async def fetch_tcg_card_detail(self, id: int, use_cache: bool = True) -> TCGCardDetail:
-        """
-        Fetches a TCG card detail by ID.
+        """Fetches detailed information for a specific TCG card by its ID.
 
-        Parameters
-        ----------
-        id: :class:`int`
-            The ID of the TCG card detail to fetch.
+        Args:
+            id: The ID of the TCG card to fetch.
+            use_cache: Whether to use cached data if available. Defaults to True.
 
-        Returns
-        -------
-        :class:`TCGCardDetail`
-            The TCG card detail.
+        Returns:
+            A TCGCardDetail object.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"gcg/{id}", use_cache=use_cache)
         return TCGCardDetail(**data["data"])
 
     async def fetch_weapons(self, use_cache: bool = True) -> list[Weapon]:
-        """
-        Fetches all weapons.
+        """Fetches summary information for all weapons.
 
-        Returns
-        -------
-        List[:class:`Weapon`]
-            The weapons.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A list of Weapon objects.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("weapon", use_cache=use_cache)
         return [Weapon(**weapon) for weapon in data["data"]["items"].values()]
 
     async def fetch_weapon_types(self, use_cache: bool = True) -> dict[str, str]:
-        """
-        Fetches all weapon types.
+        """Fetches a mapping of weapon type identifiers to their display names.
 
-        Returns
-        -------
-        Dict[:class:`str`, :class:`str`]
-            All of the weapon types.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A dictionary mapping weapon type IDs (e.g., "WEAPON_SWORD_ONE_HAND") to names (e.g., "Sword").
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("weapon", use_cache=use_cache)
         return data["data"]["types"]
 
     async def fetch_weapon_detail(self, id: int, use_cache: bool = True) -> WeaponDetail:
-        """
-        Fetches a weapon detail by ID.
+        """Fetches detailed information for a specific weapon by its ID.
 
-        Parameters
-        ----------
-        id: :class:`int`
-            The ID of the weapon detail to fetch.
+        Args:
+            id: The ID of the weapon to fetch.
+            use_cache: Whether to use cached data if available. Defaults to True.
 
-        Returns
-        -------
-        :class:`WeaponDetail`
-            The weapon detail.
+        Returns:
+            A WeaponDetail object.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"weapon/{id}", use_cache=use_cache)
         return WeaponDetail(**data["data"])
 
     async def fetch_domains(self, use_cache: bool = True) -> Domains:
-        """
-        Fetches all domains.
+        """Fetches information about daily domains and their rewards for each day of the week.
 
-        Returns
-        -------
-        :class:`Domains`
-            The domains.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A Domains object containing lists of domains for each weekday.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("dailyDungeon", use_cache=use_cache)
         return Domains(**data["data"])
 
     async def fetch_changelogs(self, use_cache: bool = True) -> list[Changelog]:
-        """
-        Fetch changelogs from the API.
+        """Fetches the API changelogs.
 
-        Returns
-        -------
-        List[Changelog]
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
             A list of Changelog objects.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("changelog", static=True, use_cache=use_cache)
         changelogs: list[Changelog] = []
@@ -579,42 +688,53 @@ class AmbrAPI:
         return changelogs
 
     async def fetch_upgrade_data(self, use_cache: bool = True) -> UpgradeData:
-        """
-        Fetch upgrade data from the API.
+        """Fetches general upgrade material requirements for characters and weapons.
 
-        Returns
-        -------
-        UpgradeData
-            The upgrade data.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            An UpgradeData object containing lists of upgrade requirements.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("upgrade", use_cache=use_cache)
         return UpgradeData(**data["data"])
 
     async def fetch_manual_weapon(self, use_cache: bool = True) -> dict[str, str]:
-        """
-        Fetch manual weapon data from the API.
+        """Fetches manual weapon data (purpose unclear from API structure).
 
-        Returns
-        -------
-        Dict[str, str]
-            The manual weapon data.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A dictionary containing the manual weapon data.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("manualWeapon", use_cache=use_cache)
         return data["data"]
 
     async def fetch_readable(self, id: str, use_cache: bool = True) -> str:
-        """
-        Fetch a readable from the API.
+        """Fetches the text content of a specific readable item (like a book volume) by its ID.
 
-        Parameters
-        ----------
-        id: :class:`str`
-            The ID of the readable to fetch.
+        Args:
+            id: The ID of the readable item to fetch.
+            use_cache: Whether to use cached data if available. Defaults to True.
 
-        Returns
-        -------
-        :class:`str`
-            The readable.
+        Returns:
+            The text content of the readable item, with HTML tags removed.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"readable/{id}", use_cache=use_cache)
         return remove_html_tags(data["data"])
@@ -622,13 +742,19 @@ class AmbrAPI:
     async def fetch_avatar_curve(
         self, use_cache: bool = True
     ) -> dict[str, dict[str, dict[str, float]]]:
-        """
-        Fetch avatar curve from the API.
+        """Fetches the character stat growth curves.
 
-        Returns
-        -------
-        Dict[str, Dict[str, Dict[str, float]]]
-            The avatar curve.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A nested dictionary representing character growth curves.
+            Structure: { level: { curve_id: { stat_id: value } } }
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("avatarCurve", static=True, use_cache=use_cache)
         return data["data"]
@@ -636,13 +762,19 @@ class AmbrAPI:
     async def fetch_weapon_curve(
         self, use_cache: bool = True
     ) -> dict[str, dict[str, dict[str, float]]]:
-        """
-        Fetch weapon curve from the API.
+        """Fetches the weapon stat growth curves.
 
-        Returns
-        -------
-        Dict[str, Dict[str, Dict[str, float]]]
-            The weapon curve.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A nested dictionary representing weapon growth curves.
+            Structure: { level: { curve_id: { stat_id: value } } }
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("weaponCurve", static=True, use_cache=use_cache)
         return data["data"]
@@ -650,25 +782,36 @@ class AmbrAPI:
     async def fetch_monster_curve(
         self, use_cache: bool = True
     ) -> dict[str, dict[str, dict[str, float]]]:
-        """
-        Fetch monster curve from the API.
+        """Fetches the monster stat growth curves.
 
-        Returns
-        -------
-        Dict[str, Dict[str, Dict[str, float]]]
-            The monster curve.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A nested dictionary representing monster growth curves.
+            Structure: { level: { curve_id: { stat_id: value } } }
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("monsterCurve", static=True, use_cache=use_cache)
         return data["data"]
 
     async def fetch_abyss_data(self, use_cache: bool = True) -> AbyssResponse:
-        """
-        Fetches abyss data from the API.
+        """Fetches data for the current and potentially previous Spiral Abyss cycles.
 
-        Returns
-        -------
-        AbyssResponse
-            The abyss data.
+        Args:
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            An AbyssResponse object containing details about abyss cycles, floors, enemies, etc.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request("tower", use_cache=use_cache)
         return AbyssResponse(**data["data"])
@@ -676,18 +819,21 @@ class AmbrAPI:
     async def fetch_character_guide(
         self, character_id: str, *, use_cache: bool = True
     ) -> CharacterGuide:
-        """
-        Fetches a character guide from the API.
+        """Fetches community-sourced build guides for a specific character.
 
-        Parameters
-        ----------
-        character_id: :class:`str`
-            The character ID to fetch the guide for.
+        Combines data from sources like Genshin Wizard and genshin.aza.gg.
 
-        Returns
-        -------
-        CharacterGuide
-            The character guide.
+        Args:
+            character_id: The ID of the character to fetch guides for.
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A CharacterGuide object containing build, playstyle, and synergy recommendations.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
         """
         data = await self._request(
             f"advanced/avatarGuides/{character_id}", use_cache=use_cache, static=True
@@ -711,6 +857,17 @@ class AmbrAPI:
             return None
 
     async def fetch_latest_version(self) -> str:
+        """Fetches the latest data version hash from the API.
+
+        This hash is used internally to ensure requests use up-to-date data.
+
+        Returns:
+            The latest version hash string.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
+        """
         data = await self._request("version", static=True, use_cache=False)
-        version = data["data"]["vh"]
-        return version
+        return data["data"]["vh"]

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-from . import constants as constants
-from . import utils as utils
+from . import constants, utils
 from .client import *
 from .enums import *
 from .exceptions import *

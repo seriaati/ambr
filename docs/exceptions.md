@@ -1,5 +1,5 @@
 # API Reference
 
-::: ambr.models
+::: ambr.exceptions
     options:
       show_source: false

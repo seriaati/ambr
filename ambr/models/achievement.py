@@ -8,13 +8,12 @@ __all__ = ("Achievement", "AchievementCategory", "AchievementDetail", "Achieveme
 
 
 class AchievementReward(BaseModel):
-    """
-    Represents an achievement reward.
+    """Represents a reward granted for completing an achievement.
 
     Attributes:
-        rarity (int): The achievement reward's rarity.
-        amount (int): The achievement reward's amount.
-        icon (str): The achievement reward's icon.
+        rarity: The rarity rank of the reward item (often Primogems).
+        amount: The quantity of the reward item granted.
+        icon: The icon URL for the reward item.
     """
 
     rarity: int = Field(alias="rank")
@@ -22,19 +21,19 @@ class AchievementReward(BaseModel):
     icon: str
 
     @field_validator("icon", mode="before")
+    @classmethod
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://gi.yatta.moe/assets/UI/{v}.png"
 
 
 class AchievementDetail(BaseModel):
-    """
-    Represents an achievement detail.
+    """Represents the details of a specific achievement.
 
     Attributes:
-        id (int): The achievement's ID.
-        title (str): The achievement's title.
-        description (str): The achievement's description.
-        rewards (list[AchievementReward]): The achievement's rewards.
+        id: The unique ID of the achievement.
+        title: The title or name of the achievement.
+        description: The description or requirement for the achievement.
+        rewards: A list of rewards granted upon completion.
     """
 
     id: int
@@ -43,18 +42,18 @@ class AchievementDetail(BaseModel):
     rewards: list[AchievementReward]
 
     @field_validator("rewards", mode="before")
+    @classmethod
     def _convert_rewards(cls, v: dict[str, dict[str, Any]]) -> list[AchievementReward]:
         return [AchievementReward(**v[item_id]) for item_id in v]
 
 
 class Achievement(BaseModel):
-    """
-    Represents an achievement.
+    """Represents an achievement, potentially with multiple stages or levels.
 
     Attributes:
-        id (int): The achievement's ID.
-        order (int): The achievement's order.
-        details (list[AchievementDetail]): The achievement's details.
+        id: The base ID for the achievement (stages might share this).
+        order: The display order of the achievement within its category.
+        details: A list containing details for each stage or level of the achievement.
     """
 
     id: int
@@ -63,15 +62,14 @@ class Achievement(BaseModel):
 
 
 class AchievementCategory(BaseModel):
-    """
-    Represents an achievement category.
+    """Represents a category of achievements.
 
     Attributes:
-        id (int): The achievement category's ID.
-        name (str): The achievement category's name.
-        order (int): The achievement category's order.
-        icon (str): The achievement category's icon.
-        achievements (list[Achievement]): The achievement category's achievements.
+        id: The unique ID of the achievement category.
+        name: The name of the category (e.g., "Wonders of the World").
+        order: The display order of the category.
+        icon: The icon URL for the category.
+        achievements: A list of achievements belonging to this category.
     """
 
     id: int
@@ -81,9 +79,11 @@ class AchievementCategory(BaseModel):
     achievements: list[Achievement] = Field(alias="achievementList")
 
     @field_validator("icon", mode="before")
+    @classmethod
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://gi.yatta.moe/assets/UI/{v}.png"
 
     @field_validator("achievements", mode="before")
+    @classmethod
     def _convert_achievements(cls, v: dict[str, dict[str, Any]]) -> list[Achievement]:
         return [Achievement(**v[achievement_id]) for achievement_id in v]
