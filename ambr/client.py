@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import time
-from enum import Enum
 from typing import TYPE_CHECKING, Any, Final, Self
 
 import aiofiles
@@ -10,6 +9,7 @@ from aiohttp_client_cache.session import CachedSession
 from loguru import logger
 
 from .constants import CACHE_PATH
+from .enums import Language
 from .exceptions import AmbrAPIError, ConnectionTimeoutError, DataNotFoundError
 from .models import (
     AbyssResponse,
@@ -47,42 +47,7 @@ from .utils import remove_html_tags
 if TYPE_CHECKING:
     import aiohttp
 
-__all__ = ("AmbrAPI", "Language")
-
-
-class Language(Enum):
-    """Supported languages for the API data."""
-
-    CHT = "cht"
-    """Traditional Chinese."""
-    CHS = "chs"
-    """Simplified Chinese."""
-    DE = "de"
-    """German."""
-    EN = "en"
-    """English."""
-    ES = "es"
-    """Spanish."""
-    FR = "fr"
-    """French."""
-    ID = "id"
-    """Indonesian."""
-    JP = "jp"
-    """Japanese."""
-    KR = "kr"
-    """Korean."""
-    PT = "pt"
-    """Portuguese."""
-    RU = "ru"
-    """Russian."""
-    TH = "th"
-    """Thai."""
-    VI = "vi"
-    """Vietnamese."""
-    IT = "it"
-    """Italian."""
-    TR = "tr"
-    """Turkish."""
+__all__ = ("AmbrAPI",)
 
 
 class AmbrAPI:  # noqa: PLR0904

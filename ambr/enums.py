@@ -2,7 +2,42 @@ from __future__ import annotations
 
 from enum import IntEnum, StrEnum
 
-__all__ = ("Element", "ExtraLevelType", "SpecialStat", "TalentType", "WeaponType")
+__all__ = ("Element", "ExtraLevelType", "Language", "SpecialStat", "TalentType", "WeaponType")
+
+
+class Language(StrEnum):
+    """Supported languages for the API data."""
+
+    CHT = "cht"
+    """Traditional Chinese."""
+    CHS = "chs"
+    """Simplified Chinese."""
+    DE = "de"
+    """German."""
+    EN = "en"
+    """English."""
+    ES = "es"
+    """Spanish."""
+    FR = "fr"
+    """French."""
+    ID = "id"
+    """Indonesian."""
+    JP = "jp"
+    """Japanese."""
+    KR = "kr"
+    """Korean."""
+    PT = "pt"
+    """Portuguese."""
+    RU = "ru"
+    """Russian."""
+    TH = "th"
+    """Thai."""
+    VI = "vi"
+    """Vietnamese."""
+    IT = "it"
+    """Italian."""
+    TR = "tr"
+    """Turkish."""
 
 
 class WeaponType(StrEnum):
