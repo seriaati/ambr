@@ -1,12 +1,12 @@
 # Project information
-site_name: ambr-py
-site_url: https://seria.is-a.dev/ambr-py
+site_name: ambr
+site_url: https://seria.is-a.dev/ambr
 site_author: Seria Ati
 site_description: An async API wrapper for Project Amber (gi.yatta.moe) written in Python.
 
 # Repository
-repo_name: seriaati/ambr-py
-repo_url: https://github.com/seriaati/ambr-py
+repo_name: seriaati/ambr
+repo_url: https://github.com/seriaati/ambr
 
 # Copyright
 copyright: Copyright &copy; 2025 - 2025 Seria Ati
