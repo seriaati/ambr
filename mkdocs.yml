@@ -48,7 +48,7 @@ plugins:
   - mkdocstrings
 
 nav:
-  - Home: README.md
+  - Home: index.md
   - API Reference:
       - Client: client.md
       - Models: models.md
