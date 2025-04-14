@@ -43,7 +43,7 @@ asyncio.run(main())
 
 ## Getting Started
 
-Read the [documentation](https://seria.is-a.dev/ambr) to learn more about on how to use this wrapper.
+Read the [documentation](https://gh.seria.moe/ambr) to learn more about on how to use this wrapper.
 
 ## Questions, Issues, Feedback, Contributions
 
