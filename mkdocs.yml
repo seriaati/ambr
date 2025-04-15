@@ -45,6 +45,7 @@ theme:
 
 plugins:
   - search
+  - social
   - mkdocstrings:
       handlers:
         python:
