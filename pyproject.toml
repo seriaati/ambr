@@ -21,7 +21,7 @@ Issues = "https://github.com/seriaati/ambr/issues"
 
 [project.optional-dependencies]
 docs = [
-    "mkdocs-material>=9.6.11",
+    "mkdocs-material[imaging]>=9.6.11",
     "mkdocstrings[python]>=0.29.1",
 ]
 
