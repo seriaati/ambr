@@ -101,8 +101,8 @@ class Story(BaseModel):
 
     @field_validator("tips", mode="before")
     @classmethod
-    def _convert_empty_tips(cls, v: str) -> str | None:
-        return v or None
+    def _convert_empty_tips(cls, v: str | int) -> str | None:
+        return str(v) or None
 
 
 class CharacterFetter(BaseModel):
