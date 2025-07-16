@@ -24,15 +24,15 @@ __all__ = (
 
 
 def remove_html_tags(text: str) -> str:
-    """Removes HTML tags and sprite presets from a string.
+    """Removes HTML tags, sprite presets, and link tags from a string.
 
     Args:
         text: The input string containing HTML tags.
 
     Returns:
-        The string with HTML tags and sprite presets removed.
+        The string with HTML tags, sprite presets, and link tags removed.
     """
-    clean = re.compile(r"<.*?>|\{SPRITE_PRESET#[^\}]+\}")
+    clean = re.compile(r"<.*?>|\{SPRITE_PRESET#[^\}]+\}|\{/?LINK(?:#[^\}]+)?\}")
     return re.sub(clean, "", text).replace("\\n", "\n")
 
 
