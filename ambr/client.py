@@ -9,40 +9,10 @@ from aiohttp_client_cache.backends.sqlite import SQLiteBackend
 from aiohttp_client_cache.session import CachedSession
 from loguru import logger
 
+from . import models
 from .constants import CACHE_PATH
 from .enums import Language
 from .exceptions import AmbrAPIError, ConnectionTimeoutError, DataNotFoundError
-from .models import (
-    AbyssResponse,
-    AchievementCategory,
-    ArtifactSet,
-    ArtifactSetDetail,
-    Book,
-    BookDetail,
-    Changelog,
-    Character,
-    CharacterDetail,
-    CharacterFetter,
-    CharacterGuide,
-    Domains,
-    Food,
-    FoodDetail,
-    Furniture,
-    FurnitureDetail,
-    Material,
-    MaterialDetail,
-    Monster,
-    MonsterDetail,
-    Namecard,
-    NamecardDetail,
-    Quest,
-    TCGCard,
-    TCGCardDetail,
-    UpgradeData,
-    Weapon,
-    WeaponDetail,
-)
-from .models.furniture import FurnitureSet, FurnitureSetDetail
 from .utils import remove_html_tags
 
 if TYPE_CHECKING:
@@ -159,7 +129,7 @@ class AmbrAPI:  # noqa: PLR0904
 
     async def fetch_achievement_categories(
         self, use_cache: bool = True
-    ) -> list[AchievementCategory]:
+    ) -> list[models.AchievementCategory]:
         """Fetches all achievement categories.
 
         Args:
@@ -175,11 +145,11 @@ class AmbrAPI:  # noqa: PLR0904
         """
         data = await self._request("achievement", use_cache=use_cache)
         return [
-            AchievementCategory(**achievement_category)
+            models.AchievementCategory(**achievement_category)
             for achievement_category in data["data"].values()
         ]
 
-    async def fetch_artifact_sets(self, use_cache: bool = True) -> list[ArtifactSet]:
+    async def fetch_artifact_sets(self, use_cache: bool = True) -> list[models.ArtifactSet]:
         """Fetches summary information for all artifact sets.
 
         Args:
@@ -194,11 +164,13 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("reliquary", use_cache=use_cache)
-        return [ArtifactSet(**artifact_set) for artifact_set in data["data"]["items"].values()]
+        return [
+            models.ArtifactSet(**artifact_set) for artifact_set in data["data"]["items"].values()
+        ]
 
     async def fetch_artifact_set_detail(
         self, id: int, *, fetch_story: bool = False, use_cache: bool = True
-    ) -> ArtifactSetDetail:
+    ) -> models.ArtifactSetDetail:
         """Fetches detailed information for a specific artifact set by its ID.
 
         Args:
@@ -215,7 +187,7 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"reliquary/{id}", use_cache=use_cache)
-        detail = ArtifactSetDetail(**data["data"])
+        detail = models.ArtifactSetDetail(**data["data"])
         if not fetch_story:
             return detail
 
@@ -229,7 +201,7 @@ class AmbrAPI:  # noqa: PLR0904
 
         return detail
 
-    async def fetch_books(self, use_cache: bool = True) -> list[Book]:
+    async def fetch_books(self, use_cache: bool = True) -> list[models.Book]:
         """Fetches summary information for all readable books.
 
         Args:
@@ -244,9 +216,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("book", use_cache=use_cache)
-        return [Book(**book) for book in data["data"]["items"].values()]
+        return [models.Book(**book) for book in data["data"]["items"].values()]
 
-    async def fetch_book_detail(self, id: int, use_cache: bool = True) -> BookDetail:
+    async def fetch_book_detail(self, id: int, use_cache: bool = True) -> models.BookDetail:
         """Fetches detailed information for a specific book by its ID, including volumes.
 
         Args:
@@ -262,9 +234,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"book/{id}", use_cache=use_cache)
-        return BookDetail(**data["data"])
+        return models.BookDetail(**data["data"])
 
-    async def fetch_characters(self, use_cache: bool = True) -> list[Character]:
+    async def fetch_characters(self, use_cache: bool = True) -> list[models.Character]:
         """Fetches summary information for all characters.
 
         Args:
@@ -279,9 +251,11 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("avatar", use_cache=use_cache)
-        return [Character(**character) for character in data["data"]["items"].values()]
+        return [models.Character(**character) for character in data["data"]["items"].values()]
 
-    async def fetch_character_detail(self, id: str, use_cache: bool = True) -> CharacterDetail:
+    async def fetch_character_detail(
+        self, id: str, use_cache: bool = True
+    ) -> models.CharacterDetail:
         """Fetches detailed information for a specific character by their ID.
 
         Args:
@@ -297,9 +271,11 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"avatar/{id}", use_cache=use_cache)
-        return CharacterDetail(**data["data"])
+        return models.CharacterDetail(**data["data"])
 
-    async def fetch_character_fetter(self, id: str, use_cache: bool = True) -> CharacterFetter:
+    async def fetch_character_fetter(
+        self, id: str, use_cache: bool = True
+    ) -> models.CharacterFetter:
         """Fetches character stories and voice-over quotes (fetter information) by character ID.
 
         Args:
@@ -315,9 +291,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"avatarFetter/{id}", use_cache=use_cache)
-        return CharacterFetter(**data["data"])
+        return models.CharacterFetter(**data["data"])
 
-    async def fetch_foods(self, use_cache: bool = True) -> list[Food]:
+    async def fetch_foods(self, use_cache: bool = True) -> list[models.Food]:
         """Fetches summary information for all food items.
 
         Args:
@@ -332,9 +308,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("food", use_cache=use_cache)
-        return [Food(**food) for food in data["data"]["items"].values()]
+        return [models.Food(**food) for food in data["data"]["items"].values()]
 
-    async def fetch_food_detail(self, id: int, use_cache: bool = True) -> FoodDetail:
+    async def fetch_food_detail(self, id: int, use_cache: bool = True) -> models.FoodDetail:
         """Fetches detailed information for a specific food item by its ID.
 
         Args:
@@ -350,9 +326,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"food/{id}", use_cache=use_cache)
-        return FoodDetail(**data["data"])
+        return models.FoodDetail(**data["data"])
 
-    async def fetch_furnitures(self, use_cache: bool = True) -> list[Furniture]:
+    async def fetch_furnitures(self, use_cache: bool = True) -> list[models.Furniture]:
         """Fetches summary information for all furniture items (Serenitea Pot).
 
         Args:
@@ -367,9 +343,11 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("furniture", use_cache=use_cache)
-        return [Furniture(**furniture) for furniture in data["data"]["items"].values()]
+        return [models.Furniture(**furniture) for furniture in data["data"]["items"].values()]
 
-    async def fetch_furniture_detail(self, id: int, use_cache: bool = True) -> FurnitureDetail:
+    async def fetch_furniture_detail(
+        self, id: int, use_cache: bool = True
+    ) -> models.FurnitureDetail:
         """Fetches detailed information for a specific furniture item by its ID.
 
         Args:
@@ -385,9 +363,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"furniture/{id}", use_cache=use_cache)
-        return FurnitureDetail(**data["data"])
+        return models.FurnitureDetail(**data["data"])
 
-    async def fetch_furniture_sets(self, use_cache: bool = True) -> list[FurnitureSet]:
+    async def fetch_furniture_sets(self, use_cache: bool = True) -> list[models.FurnitureSet]:
         """Fetches summary information for all furniture sets (Serenitea Pot).
 
         Args:
@@ -402,11 +380,13 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("furnitureSuite", use_cache=use_cache)
-        return [FurnitureSet(**furniture_set) for furniture_set in data["data"]["items"].values()]
+        return [
+            models.FurnitureSet(**furniture_set) for furniture_set in data["data"]["items"].values()
+        ]
 
     async def fetch_furniture_set_detail(
         self, id: int, use_cache: bool = True
-    ) -> FurnitureSetDetail:
+    ) -> models.FurnitureSetDetail:
         """Fetches detailed information for a specific furniture set by its ID.
 
         Args:
@@ -422,9 +402,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"furnitureSuite/{id}", use_cache=use_cache)
-        return FurnitureSetDetail(**data["data"])
+        return models.FurnitureSetDetail(**data["data"])
 
-    async def fetch_materials(self, use_cache: bool = True) -> list[Material]:
+    async def fetch_materials(self, use_cache: bool = True) -> list[models.Material]:
         """Fetches summary information for all materials (includes ingredients, ascension items, etc.).
 
         Args:
@@ -439,9 +419,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("material", use_cache=use_cache)
-        return [Material(**material) for material in data["data"]["items"].values()]
+        return [models.Material(**material) for material in data["data"]["items"].values()]
 
-    async def fetch_material_detail(self, id: int, use_cache: bool = True) -> MaterialDetail:
+    async def fetch_material_detail(self, id: int, use_cache: bool = True) -> models.MaterialDetail:
         """Fetches detailed information for a specific material by its ID.
 
         Args:
@@ -457,9 +437,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"material/{id}", use_cache=use_cache)
-        return MaterialDetail(**data["data"])
+        return models.MaterialDetail(**data["data"])
 
-    async def fetch_monsters(self, use_cache: bool = True) -> list[Monster]:
+    async def fetch_monsters(self, use_cache: bool = True) -> list[models.Monster]:
         """Fetches summary information for all monsters and living beings.
 
         Args:
@@ -474,9 +454,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("monster", use_cache=use_cache)
-        return [Monster(**monster) for monster in data["data"]["items"].values()]
+        return [models.Monster(**monster) for monster in data["data"]["items"].values()]
 
-    async def fetch_monster_detail(self, id: int, use_cache: bool = True) -> MonsterDetail:
+    async def fetch_monster_detail(self, id: int, use_cache: bool = True) -> models.MonsterDetail:
         """Fetches detailed information for a specific monster or living being by its ID.
 
         Args:
@@ -492,9 +472,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"monster/{id}", use_cache=use_cache)
-        return MonsterDetail(**data["data"])
+        return models.MonsterDetail(**data["data"])
 
-    async def fetch_namecards(self, use_cache: bool = True) -> list[Namecard]:
+    async def fetch_namecards(self, use_cache: bool = True) -> list[models.Namecard]:
         """Fetches summary information for all namecards.
 
         Args:
@@ -509,9 +489,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("namecard", use_cache=use_cache)
-        return [Namecard(**name_card) for name_card in data["data"]["items"].values()]
+        return [models.Namecard(**name_card) for name_card in data["data"]["items"].values()]
 
-    async def fetch_namecard_detail(self, id: int, use_cache: bool = True) -> NamecardDetail:
+    async def fetch_namecard_detail(self, id: int, use_cache: bool = True) -> models.NamecardDetail:
         """Fetches detailed information for a specific namecard by its ID.
 
         Args:
@@ -527,9 +507,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"namecard/{id}", use_cache=use_cache)
-        return NamecardDetail(**data["data"])
+        return models.NamecardDetail(**data["data"])
 
-    async def fetch_quests(self, use_cache: bool = True) -> list[Quest]:
+    async def fetch_quests(self, use_cache: bool = True) -> list[models.Quest]:
         """Fetches summary information for all quests.
 
         Args:
@@ -544,9 +524,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("quest", use_cache=use_cache)
-        return [Quest(**quest) for quest in data["data"]["items"].values()]
+        return [models.Quest(**quest) for quest in data["data"]["items"].values()]
 
-    async def fetch_tcg_cards(self, use_cache: bool = True) -> list[TCGCard]:
+    async def fetch_tcg_cards(self, use_cache: bool = True) -> list[models.TCGCard]:
         """Fetches summary information for all Genius Invokation TCG cards.
 
         Args:
@@ -561,9 +541,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("gcg", use_cache=use_cache)
-        return [TCGCard(**tcg_card) for tcg_card in data["data"]["items"].values()]
+        return [models.TCGCard(**tcg_card) for tcg_card in data["data"]["items"].values()]
 
-    async def fetch_tcg_card_detail(self, id: int, use_cache: bool = True) -> TCGCardDetail:
+    async def fetch_tcg_card_detail(self, id: int, use_cache: bool = True) -> models.TCGCardDetail:
         """Fetches detailed information for a specific TCG card by its ID.
 
         Args:
@@ -579,9 +559,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"gcg/{id}", use_cache=use_cache)
-        return TCGCardDetail(**data["data"])
+        return models.TCGCardDetail(**data["data"])
 
-    async def fetch_weapons(self, use_cache: bool = True) -> list[Weapon]:
+    async def fetch_weapons(self, use_cache: bool = True) -> list[models.Weapon]:
         """Fetches summary information for all weapons.
 
         Args:
@@ -596,7 +576,7 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("weapon", use_cache=use_cache)
-        return [Weapon(**weapon) for weapon in data["data"]["items"].values()]
+        return [models.Weapon(**weapon) for weapon in data["data"]["items"].values()]
 
     async def fetch_weapon_types(self, use_cache: bool = True) -> dict[str, str]:
         """Fetches a mapping of weapon type identifiers to their display names.
@@ -615,7 +595,7 @@ class AmbrAPI:  # noqa: PLR0904
         data = await self._request("weapon", use_cache=use_cache)
         return data["data"]["types"]
 
-    async def fetch_weapon_detail(self, id: int, use_cache: bool = True) -> WeaponDetail:
+    async def fetch_weapon_detail(self, id: int, use_cache: bool = True) -> models.WeaponDetail:
         """Fetches detailed information for a specific weapon by its ID.
 
         Args:
@@ -631,9 +611,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"weapon/{id}", use_cache=use_cache)
-        return WeaponDetail(**data["data"])
+        return models.WeaponDetail(**data["data"])
 
-    async def fetch_domains(self, use_cache: bool = True) -> Domains:
+    async def fetch_domains(self, use_cache: bool = True) -> models.Domains:
         """Fetches information about daily domains and their rewards for each day of the week.
 
         Args:
@@ -648,9 +628,9 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("dailyDungeon", use_cache=use_cache)
-        return Domains(**data["data"])
+        return models.Domains(**data["data"])
 
-    async def fetch_changelogs(self, use_cache: bool = True) -> list[Changelog]:
+    async def fetch_changelogs(self, use_cache: bool = True) -> list[models.Changelog]:
         """Fetches the API changelogs.
 
         Args:
@@ -665,12 +645,12 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("changelog", static=True, use_cache=use_cache)
-        changelogs: list[Changelog] = []
+        changelogs: list[models.Changelog] = []
         for changelog_id, log in data["data"].items():
-            changelogs.append(Changelog(id=int(changelog_id), **log))
+            changelogs.append(models.Changelog(id=int(changelog_id), **log))
         return changelogs
 
-    async def fetch_upgrade_data(self, use_cache: bool = True) -> UpgradeData:
+    async def fetch_upgrade_data(self, use_cache: bool = True) -> models.UpgradeData:
         """Fetches general upgrade material requirements for characters and weapons.
 
         Args:
@@ -685,7 +665,7 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("upgrade", use_cache=use_cache)
-        return UpgradeData(**data["data"])
+        return models.UpgradeData(**data["data"])
 
     async def fetch_manual_weapon(self, use_cache: bool = True) -> dict[str, str]:
         """Fetches manual weapon data (purpose unclear from API structure).
@@ -782,7 +762,7 @@ class AmbrAPI:  # noqa: PLR0904
         data = await self._request("monsterCurve", static=True, use_cache=use_cache)
         return data["data"]
 
-    async def fetch_abyss_data(self, use_cache: bool = True) -> AbyssResponse:
+    async def fetch_abyss_data(self, use_cache: bool = True) -> models.AbyssResponse:
         """Fetches data for the current and potentially previous Spiral Abyss cycles.
 
         Args:
@@ -797,11 +777,11 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("tower", use_cache=use_cache)
-        return AbyssResponse(**data["data"])
+        return models.AbyssResponse(**data["data"])
 
     async def fetch_character_guide(
         self, character_id: str, *, use_cache: bool = True
-    ) -> CharacterGuide:
+    ) -> models.CharacterGuide:
         """Fetches community-sourced build guides for a specific character.
 
         Combines data from sources like Genshin Wizard and genshin.aza.gg.
@@ -821,7 +801,7 @@ class AmbrAPI:  # noqa: PLR0904
         data = await self._request(
             f"advanced/avatarGuides/{character_id}", use_cache=use_cache, static=True
         )
-        return CharacterGuide(**data["data"])
+        return models.CharacterGuide(**data["data"])
 
     async def _save_version(self, version: str) -> None:
         CACHE_PATH.mkdir(parents=True, exist_ok=True)
