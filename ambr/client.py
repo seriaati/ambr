@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import time
 from typing import TYPE_CHECKING, Any, Final, Self
 
@@ -46,6 +47,8 @@ from .utils import remove_html_tags
 
 if TYPE_CHECKING:
     import aiohttp
+
+    from ambr.models.artifact import Artifact
 
 __all__ = ("AmbrAPI",)
 
@@ -193,11 +196,14 @@ class AmbrAPI:  # noqa: PLR0904
         data = await self._request("reliquary", use_cache=use_cache)
         return [ArtifactSet(**artifact_set) for artifact_set in data["data"]["items"].values()]
 
-    async def fetch_artifact_set_detail(self, id: int, use_cache: bool = True) -> ArtifactSetDetail:
+    async def fetch_artifact_set_detail(
+        self, id: int, *, fetch_story: bool = False, use_cache: bool = True
+    ) -> ArtifactSetDetail:
         """Fetches detailed information for a specific artifact set by its ID.
 
         Args:
             id: The ID of the artifact set to fetch.
+            fetch_story: Whether to do five additional requests to fetch the lore of each artifact piece. Defaults to False.
             use_cache: Whether to use cached data if available. Defaults to True.
 
         Returns:
@@ -209,7 +215,19 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request(f"reliquary/{id}", use_cache=use_cache)
-        return ArtifactSetDetail(**data["data"])
+        detail = ArtifactSetDetail(**data["data"])
+        if not fetch_story:
+            return detail
+
+        async def _set_artifact_story(artifact: Artifact) -> None:
+            story = await self.fetch_readable(artifact.icon_path.replace("UI_RelicIcon_", "Relic"))
+            artifact.story = story
+
+        async with asyncio.TaskGroup() as tg:
+            for artifact in detail.artifacts:
+                tg.create_task(_set_artifact_story(artifact))
+
+        return detail
 
     async def fetch_books(self, use_cache: bool = True) -> list[Book]:
         """Fetches summary information for all readable books.

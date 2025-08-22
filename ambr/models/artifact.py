@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, computed_field, field_validator
 
 __all__ = ("Artifact", "ArtifactAffix", "ArtifactSet", "ArtifactSetDetail")
 
@@ -28,18 +28,21 @@ class Artifact(BaseModel):
         description: The flavor text or description of the artifact piece.
         max_rarity: The maximum rarity level this artifact piece can have.
         icon: The icon URL for the artifact piece.
+        story: The lore of this artifact piece, None if fetch_story=False.
     """
 
     pos: str
     name: str
     description: str
     max_rarity: int = Field(alias="maxLevel")
-    icon: str
+    icon_path: str = Field(alias="icon")
+    story: str | None = None
 
-    @field_validator("icon", mode="before")
-    @classmethod
-    def _convert_icon_url(cls, v: str) -> str:
-        return f"https://gi.yatta.moe/assets/UI/reliquary/{v}.png"
+    @computed_field
+    @property
+    def icon(self) -> str:
+        """The icon URL for the artifact piece."""
+        return f"https://gi.yatta.moe/assets/UI/reliquary/{self.icon_path}.png"
 
 
 class ArtifactSetDetail(BaseModel):
