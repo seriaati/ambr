@@ -102,3 +102,15 @@ class ExtraLevelType(IntEnum):
     NORMAL = 1
     SKILL = 2
     ULTIMATE = 9
+
+
+class City(IntEnum):
+    """City associated with domains."""
+
+    MONDSTADT = 1
+    LIYUE = 2
+    INAZUMA = 3
+    SUMERU = 4
+    FONTAINE = 5
+    NATLAN = 6
+    NOD_KRAI = 7

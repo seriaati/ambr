@@ -1,22 +1,12 @@
 from __future__ import annotations
 
-from enum import IntEnum
 from typing import Any
 
 from pydantic import BaseModel, Field, field_validator
 
-__all__ = ("City", "Domain", "DomainReward", "Domains")
+from ambr.enums import City
 
-
-class City(IntEnum):
-    """Enumeration of cities/regions associated with domains."""
-
-    MONDSTADT = 1
-    LIYUE = 2
-    INAZUMA = 3
-    SUMERU = 4
-    FONTAINE = 5
-    NATLAN = 6
+__all__ = ("Domain", "DomainReward", "Domains")
 
 
 class DomainReward(BaseModel):
