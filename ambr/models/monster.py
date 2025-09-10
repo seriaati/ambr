@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import Field, field_validator
 
-from ..utils import remove_html_tags
+from ._base import BaseModel
 
 __all__ = ("Monster", "MonsterDetail", "MonsterEntry", "MonsterReward")
 
@@ -83,11 +83,6 @@ class MonsterDetail(BaseModel):
     @classmethod
     def _convert_entries(cls, v: dict[str, dict[str, Any]]) -> list[MonsterEntry]:
         return [MonsterEntry(**v[item_id]) for item_id in v]
-
-    @field_validator("description", mode="before")
-    @classmethod
-    def _format_description(cls, v: str) -> str:
-        return remove_html_tags(v)
 
 
 class Monster(BaseModel):

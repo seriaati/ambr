@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import Field, field_validator
 
-from ambr.utils import remove_html_tags
+from ._base import BaseModel
 
 __all__ = ("Book", "BookDetail", "BookVolume")
 
@@ -21,16 +21,6 @@ class BookVolume(BaseModel):
     name: str
     description: str
     story_id: int = Field(alias="storyId")
-
-    @field_validator("description", mode="before")
-    @classmethod
-    def __format_description(cls, v: str) -> str:
-        return remove_html_tags(v)
-
-    @field_validator("name", "description", mode="before")
-    @classmethod
-    def __convert_name(cls, v: str | int) -> str:
-        return str(v)
 
 
 class BookDetail(BaseModel):
@@ -55,11 +45,6 @@ class BookDetail(BaseModel):
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://gi.yatta.moe/assets/UI/{v}.png"
 
-    @field_validator("name", mode="before")
-    @classmethod
-    def __convert_name(cls, v: str | int) -> str:
-        return str(v)
-
 
 class Book(BaseModel):
     """Represents a book summary.
@@ -82,8 +67,3 @@ class Book(BaseModel):
     @classmethod
     def _convert_icon_url(cls, v: str) -> str:
         return f"https://gi.yatta.moe/assets/UI/{v}.png"
-
-    @field_validator("name", mode="before")
-    @classmethod
-    def __convert_name(cls, v: str | int) -> str:
-        return str(v)

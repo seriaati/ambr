@@ -1,10 +1,13 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import Field, field_validator
 
-from ambr.enums import City
+from ._base import BaseModel
+
+if TYPE_CHECKING:
+    from ambr.enums import City
 
 __all__ = ("Domain", "DomainReward", "Domains")
 

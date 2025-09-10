@@ -4,10 +4,10 @@ import datetime
 from typing import Any
 
 from loguru import logger
-from pydantic import BaseModel, Field, field_validator
+from pydantic import Field, field_validator
 
 from ..enums import Element, ExtraLevelType, SpecialStat, TalentType, WeaponType
-from ..utils import remove_html_tags
+from ._base import BaseModel
 
 __all__ = (
     "AscensionMaterial",
@@ -67,11 +67,6 @@ class Constellation(BaseModel):
     description: str
     extra_level: TalentExtraLevel | None = Field(alias="extraData")
     icon: str
-
-    @field_validator("description", mode="before")
-    @classmethod
-    def _format_description(cls, v: str) -> str:
-        return remove_html_tags(v)
 
     @field_validator("extra_level", mode="before")
     @classmethod
@@ -144,11 +139,6 @@ class Talent(BaseModel):
     upgrades: list[TalentUpgrade] | None = Field(None, alias="promote")
     cooldown: float | None = Field(None)
     cost: int | None = Field(None)
-
-    @field_validator("description", mode="before")
-    @classmethod
-    def _format_description(cls, v: str) -> str:
-        return remove_html_tags(v)
 
     @field_validator("icon", mode="before")
     @classmethod
@@ -329,11 +319,6 @@ class CharacterDetail(BaseModel):
     special_stat: SpecialStat | str = Field(alias="specialProp")
     region: str
 
-    @field_validator("id", mode="before")
-    @classmethod
-    def _stringify_id(cls, v: int) -> str:
-        return str(v)
-
     @field_validator("icon", mode="before")
     @classmethod
     def _convert_icon_url(cls, v: str) -> str:
@@ -409,11 +394,6 @@ class Character(BaseModel):
     beta: bool = Field(False)
     special_stat: SpecialStat | str = Field(alias="specialProp")
     region: str
-
-    @field_validator("id", mode="before")
-    @classmethod
-    def _stringify_id(cls, v: int | str) -> str:
-        return str(v)
 
     @field_validator("icon", mode="before")
     @classmethod

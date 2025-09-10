@@ -2,9 +2,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import Field, field_validator
 
 from ..utils import remove_html_tags, replace_placeholders
+from ._base import BaseModel
 
 __all__ = ("CardDictionary", "CardTag", "CardTalent", "DiceCost", "TCGCard", "TCGCardDetail")
 
@@ -49,11 +50,6 @@ class CardDictionary(BaseModel):
     params: dict[str, Any] | None = None
     description: str
     cost: list[DiceCost] = Field(alias="diceCost", default_factory=list)
-
-    @field_validator("name", mode="before")
-    @classmethod
-    def _format_name(cls, v: str) -> str:
-        return remove_html_tags(v)
 
     @field_validator("cost", mode="before")
     @classmethod

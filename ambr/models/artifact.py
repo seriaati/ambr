@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, Field, computed_field, field_validator
+from pydantic import Field, computed_field, field_validator
+
+from ._base import BaseModel
 
 __all__ = ("Artifact", "ArtifactAffix", "ArtifactSet", "ArtifactSetDetail")
 

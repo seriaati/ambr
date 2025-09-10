@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import Field, field_validator
 
 from ..constants import WEEKDAYS
-from ..utils import remove_html_tags
+from ._base import BaseModel
 
 __all__ = ("Material", "MaterialDetail", "MaterialRecipe", "MaterialSource")
 
@@ -68,11 +68,6 @@ class MaterialDetail(BaseModel):
     icon: str
     rarity: int = Field(alias="rank")
     route: str
-
-    @field_validator("description", mode="before")
-    @classmethod
-    def _format_description(cls, v: str) -> str:
-        return remove_html_tags(v)
 
     @field_validator("recipe", mode="before")
     @classmethod

@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import Field, field_validator
 
-from ..utils import remove_html_tags
+from ._base import BaseModel
 
 __all__ = ("Food", "FoodDetail", "FoodEffect", "FoodRecipe", "FoodSource")
 
@@ -31,11 +31,6 @@ class FoodEffect(BaseModel):
 
     id: str
     description: str
-
-    @field_validator("description", mode="before")
-    @classmethod
-    def _format_description(cls, v: str) -> str:
-        return remove_html_tags(v)
 
 
 class FoodRecipe(BaseModel):

@@ -3,9 +3,9 @@ from __future__ import annotations
 import datetime
 from typing import Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import Field, field_validator
 
-from ..utils import remove_html_tags
+from ._base import BaseModel
 
 __all__ = (
     "Abyss",
@@ -33,11 +33,6 @@ class Blessing(BaseModel):
     description: str
     level_config_name: str = Field(..., alias="levelConfigName")
     visible: bool
-
-    @field_validator("description", mode="before")
-    @classmethod
-    def _format_description(cls, v: str) -> str:
-        return remove_html_tags(v)
 
 
 class ChallengeTarget(BaseModel):
@@ -87,11 +82,6 @@ class LeyLineDisorder(BaseModel):
     description: str
     level_config_name: str = Field(..., alias="levelConfigName")
     visible: bool
-
-    @field_validator("description", mode="before")
-    @classmethod
-    def _format_description(cls, v: str) -> str:
-        return remove_html_tags(v)
 
 
 class Floor(BaseModel):
