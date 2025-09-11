@@ -72,6 +72,7 @@ quote-annotations = true
 runtime-evaluated-base-classes = [
     "pydantic.BaseModel",
     "pydantic_settings.BaseSettings",
+    "ambr.models._base.BaseModel",
 ]
 
 [lint.mccabe]
