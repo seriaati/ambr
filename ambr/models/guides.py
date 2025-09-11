@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import Field, field_validator
 
@@ -234,6 +234,11 @@ class GWSynergy(BaseModel):
         list[GWSynergyNormalCharacter | GWSynergyElementCharacter | GWSynergyFlexibleCharacter]
     ] = Field(alias="synergiestList")
     credits: str
+
+    @field_validator("teams", mode="before")
+    @classmethod
+    def __remove_null_characters(cls, v: list[list[dict[str, Any]]]) -> list[list[dict[str, Any]]]:
+        return [[char for char in team if char.get("type") is not None] for team in v]
 
 
 class GWData(BaseModel):
