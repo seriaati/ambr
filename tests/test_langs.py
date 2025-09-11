@@ -1,10 +1,11 @@
 from __future__ import annotations
 
+import pytest
+
 import ambr
 
 
-async def test_languages() -> None:
-    async with ambr.AmbrAPI() as client:
-        for lang in ambr.Language:
-            client.lang = lang
-            await client.fetch_characters()
+@pytest.mark.parametrize("lang", list(ambr.Language))
+async def test_languages(lang: ambr.Language) -> None:
+    async with ambr.AmbrAPI(lang=lang) as client:
+        await client.fetch_characters()
