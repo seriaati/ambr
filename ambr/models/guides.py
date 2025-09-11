@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal
+from typing import Literal
 
 from pydantic import Field, field_validator
 
+from ..enums import Element, WeaponType
 from ._base import BaseModel
-
-if TYPE_CHECKING:
-    from ..enums import Element, WeaponType
 
 __all__ = (
     "AvailableItems",
