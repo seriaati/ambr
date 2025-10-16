@@ -52,6 +52,7 @@ class AmbrAPI:  # noqa: PLR0904
         self.lang = lang
         self._cache_ttl = cache_ttl
 
+        self._using_custom_session = session is not None
         self._session = session
         self._headers = headers or {"User-Agent": "ambr-py"}
 
@@ -124,7 +125,7 @@ class AmbrAPI:  # noqa: PLR0904
         Should be called to gracefully shut down the session if not using
         the client as an async context manager.
         """
-        if self._session is not None:
+        if self._session is not None and not self._using_custom_session:
             await self._session.close()
 
     async def fetch_achievement_categories(
