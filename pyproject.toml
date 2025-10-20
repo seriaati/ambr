@@ -20,11 +20,13 @@ Repository = "https://github.com/seriaati/ambr.git"
 Issues = "https://github.com/seriaati/ambr/issues"
 Documentation = "https://gh.seria.moe/ambr"
 
-[project.optional-dependencies]
+[dependency-groups]
 docs = [
-    "mkdocs-material[imaging]>=9.6.11",
+    "mkdocs-material>=9.6.11",
     "mkdocstrings[python]>=0.29.1",
+    "griffe-pydantic>=1.1.7",
 ]
+test = ["pytest-asyncio>=0.24.0", "pytest>=8.3.3"]
 
 [build-system]
 requires = ["hatchling"]
@@ -41,4 +43,4 @@ asyncio_default_fixture_loop_scope = "function"
 typeCheckingMode = "standard"
 
 [tool.uv]
-dev-dependencies = ["pytest-asyncio>=0.24.0", "pytest>=8.3.3"]
+default-groups = "all"

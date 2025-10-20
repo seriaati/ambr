@@ -8,7 +8,7 @@ pip install ambr-py
 
 ## Usage
 
-Every API call goes through the `AmbrAPI` class. You can see more details in the [API Reference](./client.md#ambr.client.AmbrAPI).
+Every API call goes through the `AmbrAPI` class. You can see more details in the [API Reference](./reference/client.md#ambr.client.AmbrAPI).
 
 ```py
 import ambr
@@ -18,7 +18,7 @@ async with ambr.AmbrAPI(ambr.Language.CHT) as api:
     print(characters)
 ```
 
-Overall, it's pretty straightforward. You can find all the available methods in the [API Reference](./client.md#ambr.client.AmbrAPI).
+Overall, it's pretty straightforward. You can find all the available methods in the [API Reference](./reference/client.md#ambr.client.AmbrAPI).
 
 ## Tips
 
@@ -41,11 +41,11 @@ await api.close()
 
 ### Finding Model Attributes
 
-Refer to the [Models](./models.md) section for a list of all available models and their attributes.
+Refer to the [Models](./reference/models/abyss.md) section for a list of all available models and their attributes.
 
 ### Catching Errors
 
-Refer to the [Exceptions](./exceptions.md) section for a list of all available exceptions, catch them with `try/except` blocks.
+Refer to the [Exceptions](./reference/exceptions.md) section for a list of all available exceptions, catch them with `try/except` blocks.
 
 ```py
 import ambr

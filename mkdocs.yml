@@ -16,7 +16,10 @@ theme:
   name: material
   features:
     - navigation.tabs
+    - navigation.instant
     - content.code.copy
+    - content.code.annotate
+  language: en
   palette:
     # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"
@@ -46,14 +49,43 @@ theme:
 
 plugins:
   - search
-  - social
   - mkdocstrings:
       handlers:
         python:
+          paths: ["genshin"]
+          inventories:
+            - https://docs.python.org/3/objects.inv
+            - https://mkdocstrings.github.io/griffe/objects.inv
+            - https://docs.pydantic.dev/latest/objects.inv
           options:
+            backlinks: tree
             docstring_style: google
+            docstring_options:
+              ignore_init_summary: true
+            docstring_section_style: list
+            parameter_headings: true
+            relative_crossrefs: true
+            scoped_crossrefs: true
+            type_parameter_headings: true
+            show_root_heading: true
+            show_root_full_path: false
             show_root_toc_entry: false
             show_symbol_type_heading: true
+            show_if_no_docstring: true
+            show_source: false
+            show_bases: false
+            separate_signature: true
+            signature_crossrefs: true
+            show_symbol_type_toc: true
+            show_signature_annotations: true
+            show_signature_type_parameters: true
+            summary: true
+            filters:
+              - "!^_"
+            unwrap_annotated: true
+            extensions:
+              - griffe_pydantic:
+                  schema: false
 
 markdown_extensions:
   - admonition
@@ -70,8 +102,26 @@ nav:
   - Home: index.md
   - Getting Started: getting_started.md
   - API Reference:
-      - Client: client.md
-      - Models: models.md
-      - Exceptions: exceptions.md
-      - Enums: enums.md
-      - Utils: utils.md
+      - Client: reference/client.md
+      - Exceptions: reference/exceptions.md
+      - Enums: reference/enums.md
+      - Utils: reference/utils.md
+      - Models:
+          - Abyss: reference/models/abyss.md
+          - Achievement: reference/models/achievement.md
+          - Artifact: reference/models/artifact.md
+          - Book: reference/models/book.md
+          - Changelog: reference/models/changelog.md
+          - Character: reference/models/character.md
+          - Character Fetter: reference/models/character_fetter.md
+          - Domain: reference/models/domain.md
+          - Food: reference/models/food.md
+          - Furniture: reference/models/furniture.md
+          - Guides: reference/models/guides.md
+          - Material: reference/models/material.md
+          - Monster: reference/models/monster.md
+          - Name Card: reference/models/name_card.md
+          - Quest: reference/models/quest.md
+          - TCG: reference/models/tcg.md
+          - Upgrade: reference/models/upgrade.md
+          - Weapon: reference/models/weapon.md
