@@ -395,6 +395,13 @@ class Character(BaseModel):
     special_stat: SpecialStat | str = Field(alias="specialProp")
     region: str
 
+    @field_validator("element", mode="before")
+    @classmethod
+    def __convert_element(cls, v: str | None) -> Element:
+        if v is None:
+            return Element.NONE
+        return Element(v)
+
     @field_validator("icon", mode="before")
     @classmethod
     def _convert_icon_url(cls, v: str) -> str:

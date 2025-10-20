@@ -93,6 +93,7 @@ class Element(StrEnum):
     HYDRO = "Water"
     CRYO = "Ice"
     DENDRO = "Grass"
+    NONE = "None"  # I hate Manekins
 
 
 class TalentType(IntEnum):
