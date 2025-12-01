@@ -342,6 +342,8 @@ class CharacterDetail(BaseModel):
     @field_validator("constellations", mode="before")
     @classmethod
     def _convert_constellations(cls, v: dict[str, dict[str, Any]]) -> list[Constellation]:
+        if not v:
+            return []
         return [Constellation(**constellation) for constellation in v.values()]
 
     @field_validator("release", mode="before")
@@ -357,6 +359,13 @@ class CharacterDetail(BaseModel):
         except ValueError:
             logger.error(f"Unknown specialProp: {v!r}")
             return v
+
+    @field_validator("element", mode="before")
+    @classmethod
+    def __convert_element(cls, v: str | None) -> Element:
+        if v is None:
+            return Element.NONE
+        return Element(v)
 
     @property
     def gacha(self) -> str:
