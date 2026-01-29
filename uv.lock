@@ -166,7 +166,7 @@ wheels = [
 
 [[package]]
 name = "ambr-py"
-version = "1.8.10"
+version = "1.8.11"
 source = { editable = "." }
 dependencies = [
     { name = "aiofiles" },
