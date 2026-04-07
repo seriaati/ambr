@@ -8,6 +8,7 @@ import aiofiles
 from aiohttp_client_cache.backends.sqlite import SQLiteBackend
 from aiohttp_client_cache.session import CachedSession
 from loguru import logger
+from pydantic import ValidationError
 
 from . import models
 from .constants import CACHE_PATH
@@ -145,10 +146,13 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("achievement", use_cache=use_cache)
-        return [
-            models.AchievementCategory(**achievement_category)
-            for achievement_category in data["data"].values()
-        ]
+        result: list[models.AchievementCategory] = []
+        for item in data["data"].values():
+            try:
+                result.append(models.AchievementCategory(**item))
+            except ValidationError:
+                logger.error(f"Failed to validate AchievementCategory: {item}")
+        return result
 
     async def fetch_artifact_sets(self, use_cache: bool = True) -> list[models.ArtifactSet]:
         """Fetches summary information for all artifact sets.
@@ -165,9 +169,13 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("reliquary", use_cache=use_cache)
-        return [
-            models.ArtifactSet(**artifact_set) for artifact_set in data["data"]["items"].values()
-        ]
+        result: list[models.ArtifactSet] = []
+        for item in data["data"]["items"].values():
+            try:
+                result.append(models.ArtifactSet(**item))
+            except ValidationError:
+                logger.error(f"Failed to validate ArtifactSet: {item}")
+        return result
 
     async def fetch_artifact_set_detail(
         self, id: int, *, fetch_story: bool = False, use_cache: bool = True
@@ -217,7 +225,13 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("book", use_cache=use_cache)
-        return [models.Book(**book) for book in data["data"]["items"].values()]
+        result: list[models.Book] = []
+        for item in data["data"]["items"].values():
+            try:
+                result.append(models.Book(**item))
+            except ValidationError:
+                logger.error(f"Failed to validate Book: {item}")
+        return result
 
     async def fetch_book_detail(self, id: int, use_cache: bool = True) -> models.BookDetail:
         """Fetches detailed information for a specific book by its ID, including volumes.
@@ -252,7 +266,13 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("avatar", use_cache=use_cache)
-        return [models.Character(**character) for character in data["data"]["items"].values()]
+        result: list[models.Character] = []
+        for item in data["data"]["items"].values():
+            try:
+                result.append(models.Character(**item))
+            except ValidationError:
+                logger.error(f"Failed to validate Character: {item}")
+        return result
 
     async def fetch_character_detail(
         self, id: str, use_cache: bool = True
@@ -309,7 +329,13 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("food", use_cache=use_cache)
-        return [models.Food(**food) for food in data["data"]["items"].values()]
+        result: list[models.Food] = []
+        for item in data["data"]["items"].values():
+            try:
+                result.append(models.Food(**item))
+            except ValidationError:
+                logger.error(f"Failed to validate Food: {item}")
+        return result
 
     async def fetch_food_detail(self, id: int, use_cache: bool = True) -> models.FoodDetail:
         """Fetches detailed information for a specific food item by its ID.
@@ -344,7 +370,13 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("furniture", use_cache=use_cache)
-        return [models.Furniture(**furniture) for furniture in data["data"]["items"].values()]
+        result: list[models.Furniture] = []
+        for item in data["data"]["items"].values():
+            try:
+                result.append(models.Furniture(**item))
+            except ValidationError:
+                logger.error(f"Failed to validate Furniture: {item}")
+        return result
 
     async def fetch_furniture_detail(
         self, id: int, use_cache: bool = True
@@ -381,9 +413,13 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("furnitureSuite", use_cache=use_cache)
-        return [
-            models.FurnitureSet(**furniture_set) for furniture_set in data["data"]["items"].values()
-        ]
+        result: list[models.FurnitureSet] = []
+        for item in data["data"]["items"].values():
+            try:
+                result.append(models.FurnitureSet(**item))
+            except ValidationError:
+                logger.error(f"Failed to validate FurnitureSet: {item}")
+        return result
 
     async def fetch_furniture_set_detail(
         self, id: int, use_cache: bool = True
@@ -420,7 +456,13 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("material", use_cache=use_cache)
-        return [models.Material(**material) for material in data["data"]["items"].values()]
+        result: list[models.Material] = []
+        for item in data["data"]["items"].values():
+            try:
+                result.append(models.Material(**item))
+            except ValidationError:
+                logger.error(f"Failed to validate Material: {item}")
+        return result
 
     async def fetch_material_detail(self, id: int, use_cache: bool = True) -> models.MaterialDetail:
         """Fetches detailed information for a specific material by its ID.
@@ -455,7 +497,13 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("monster", use_cache=use_cache)
-        return [models.Monster(**monster) for monster in data["data"]["items"].values()]
+        result: list[models.Monster] = []
+        for item in data["data"]["items"].values():
+            try:
+                result.append(models.Monster(**item))
+            except ValidationError:
+                logger.error(f"Failed to validate Monster: {item}")
+        return result
 
     async def fetch_monster_detail(self, id: int, use_cache: bool = True) -> models.MonsterDetail:
         """Fetches detailed information for a specific monster or living being by its ID.
@@ -490,7 +538,13 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("namecard", use_cache=use_cache)
-        return [models.Namecard(**name_card) for name_card in data["data"]["items"].values()]
+        result: list[models.Namecard] = []
+        for item in data["data"]["items"].values():
+            try:
+                result.append(models.Namecard(**item))
+            except ValidationError:
+                logger.error(f"Failed to validate Namecard: {item}")
+        return result
 
     async def fetch_namecard_detail(self, id: int, use_cache: bool = True) -> models.NamecardDetail:
         """Fetches detailed information for a specific namecard by its ID.
@@ -525,7 +579,13 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("quest", use_cache=use_cache)
-        return [models.Quest(**quest) for quest in data["data"]["items"].values()]
+        result: list[models.Quest] = []
+        for item in data["data"]["items"].values():
+            try:
+                result.append(models.Quest(**item))
+            except ValidationError:
+                logger.error(f"Failed to validate Quest: {item}")
+        return result
 
     async def fetch_tcg_cards(self, use_cache: bool = True) -> list[models.TCGCard]:
         """Fetches summary information for all Genius Invokation TCG cards.
@@ -542,7 +602,13 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("gcg", use_cache=use_cache)
-        return [models.TCGCard(**tcg_card) for tcg_card in data["data"]["items"].values()]
+        result: list[models.TCGCard] = []
+        for item in data["data"]["items"].values():
+            try:
+                result.append(models.TCGCard(**item))
+            except ValidationError:
+                logger.error(f"Failed to validate TCGCard: {item}")
+        return result
 
     async def fetch_tcg_card_detail(self, id: int, use_cache: bool = True) -> models.TCGCardDetail:
         """Fetches detailed information for a specific TCG card by its ID.
@@ -577,7 +643,13 @@ class AmbrAPI:  # noqa: PLR0904
             AmbrAPIError: For other API-related errors.
         """
         data = await self._request("weapon", use_cache=use_cache)
-        return [models.Weapon(**weapon) for weapon in data["data"]["items"].values()]
+        result: list[models.Weapon] = []
+        for item in data["data"]["items"].values():
+            try:
+                result.append(models.Weapon(**item))
+            except ValidationError:
+                logger.error(f"Failed to validate Weapon: {item}")
+        return result
 
     async def fetch_weapon_types(self, use_cache: bool = True) -> dict[str, str]:
         """Fetches a mapping of weapon type identifiers to their display names.
@@ -648,7 +720,10 @@ class AmbrAPI:  # noqa: PLR0904
         data = await self._request("changelog", static=True, use_cache=use_cache)
         changelogs: list[models.Changelog] = []
         for changelog_id, log in data["data"].items():
-            changelogs.append(models.Changelog(id=int(changelog_id), **log))
+            try:
+                changelogs.append(models.Changelog(id=int(changelog_id), **log))
+            except ValidationError:
+                logger.error(f"Failed to validate Changelog id={changelog_id}: {log}")
         return changelogs
 
     async def fetch_upgrade_data(self, use_cache: bool = True) -> models.UpgradeData:
