@@ -60,6 +60,7 @@ ignore = [
     "D107",   # Missing docstring in __init__
     "DOC501", # Raised exception not documented
     "DOC502", # Raised exception not documented
+    "RUF076", # Avoid using `autouse=True` in `pytest.fixture` decorators
 ]
 
 [lint.per-file-ignores]
