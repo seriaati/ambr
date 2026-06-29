@@ -37,7 +37,7 @@ class NamecardDetail(BaseModel):
 
     @property
     def picture(self) -> str:
-        """Returns the URL for the full picture version of the namecard."""
+        """The URL for the full picture version of the namecard."""
         return f"{self.icon.replace('NameCardIcon', 'NameCardPic')[:-4]}_P.png"
 
 
@@ -67,5 +67,5 @@ class Namecard(BaseModel):
 
     @property
     def picture(self) -> str:
-        """Returns the URL for the full picture version of the namecard."""
+        """The URL for the full picture version of the namecard."""
         return f"{self.icon.replace('NameCardIcon', 'NameCardPic')[:-4]}_P.png"

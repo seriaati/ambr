@@ -369,7 +369,7 @@ class CharacterDetail(BaseModel):
 
     @property
     def gacha(self) -> str:
-        """Returns the URL for the character's gacha artwork (full body image)."""
+        """The URL for the character's gacha artwork (full body image)."""
         return self.icon.replace("AvatarIcon", "Gacha_AvatarImg")
 
 
@@ -437,5 +437,5 @@ class Character(BaseModel):
 
     @property
     def gacha(self) -> str:
-        """Returns the URL for the character's gacha artwork (full body image)."""
+        """The URL for the character's gacha artwork (full body image)."""
         return self.icon.replace("AvatarIcon", "Gacha_AvatarImg")
