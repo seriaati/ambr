@@ -22,7 +22,7 @@ class DomainReward(BaseModel):
 
     @property
     def icon(self) -> str:
-        """Returns the icon URL for the reward item."""
+        """The icon URL for the reward item."""
         return f"https://gi.yatta.moe/assets/UI/UI_ItemIcon_{self.id}.png"
 
 

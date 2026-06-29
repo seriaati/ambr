@@ -48,7 +48,7 @@ class ChallengeTarget(BaseModel):
 
     @property
     def formatted(self) -> str:
-        """Returns the challenge target description with values formatted in."""
+        """The challenge target description with values formatted in."""
         return self.type.format("/".join(str(v) for v in self.values))
 
 

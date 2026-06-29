@@ -113,7 +113,7 @@ class CardTalent(BaseModel):
 
     @property
     def small_icon(self) -> str:
-        """Returns the URL for the small version of the talent icon."""
+        """The URL for the small version of the talent icon."""
         return self.icon.replace(".png", ".sm.png")
 
 
@@ -160,7 +160,7 @@ class TCGCardDetail(BaseModel):
 
     @property
     def small_icon(self) -> str:
-        """Returns the URL for the small version of the card icon."""
+        """The URL for the small version of the card icon."""
         return self.icon.replace(".png", ".sm.png")
 
     @field_validator("dictionaries", mode="before")
@@ -214,5 +214,5 @@ class TCGCard(BaseModel):
 
     @property
     def small_icon(self) -> str:
-        """Returns the URL for the small version of the card icon."""
+        """The URL for the small version of the card icon."""
         return self.icon.replace(".png", ".sm.png")
