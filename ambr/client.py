@@ -24,7 +24,7 @@ if TYPE_CHECKING:
 __all__ = ("AmbrAPI",)
 
 
-class AmbrAPI:  # noqa: PLR0904
+class AmbrAPI:  # ruff: ignore[too-many-public-methods]
     """Asynchronous client for interacting with the Ambr project API (gi.yatta.moe).
 
     Provides methods to fetch various Genshin Impact game data.
@@ -61,7 +61,7 @@ class AmbrAPI:  # noqa: PLR0904
         await self.start()
         return self
 
-    async def __aexit__(self, exc_type, exc, tb) -> None:  # noqa: ANN001
+    async def __aexit__(self, exc_type, exc, tb) -> None:  # ruff: ignore[missing-type-function-argument]
         await self.close()
 
     async def _request(
