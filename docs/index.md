@@ -34,9 +34,11 @@ pip install ambr-py
 import ambr
 import asyncio
 
+
 async def main() -> None:
     async with ambr.AmbrAPI(ambr.Language.CHT) as client:
         await client.fetch_characters()
+
 
 asyncio.run(main())
 ```
