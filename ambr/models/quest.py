@@ -32,5 +32,7 @@ class Quest(BaseModel):
 
     @field_validator("chapter_icon", mode="before")
     @classmethod
-    def _convert_icon_url(cls, v: str) -> str:
+    def _convert_icon_url(cls, v: str | None) -> str | None:
+        if v is None:
+            return None
         return f"https://gi.yatta.moe/assets/UI/{v}.png"
