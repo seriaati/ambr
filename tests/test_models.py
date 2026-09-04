@@ -101,6 +101,11 @@ async def test_quests() -> None:
         await api.fetch_quests()
 
 
+async def test_quest_detail() -> None:
+    async with ambr.AmbrAPI() as api:
+        await api.fetch_quest_detail(40016)
+
+
 async def test_domains() -> None:
     async with ambr.AmbrAPI() as api:
         await api.fetch_domains()

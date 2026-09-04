@@ -587,6 +587,24 @@ class AmbrAPI:  # ruff: ignore[too-many-public-methods]
                 logger.error(f"Failed to validate Quest: {item}")
         return result
 
+    async def fetch_quest_detail(self, id: int, use_cache: bool = True) -> models.QuestDetail:
+        """Fetches detailed information for a specific quest chapter by its ID.
+
+        Args:
+            id: The ID of the quest chapter to fetch.
+            use_cache: Whether to use cached data if available. Defaults to True.
+
+        Returns:
+            A QuestDetail object.
+
+        Raises:
+            DataNotFoundError: If the requested data is not found (404).
+            ConnectionTimeoutError: If the connection times out (522, 524).
+            AmbrAPIError: For other API-related errors.
+        """
+        data = await self._request(f"quest/{id}", use_cache=use_cache)
+        return models.QuestDetail(**data["data"])
+
     async def fetch_tcg_cards(self, use_cache: bool = True) -> list[models.TCGCard]:
         """Fetches summary information for all Genius Invokation TCG cards.
 
