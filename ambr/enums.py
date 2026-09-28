@@ -123,3 +123,4 @@ class City(IntEnum):
     FONTAINE = 5
     NATLAN = 6
     NOD_KRAI = 7
+    SNEZHNAYA = 8
