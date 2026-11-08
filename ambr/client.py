@@ -895,6 +895,8 @@ class AmbrAPI:  # ruff: ignore[too-many-public-methods]
         data = await self._request(
             f"advanced/avatarGuides/{character_id}", use_cache=use_cache, static=True
         )
+        if data["data"]["dataList"] is None:
+            raise DataNotFoundError
         return models.CharacterGuide(**data["data"])
 
     async def _save_version(self, version: str) -> None:
